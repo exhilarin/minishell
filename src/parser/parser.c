@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 15:13:23 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/06/30 01:22:18 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/06/30 01:48:20 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,46 +14,56 @@
 
 t_cmd	*parser(t_token *tokens)
 {
-	t_token	*token;
 	t_cmd	*commands;
 	t_cmd	*current_cmd;
+	t_token	*current_token;
 
-	token = tokens;
-	void *(token);
 	commands = NULL;
 	current_cmd = init_cmd();
-	while (token)
+	if (!current_cmd)
+		return (0);
+	current_token = tokens;
+	while (current_token)
 	{
-		if (!process_token(&token, &current_cmd, &commands, tokens))
+		if (!process_token(&current_token, &current_cmd, &commands, tokens))
 			return (NULL);
-		token = token->next;
+		current_token = current_token->next;
 	}
 	add_cmd_to_lst(&commands, current_cmd);
 	return (commands);
 }
 
-int	process_token(t_token **token, t_cmd **cmd, t_cmd **cmds, t_token *tokens)
+int	process_token(t_token **c_tkn, t_cmd **c_cmd, t_cmd **cmds, t_token *tkns)
 {
-	if ((*token)->type == WORD || (*token)->type == QUOTE_SINGLE
-		|| (*token)->type == QUOTE_DOUBLE)
-		add_arg_to_cmd(*cmd, (*token)->value);
-	else if ((*token)->type == REDIR_IN || (*token)->type == REDIR_OUT
-		|| (*token)->type == APPEND || (*token)->type == HEREDOC)
+	if ((*c_tkn)->type == WORD || (*c_tkn)->type == QUOTE_SINGLE
+		|| (*c_tkn)->type == QUOTE_DOUBLE)
+		add_arg_to_cmd(*c_cmd, (*c_tkn)->value);
+	else if ((*c_tkn)->type == REDIR_IN || (*c_tkn)->type == REDIR_OUT
+		|| (*c_tkn)->type == APPEND || (*c_tkn)->type == HEREDOC)
 	{
-		add_redir_to_cmd(*cmd, (*token)->type, (*token)->next->value);
-		*token = (*token)->next;
+		add_redir_to_cmd(*c_cmd, (*c_tkn)->type, (*c_tkn)->next->value);
+		*c_tkn = (*c_tkn)->next;
 	}
-	else if ((*token)->type == PIPE)
+	else if ((*c_tkn)->type == PIPE)
 	{
-		add_cmd_to_lst(cmds, *cmd);
-		*cmd = init_cmd();
+		add_cmd_to_lst(cmds, *c_cmd);
+		*c_cmd = init_cmd();
+		if (!(*c_cmd))
+			return (0);
 	}
 	return (1);
 }
 
-// init_cmd();
-
-// add_arg_to_cmd();
+// void	add_arg_to_cmd(t_cmd *current_cmd, char *token_value)
+// {
+// 	if (!current_cmd->argv)
+// 		current_cmd->argv = token_value;
+// 	else
+// 	{
+// 		while (token_value)
+			
+// 	}	
+// }
 
 // add_redir_to_cmd();
 
