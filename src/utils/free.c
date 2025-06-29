@@ -1,25 +1,47 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/28 02:53:18 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/06/28 02:53:20 by ilyas-guney      ###   ########.fr       */
+/*   Created: 2025/06/29 19:51:17 by ilyas-guney       #+#    #+#             */
+/*   Updated: 2025/06/29 19:59:17 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_isspace(char c)
+void	free_tokens(t_token *tokens)
 {
-	return (c == ' ' || c == '\t' || c == '\n' ||
-			c == '\v' || c == '\f' || c == '\r');
+	t_token	*tmp;
+
+	while (tokens)
+	{
+		tmp = tokens->next;
+		if (tokens->value)
+			free(tokens->value);
+		free (tokens);
+		tokens = tmp;
+	}
 }
 
-void	skip_whitespace(char **input)
+void	free_cmd(t_cmd  *commands)
 {
-	while (**input && ft_isspace(**input))
-		(*input)++;
+	t_cmd	*tmp;
+
+	while (commands)
+	{
+		tmp = commands->next;
+		if (commands->argv)
+			free(commands->argv);
+		free(commands);
+		commands = tmp;
+	}
+}
+
+void	*syntax_error(char *message)
+{
+	perror(message);
+	exit(1);
 }

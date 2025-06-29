@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/06/28 03:12:52 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/06/29 19:16:46 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ int main(int argc, char *argv[], char *env[])
 	(void)argv;
 	(void)env;
 	char *input;
-	t_token *token_list;
-	token_list = NULL;
 	while (1)
 	{
 		input = prompt();
@@ -33,23 +31,21 @@ int main(int argc, char *argv[], char *env[])
 		}
 		if (*input)
 			add_history(input);
-		token_list = lexer(input);
-		print_tokens(token_list);
-		// command_table = parser(token_list);
-		// executor(command_table);
+		process(input);
 		free(input);
 	}
 	return (0);
 }
- 
-void	print_tokens(t_token *tokens)
+
+void	process(char *input)
 {
-	t_token *tmp = tokens;
-	while (tmp)
-	{
-		printf("token: [%s], type: %s, quoted: %d\n", tmp->value, token_type_to_str(tmp->type), tmp->quoted);
-		tmp = tmp->next;
-	}
+	t_token *token_list;
+	t_cmd	*command_list;
+
+	token_list = lexer(input);
+	// command_list = parser(token_list);
+	// executor(command_table);
+	
 }
 
 char	*prompt(void)
@@ -93,28 +89,6 @@ int	has_unclosed_quotes(const char *input)
 		input++;
 	}
 	return (s_quote || d_quote);
-}
-
-const char *token_type_to_str(t_token_type type)
-{
-	if (type == WORD)
-		return "WORD";
-	else if (type == PIPE)
-		return "PIPE";
-	else if (type == REDIR_IN)
-		return "REDIR_IN";
-	else if (type == REDIR_OUT)
-		return "REDIR_OUT";
-	else if (type == APPEND)
-		return "APPEND";
-	else if (type == HEREDOC)
-		return "HEREDOC";
-	else if (type == QUOTE_SINGLE)
-		return "QUOTE_SINGLE";
-	else if (type == QUOTE_DOUBLE)
-		return "QUOTE_DOUBLE";
-	else
-		return "UNKNOWN";
 }
 
 /*  Sources

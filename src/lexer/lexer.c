@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 15:42:55 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/06/28 02:18:35 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/06/29 18:21:02 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 t_token *lexer(char *input)
 {
-	t_token	*tokens = NULL;
-
+	t_token	*tokens;
+	
+	tokens = NULL;
 	while (*input)
 	{
 		skip_whitespace(&input);

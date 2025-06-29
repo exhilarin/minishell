@@ -12,10 +12,9 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-void		print_tokens(t_token *tokens);
 char		*prompt(void);
+void        process(char *input);
 int			has_unclosed_quotes(const char *input);
-const char	*token_type_to_str(t_token_type type);
 
 
 #endif
