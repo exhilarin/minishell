@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/06/29 19:16:46 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/06/29 20:54:08 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void	process(char *input)
 	token_list = lexer(input);
 	// command_list = parser(token_list);
 	// executor(command_table);
+	free_tokens(token_list);
+    free_cmds(command_list);
 	
 }
 
