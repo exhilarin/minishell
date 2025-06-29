@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 15:13:23 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/06/29 19:58:32 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/06/30 01:22:18 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,37 +14,47 @@
 
 t_cmd	*parser(t_token *tokens)
 {
-	if (!validate_syntax(tokens))
-		return (syntax_error("syntax error"));
+	t_token	*token;
+	t_cmd	*commands;
+	t_cmd	*current_cmd;
 
-	t_cmd	*commands = NULL;
-	t_cmd	*current_cmd = init_cmd(); // aktif komut
-	t_token	*current = tokens;
-	while (current)
+	token = tokens;
+	void *(token);
+	commands = NULL;
+	current_cmd = init_cmd();
+	while (token)
 	{
-		if (current->type == WORD ||
-			current->type == QUOTE_SINGLE || current->type == QUOTE_DOUBLE)
-				add_arg_to_cmd(current_cmd, current->value); // argv'ye ekle
-		else if (current->type == REDIR_IN || current->type == REDIR_OUT ||
-				current->type == APPEND || current->type == HEREDOC)
-		{
-			if (!current->next)
-				return (syntax_error("unexpected end of redirect"));
-			add_redir_to_cmd(current_cmd, current->type, current->next->value);
-			current = current->next; // filename atla
-		}
-		else if (current->type == PIPE)
-		{
-			append_cmd(&commands, current_cmd); // önceki komutu listeye ekle
-			current_cmd = init_cmd();           // yeni komut başlat
-		}
-		current = current->next;
+		if (!process_token(&token, &current_cmd, &commands, tokens))
+			return (NULL);
+		token = token->next;
 	}
-	append_cmd(&commands, current_cmd); // son komutu da ekle
+	add_cmd_to_lst(&commands, current_cmd);
 	return (commands);
 }
 
-int	validate_syntax(t_token	*tokens)
+int	process_token(t_token **token, t_cmd **cmd, t_cmd **cmds, t_token *tokens)
 {
-	
+	if ((*token)->type == WORD || (*token)->type == QUOTE_SINGLE
+		|| (*token)->type == QUOTE_DOUBLE)
+		add_arg_to_cmd(*cmd, (*token)->value);
+	else if ((*token)->type == REDIR_IN || (*token)->type == REDIR_OUT
+		|| (*token)->type == APPEND || (*token)->type == HEREDOC)
+	{
+		add_redir_to_cmd(*cmd, (*token)->type, (*token)->next->value);
+		*token = (*token)->next;
+	}
+	else if ((*token)->type == PIPE)
+	{
+		add_cmd_to_lst(cmds, *cmd);
+		*cmd = init_cmd();
+	}
+	return (1);
 }
+
+// init_cmd();
+
+// add_arg_to_cmd();
+
+// add_redir_to_cmd();
+
+// add_cmd_to_list();

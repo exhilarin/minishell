@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/06/29 20:54:08 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/06/30 01:18:00 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,20 @@ void	process(char *input)
 {
 	t_token *token_list;
 	t_cmd	*command_list;
+	int		syntax_err;
 
 	token_list = lexer(input);
-	// command_list = parser(token_list);
-	// executor(command_table);
+	syntax_err = validate_syntax(token_list);
+	if (syntax_err != SYNTAX_OK)
+	{
+		syntax_error(syntax_err);
+		free_tokens(token_list);
+		return ;
+	}
+	command_list = parser(token_list);
+	printf("%s\n", command_list->argv[0]);
+	// executor(command_list);
 	free_tokens(token_list);
-    free_cmds(command_list);
-	
 }
 
 char	*prompt(void)
