@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/07/01 00:50:04 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/07/01 02:10:25 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ void	process(char *input)
 	// t_cmd	*command_list;
 	int		syntax_err;
 
+	if (is_invalid_char(input))
+		return (syntax_error(ERR_INVALID));
 	token_list = lexer(input);
 	syntax_err = validate_syntax(token_list);
 	if (syntax_err != SYNTAX_OK)
