@@ -25,8 +25,10 @@ typedef struct s_token
 t_token	*lexer(char *input);
 void	add_token(t_token **tokens, t_token_type type, char *value, int quoted);
 void	handle_redirection(t_token **tokens, char **input);
-char	*extract_quoted_string(char **input);
+void	extract_double_quoted_string(t_token **tokens, char **input);
+char	*extract_single_quoted_string(char **input);
 char	*extract_word(char **input);
+char	*extract_var(char **input);
 
 int		ft_isspace(char c);
 void	skip_whitespace(char **input);
