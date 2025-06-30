@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 19:51:17 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/06/30 00:41:35 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/06/30 21:36:56 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	validate_syntax(t_token *tokens)
 			return (ERR_PIPE_DOUBLE);
 		else if ((tokens->type == REDIR_IN || tokens->type == REDIR_OUT
 			|| tokens->type == APPEND || tokens->type == HEREDOC)
-			&& tokens->next == NULL)
+			&& (tokens->next == NULL || tokens->next->type == PIPE))
 			return (ERR_REDIR_EOF);
 		tokens = tokens->next;
 	}
