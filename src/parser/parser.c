@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 15:13:23 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/07/03 02:32:37 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/07/03 02:37:17 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ int	process_token(t_token **c_tkn, t_cmd **c_cmd, t_cmd **cmds)
 	}
 	return (1);
 }
-
 
 void add_arg_to_cmd(t_cmd *current_cmd, char *token_value)
 {
