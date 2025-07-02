@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/07/03 02:25:30 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/07/03 02:29:04 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,43 @@ int main(int argc, char *argv[], char *env[])
 	}
 	return (0);
 }
+#include <stdio.h>
+
+void	print_commands(t_cmd *commands)
+{
+	int		i;
+	t_cmd	*cmd = commands;
+
+	while (cmd)
+	{
+		printf("Command:\n");
+		if (cmd->argv)
+		{
+			for (i = 0; cmd->argv[i]; i++)
+				printf("  argv[%d]: %s\n", i, cmd->argv[i]);
+		}
+		else
+			printf("  (No arguments)\n");
+
+		t_redir *redir = cmd->redir;
+		while (redir)
+		{
+			char *type_str = NULL;
+			if (redir->type == REDIR_IN)
+				type_str = "REDIR_IN";
+			else if (redir->type == REDIR_OUT)
+				type_str = "REDIR_OUT";
+			else if (redir->type == APPEND)
+				type_str = "APPEND";
+			else if (redir->type == HEREDOC)
+				type_str = "HEREDOC";
+
+			printf("  redir: %s -> %s\n", type_str, redir->file);
+			redir = redir->next;
+		}
+		cmd = cmd->next;
+	}
+}
 
 void	process(char *input)
 {
@@ -52,7 +89,7 @@ void	process(char *input)
 		return ;
 	}
 	command_list = parser(token_list);
-
+	print_commands(command_list);
 	// executor(command_list);
 	free_tokens(token_list);
 }

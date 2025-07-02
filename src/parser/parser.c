@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 15:13:23 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/07/03 02:21:53 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/07/03 02:32:37 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,26 +57,24 @@ int	process_token(t_token **c_tkn, t_cmd **c_cmd, t_cmd **cmds)
 
 void add_arg_to_cmd(t_cmd *current_cmd, char *token_value)
 {
-    int argc;
+    int argc = 0;
     char **new_argv;
 
     if (!token_value)
-        return ;
-    argc = -1;
+        return;
     if (current_cmd->argv)
-        while (current_cmd->argv[++argc])
-            ;
+        while (current_cmd->argv[argc])
+            argc++;
     new_argv = malloc(sizeof(char *) * (argc + 2));
     if (!new_argv)
-        return ;
-    argc = -1;
-    while (current_cmd->argv && current_cmd->argv[++argc])
-        new_argv[argc] = current_cmd->argv[argc];
+        return;
+    for (int i = 0; i < argc; i++)
+        new_argv[i] = current_cmd->argv[i];
     new_argv[argc] = ft_strdup(token_value);
     if (!new_argv[argc])
     {
         free(new_argv);
-        return ;
+        return;
     }
     new_argv[argc + 1] = NULL;
     if (current_cmd->argv)
