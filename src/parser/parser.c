@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 15:13:23 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/07/03 02:37:17 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/07/03 02:43:25 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int	process_token(t_token **c_tkn, t_cmd **c_cmd, t_cmd **cmds)
 
 void add_arg_to_cmd(t_cmd *current_cmd, char *token_value)
 {
+    int i;
     int argc = 0;
     char **new_argv;
 
@@ -67,7 +68,8 @@ void add_arg_to_cmd(t_cmd *current_cmd, char *token_value)
     new_argv = malloc(sizeof(char *) * (argc + 2));
     if (!new_argv)
         return;
-    for (int i = 0; i < argc; i++)
+    i = -1;
+    while (++i < argc)
         new_argv[i] = current_cmd->argv[i];
     new_argv[argc] = ft_strdup(token_value);
     if (!new_argv[argc])
