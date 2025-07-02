@@ -18,6 +18,7 @@ SRCS = \
 	src/utils/error.c \
 	src/utils/extract.c \
 	src/utils/tools.c \
+	src/utils/free.c \
 	src/lexer/lexer.c \
 	src/parser/parser.c \
 	# src/executor/executor.c \

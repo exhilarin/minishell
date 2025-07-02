@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/07/01 02:10:25 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/07/03 02:25:30 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int main(int argc, char *argv[], char *env[])
 void	process(char *input)
 {
 	t_token *token_list;
-	// t_cmd	*command_list;
+	t_cmd	*command_list;
 	int		syntax_err;
 
 	if (is_invalid_char(input))
@@ -51,7 +51,8 @@ void	process(char *input)
 		free_tokens(token_list);
 		return ;
 	}
-	// command_list = parser(token_list);
+	command_list = parser(token_list);
+
 	// executor(command_list);
 	free_tokens(token_list);
 }

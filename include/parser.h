@@ -23,13 +23,17 @@ typedef struct s_cmd
 } t_cmd;
 
 t_cmd	*parser(t_token *tokens);
-int		process_token(t_token **token, t_cmd **curr, t_cmd **cmds, t_token *tokens);
+int	process_token(t_token **c_tkn, t_cmd **c_cmd, t_cmd **cmds);
 t_cmd	*init_cmd(void);
+void 	add_arg_to_cmd(t_cmd *current_cmd, char *token_value);
+void	add_redir_to_cmd(t_cmd *cmd, int type, char *file);
+void	add_cmd_to_lst(t_cmd **cmds, t_cmd *new_cmd);
 
 int		is_invalid_char(char *input);
 int		validate_syntax(t_token	*tokens);
 void	syntax_error(int err_code);
 void	free_tokens(t_token *tokens);
 void	free_cmd(t_cmd  *commands);
+void	free_redir(t_redir *redir);
 
 #endif
