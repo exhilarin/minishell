@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/07/03 02:29:04 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/07/03 02:39:17 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,7 @@ int main(int argc, char *argv[], char *env[])
 	}
 	return (0);
 }
-#include <stdio.h>
-
+//TODO: Delete this function after the test.
 void	print_commands(t_cmd *commands)
 {
 	int		i;
