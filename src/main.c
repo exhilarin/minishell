@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/07/03 02:39:17 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/07/29 19:21:44 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "minishell.h"
 
 int main(int argc, char *argv[], char *env[])
 {
@@ -30,7 +30,6 @@ int main(int argc, char *argv[], char *env[])
 		if (*input)
 			add_history(input);
 		process(input);
-		free(input);
 	}
 	return (0);
 }
@@ -91,6 +90,8 @@ void	process(char *input)
 	print_commands(command_list);
 	// executor(command_list);
 	free_tokens(token_list);
+	free_cmd(command_list);
+	free(input);
 }
 
 char	*prompt(void)

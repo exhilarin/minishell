@@ -16,5 +16,4 @@ char		*prompt(void);
 void        process(char *input);
 int			has_unclosed_quotes(const char *input);
 
-
 #endif
