@@ -26,7 +26,7 @@ char	*ft_strchr(const char *s, int c);
 char	*ft_strdup(const char *s1);
 size_t	ft_strlcpy(char *dst, char *src, size_t l);
 size_t	ft_strlen(const char *str);
-int		args[0] == "echo"ft_strncmp(const char *s1, const char *s2, size_t n);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
 char	*ft_strnstr(const char *str, const char *to_find, size_t len);
 char	*ft_strrchr(const char *s, int c);
 int		ft_tolower(int c);

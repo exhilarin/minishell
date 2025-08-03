@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/07/29 19:21:44 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/03 01:13:12 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int main(int argc, char *argv[], char *env[])
 	while (1)
 	{
 		input = prompt();
+		if (ft_strncmp(input, "echo", 4))
+			ft_echo(input);
 		if (!input)
 		{
 			printf("exit\n");

@@ -4,6 +4,7 @@
 # include "lexer.h"
 # include "parser.h"
 # include "executor.h"
+# include "builtins.h"
 # include "../libft/libft.h"
 
 # include <stdio.h>
