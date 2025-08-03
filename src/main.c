@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/03 20:01:51 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/03 20:41:25 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ int	main(int argc, char *argv[], char *env[])
 	while (1)
 	{
 		input = prompt();
-		if (ft_strncmp(input, "echo", 4))
-			ft_echo(input);
 		if (!input)
 		{
 			printf("exit\n");
@@ -54,8 +52,7 @@ void	process(char *input)
 		return ;
 	}
 	command_list = parser(token_list);
-	print_commands(command_list);
-	executor(command_list);
+	// executor(command_list);
 	free_tokens(token_list);
 	free_cmd(command_list);
 	free(input);

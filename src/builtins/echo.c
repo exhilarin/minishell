@@ -6,13 +6,13 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 01:15:50 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/03 20:15:31 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/03 20:38:41 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_echo(char **args)
+int	builtin_echo(char **args)
 {
 	int	i;
 	int	newline;
