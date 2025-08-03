@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 01:15:50 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/03 20:38:41 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/03 21:21:59 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	builtin_echo(char **args)
 
 	i = 0;
 	newline = 1;
-	if (args[1] && !ft_strncmp(args[1], 2, "-n"))
+	if (args[1] && !ft_strncmp(args[1], "-n", 2))
 	{
 		newline = 0;
 		i++;
