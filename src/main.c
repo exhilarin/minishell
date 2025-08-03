@@ -3,21 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/03 01:13:12 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/03 20:01:51 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int main(int argc, char *argv[], char *env[])
+int	main(int argc, char *argv[], char *env[])
 {
+	char	*input;
+
 	(void)argc;
 	(void)argv;
 	(void)env;
-	char *input;
 	while (1)
 	{
 		input = prompt();
@@ -27,7 +28,7 @@ int main(int argc, char *argv[], char *env[])
 		{
 			printf("exit\n");
 			free(input);
-			break;
+			break ;
 		}
 		if (*input)
 			add_history(input);
@@ -35,46 +36,10 @@ int main(int argc, char *argv[], char *env[])
 	}
 	return (0);
 }
-//TODO: Delete this function after the test.
-void	print_commands(t_cmd *commands)
-{
-	int		i;
-	t_cmd	*cmd = commands;
-
-	while (cmd)
-	{
-		printf("Command:\n");
-		if (cmd->argv)
-		{
-			for (i = 0; cmd->argv[i]; i++)
-				printf("  argv[%d]: %s\n", i, cmd->argv[i]);
-		}
-		else
-			printf("  (No arguments)\n");
-
-		t_redir *redir = cmd->redir;
-		while (redir)
-		{
-			char *type_str = NULL;
-			if (redir->type == REDIR_IN)
-				type_str = "REDIR_IN";
-			else if (redir->type == REDIR_OUT)
-				type_str = "REDIR_OUT";
-			else if (redir->type == APPEND)
-				type_str = "APPEND";
-			else if (redir->type == HEREDOC)
-				type_str = "HEREDOC";
-
-			printf("  redir: %s -> %s\n", type_str, redir->file);
-			redir = redir->next;
-		}
-		cmd = cmd->next;
-	}
-}
 
 void	process(char *input)
 {
-	t_token *token_list;
+	t_token	*token_list;
 	t_cmd	*command_list;
 	int		syntax_err;
 
@@ -90,7 +55,7 @@ void	process(char *input)
 	}
 	command_list = parser(token_list);
 	print_commands(command_list);
-	// executor(command_list);
+	executor(command_list);
 	free_tokens(token_list);
 	free_cmd(command_list);
 	free(input);
@@ -103,7 +68,7 @@ char	*prompt(void)
 	char	*temp;
 	char	*joined;
 
-	line  = readline("\001\033[1;36m\002minishell$ \001\033[0m\002");
+	line = readline("\001\033[1;36m\002minishell$ \001\033[0m\002");
 	if (!line)
 		return (NULL);
 	while (has_unclosed_quotes(line))

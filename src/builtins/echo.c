@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 01:15:50 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/03 01:15:53 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/03 20:15:31 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 
 int	ft_echo(char **args)
 {
-	int	i = 0;
-	int	newline = 1;
+	int	i;
+	int	newline;
 
+	i = 0;
+	newline = 1;
 	if (args[1] && !ft_strncmp(args[1], 2, "-n"))
 	{
 		newline = 0;

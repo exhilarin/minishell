@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/03 20:19:13 by iguney            #+#    #+#             */
+/*   Updated: 2025/08/03 20:20:32 by iguney           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef LEXER_H
 # define LEXER_H
 
-typedef enum e_token_type 
+typedef enum e_token_type
 {
 	WORD,
 	PIPE,
@@ -12,15 +24,15 @@ typedef enum e_token_type
 	VAR,
 	QUOTE_SINGLE,
 	QUOTE_DOUBLE
-}   t_token_type;
+}	t_token_type;
 
-typedef struct s_token 
+typedef struct s_token
 {
 	t_token_type	type;
 	char			*value;
-	int 			quoted;
+	int				quoted;
 	struct s_token	*next;
-}   t_token;
+}	t_token;
 
 t_token	*lexer(char *input);
 void	add_token(t_token **tokens, t_token_type type, char *value, int quoted);
@@ -32,6 +44,5 @@ char	*extract_var(char **input);
 
 int		ft_isspace(char c);
 void	skip_whitespace(char **input);
-
 
 #endif

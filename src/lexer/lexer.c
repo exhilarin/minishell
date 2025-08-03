@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 15:42:55 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/07/01 02:23:35 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/03 20:14:04 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token *lexer(char *input)
+t_token	*lexer(char *input)
 {
 	t_token	*tokens;
-	
+
 	tokens = NULL;
 	while (*input)
 	{
@@ -42,15 +42,14 @@ t_token *lexer(char *input)
 
 void	add_token(t_token **tokens, t_token_type type, char *value, int quoted)
 {
-	t_token *new_token;
-	t_token *current;
+	t_token	*new_token;
+	t_token	*current;
 
 	if (!ft_strlen(value))
 		return ;
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
 		return (free(value));
-
 	new_token->type = type;
 	new_token->value = value;
 	new_token->quoted = quoted;

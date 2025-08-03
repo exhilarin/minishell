@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   extract.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 00:14:18 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/07/03 02:17:16 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/03 20:05:13 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*extract_var(char **input)
 char	*extract_single_quoted_string(char **input)
 {
 	char	*start;
-	int 	length;
+	int		length;
 
 	if (**input != '\'')
 		return (NULL);
@@ -52,8 +52,8 @@ char	*extract_single_quoted_string(char **input)
 
 void	extract_double_quoted_string(t_token **tokens, char **input)
 {
-	char *start;
-	int 	length;
+	char	*start;
+	int		length;
 
 	if (**input != '"')
 		return ;
@@ -85,13 +85,13 @@ char	*extract_word(char **input)
 	int		length;
 
 	start = *input;
-	while (**input &&
-		!ft_isspace(**input) &&
-		**input != '|' &&
-		**input != '<' &&
-		**input != '>' &&
-		**input != '\'' &&
-		**input != '"')
+	while (**input
+		&& !ft_isspace(**input)
+		&& **input != '|'
+		&& **input != '<'
+		&& **input != '>'
+		&& **input != '\''
+		&& **input != '"')
 		(*input)++;
 	length = *input - start;
 	return (ft_substr(start, 0, length));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 19:51:17 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/07/03 02:17:05 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/03 20:11:28 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,19 @@ int	validate_syntax(t_token *tokens)
 	{
 		if (tokens->type == PIPE && tokens->next->type == PIPE)
 			return (ERR_PIPE_DOUBLE);
-		else if (tokens->type == PIPE && ((tokens->next->type == REDIR_IN || tokens->next->type == REDIR_OUT
-			|| tokens->next->type == APPEND || tokens->next->type == HEREDOC)))
+		else if (tokens->type == PIPE && ((tokens->next->type == REDIR_IN
+					|| tokens->next->type == REDIR_OUT
+					|| tokens->next->type == APPEND
+					|| tokens->next->type == HEREDOC)))
 			return (ERR_REDIR_EOF);
 		else if ((tokens->type == REDIR_IN || tokens->type == REDIR_OUT
-			|| tokens->type == APPEND || tokens->type == HEREDOC)
+				|| tokens->type == APPEND || tokens->type == HEREDOC)
 			&& (tokens->next == NULL || tokens->next->type == PIPE))
 			return (ERR_REDIR_EOF);
 		tokens = tokens->next;
 	}
 	if (tokens && (tokens->type == REDIR_IN || tokens->type == REDIR_OUT
-		|| tokens->type == APPEND || tokens->type == HEREDOC))
+			|| tokens->type == APPEND || tokens->type == HEREDOC))
 		return (ERR_REDIR_EOF);
 	if (tokens && tokens->type == PIPE)
 		return (ERR_PIPE_EOF);
