@@ -16,11 +16,11 @@ LIBFT       = $(LIBFT_DIR)/libft.a
 SRCS = \
 	src/main.c \
 	src/utils/error.c \
-	src/utils/extract.c \
 	src/utils/tools.c \
 	src/utils/free.c \
 	src/lexer/lexer.c \
 	src/parser/parser.c \
+	src/parser/extract.c \
 	src/executor/executor.c \
 	src/executor/builtin.c \
 	src/executor/heredoc.c \
