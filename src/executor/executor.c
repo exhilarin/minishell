@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/04 07:13:37 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/04 08:11:13 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,12 @@ int	executor(t_cmd *cmds)
 	pid_t	pid;
 
 	in_fd = 0;
+	if (cmds && !cmds->next && is_builtin(cmds)
+		&& builtin_needs_parent(cmds->argv[0]))
+		return (exec_builtin_parent(cmds));
 	while (cmds)
 	{
+		// is_redir_heredoc(cmds->redir, cmds);
 		if (cmds->next && pipe(fd) == -1)
 			return (perror("pipe"), 1);
 		pid = fork();
@@ -28,17 +32,10 @@ int	executor(t_cmd *cmds)
 			return (perror("fork"), 1);
 		if (pid == 0)
 			child_process(cmds, in_fd, fd);
-		if (in_fd != 0)
-			close(in_fd);
-		if (cmds->next)
-		{
-			close(fd[1]);
-			in_fd = fd[0];
-		}
-		waitpid(pid, NULL, 0);
+		parent_process(cmds, in_fd, fd, pid);
 		cmds = cmds->next;
 	}
-	return (1);
+	return (0);
 }
 
 void	child_process(t_cmd *cmd, int in_fd, int fd[2])
@@ -56,45 +53,17 @@ void	child_process(t_cmd *cmd, int in_fd, int fd[2])
 		exit(0);
 	if (is_builtin(cmd))
 		exec_builtin(cmd);
-	// exec_command(cmd); 
+	// exec_command(cmd);
 }
 
-int	is_builtin(t_cmd *cmd)
+void	parent_process(t_cmd *cmds, int in_fd, int *fd, pid_t pid)
 {
-	if (!cmd || !cmd->argv || !cmd->argv[0])
-		return (0);
-	if (ft_strncmp(cmd->argv[0], "cd", 2))
-		return (1);
-	if (ft_strncmp(cmd->argv[0], "echo", 4))
-		return (1);
-	if (ft_strncmp(cmd->argv[0], "pwd", 3))
-		return (1);
-	if (ft_strncmp(cmd->argv[0], "export", 6))
-		return (1);
-	if (ft_strncmp(cmd->argv[0], "unset", 5))
-		return (1);
-	if (ft_strncmp(cmd->argv[0], "env", 3))
-		return (1);
-	if (ft_strncmp(cmd->argv[0], "exit", 4))
-		return (1);
-	return (0);
-}
-
-int	exec_builtin(t_cmd *cmd)
-{
-	// if (ft_strcmp(cmd->argv[0], "cd"))
-	// 	return (builtin_cd(cmd));
-	if (ft_strncmp(cmd->argv[0], "echo", 4))
-		return (builtin_echo(cmd->argv));
-	// if (ft_strcmp(cmd->argv[0], "pwd"))
-	// 	return (builtin_pwd(cmd));
-	// if (ft_strcmp(cmd->argv[0], "export"))
-	// 	return (builtin_export(cmd));
-	// if (ft_strcmp(cmd->argv[0], "unset"))
-	// 	return (builtin_unset(cmd));
-	// if (ft_strcmp(cmd->argv[0], "env"))
-	// 	return (builtin_env(cmd));
-	// if (ft_strcmp(cmd->argv[0], "exit"))
-	// 	return (builtin_exit(cmd));
-	return (1);
+	if (in_fd != 0)
+		close(in_fd);
+	if (cmds->next)
+	{
+		close(fd[1]);
+		in_fd = fd[0];
+	}
+	waitpid(pid, NULL, 0);
 }
