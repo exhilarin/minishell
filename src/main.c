@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/03 23:43:11 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/04 07:11:54 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,7 @@ void	process(char *input)
 		return ;
 	}
 	command_list = parser(token_list);
-	(void)command_list;
-	// executor(command_list);
+	executor(command_list);
 	free_tokens(token_list);
 	free_cmd(command_list);
 	free(input);

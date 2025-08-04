@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/03 21:26:26 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/04 07:13:37 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	executor(t_cmd *cmds)
 		waitpid(pid, NULL, 0);
 		cmds = cmds->next;
 	}
-	return (0);
+	return (1);
 }
 
 void	child_process(t_cmd *cmd, int in_fd, int fd[2])
