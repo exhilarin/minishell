@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 19:51:17 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/03 20:11:28 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/05 03:56:57 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,27 @@ int	validate_syntax(t_token *tokens)
 void	syntax_error(int err_code)
 {
 	if (err_code == ERR_INVALID)
-		fprintf(stderr, "syntax error: invalid character\n");
+		perror("syntax error: invalid character\n");
 	if (err_code == ERR_PIPE_START)
-		fprintf(stderr, "syntax error: unexpected pipe at start\n");
+		perror("syntax error: unexpected pipe at start\n");
 	else if (err_code == ERR_PIPE_DOUBLE)
-		fprintf(stderr, "syntax error: double pipe `||`\n");
+		perror("syntax error: double pipe `||`\n");
 	else if (err_code == ERR_REDIR_EOF)
-		fprintf(stderr, "syntax error: redirection without target\n");
+		perror("syntax error: redirection without target\n");
 	else if (err_code == ERR_PIPE_EOF)
-		fprintf(stderr, "syntax error: unexpected token\n");
+		perror("syntax error: unexpected token\n");
+}
+
+int	shutdown_shell(t_shell *shell)
+{
+	if (!shell)
+		return (shell->exit_status);
+	if (shell->token_list)
+		free_tokens(shell->token_list);
+	if (shell->command_list)
+		free_cmd(shell->command_list);
+	if (shell->input)
+		free(shell->input);
+	rl_clear_history();
+	return (shell->exit_status);
 }

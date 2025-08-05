@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/04 08:17:21 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/05 03:38:10 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,48 +14,51 @@
 
 int	main(int argc, char *argv[], char *env[])
 {
-	char	*input;
+	t_shell	shell;
 
 	(void)argc;
 	(void)argv;
 	(void)env;
+	shell.exit_status = 0;
 	while (1)
 	{
-		input = prompt();
-		if (!input)
+		shell.input = prompt();
+		if (!shell.input)
 		{
 			printf("exit\n");
-			free(input);
+			free(shell.input);
 			break ;
 		}
-		if (*input)
-			add_history(input);
-		process(input);
+		if (*shell.input)
+			add_history(shell.input);
+		process(&shell);
 	}
 	return (0);
 }
 
-void	process(char *input)
+void	process(t_shell *shell)
 {
-	t_token	*token_list;
-	t_cmd	*command_list;
 	int		syntax_err;
 
-	if (is_invalid_char(input))
+	if (is_invalid_char(shell->input))
+	{
+		shell->exit_status = 1;
 		return (syntax_error(ERR_INVALID));
-	token_list = lexer(input);
-	syntax_err = validate_syntax(token_list);
+	}
+	shell->token_list = lexer(shell->input);
+	syntax_err = validate_syntax(shell->token_list);
 	if (syntax_err != SYNTAX_OK)
 	{
 		syntax_error(syntax_err);
-		free_tokens(token_list);
+		shell->exit_status = 1;
+		free_tokens(shell->token_list);
 		return ;
 	}
-	command_list = parser(token_list);
-	executor(command_list);
-	free_tokens(token_list);
-	free_cmd(command_list);
-	free(input);
+	shell->command_list = parser(shell->token_list);
+	executor(shell->command_list);
+	free_tokens(shell->token_list);
+	free_cmd(shell->command_list);
+	free(shell->input);
 }
 
 char	*prompt(void)

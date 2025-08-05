@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:03 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/04 08:05:47 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/05 03:57:31 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,17 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-char		*prompt(void);
-void		process(char *input);
-int			has_unclosed_quotes(const char *input);
+typedef struct s_shell
+{
+	char	*input;
+	t_token	*token_list;
+	t_cmd	*command_list;
+	int		exit_status;
+}	t_shell;
+
+char	*prompt(void);
+void	process(t_shell *shell);
+int		shutdown_shell(t_shell *shell);
+int		has_unclosed_quotes(const char *input);
 
 #endif
