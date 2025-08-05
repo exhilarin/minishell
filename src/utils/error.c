@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 19:51:17 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/05 03:56:57 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/05 20:33:39 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,15 +53,15 @@ int	validate_syntax(t_token *tokens)
 void	syntax_error(int err_code)
 {
 	if (err_code == ERR_INVALID)
-		perror("syntax error: invalid character\n");
+		printf("syntax error: invalid character\n");
 	if (err_code == ERR_PIPE_START)
-		perror("syntax error: unexpected pipe at start\n");
+		printf("syntax error: unexpected pipe at start\n");
 	else if (err_code == ERR_PIPE_DOUBLE)
-		perror("syntax error: double pipe `||`\n");
+		printf("syntax error: double pipe `||`\n");
 	else if (err_code == ERR_REDIR_EOF)
-		perror("syntax error: redirection without target\n");
+		printf("syntax error: redirection without target\n");
 	else if (err_code == ERR_PIPE_EOF)
-		perror("syntax error: unexpected token\n");
+		printf("syntax error: unexpected token\n");
 }
 
 int	shutdown_shell(t_shell *shell)
@@ -74,6 +74,5 @@ int	shutdown_shell(t_shell *shell)
 		free_cmd(shell->command_list);
 	if (shell->input)
 		free(shell->input);
-	rl_clear_history();
 	return (shell->exit_status);
 }

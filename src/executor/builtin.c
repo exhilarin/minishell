@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 04:36:45 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/04 08:09:47 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/05 20:27:42 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 int	is_builtin(t_cmd *cmd)
 {
-	if (!cmd || !cmd->argv || !cmd->argv[0])
+	if (!cmd || !cmd->argv
+		|| !cmd->argv[0])
 		return (0);
 	if (ft_strncmp(cmd->argv[0], "cd", 2))
 		return (1);
@@ -33,22 +34,22 @@ int	is_builtin(t_cmd *cmd)
 	return (0);
 }
 
-int	exec_builtin(t_cmd *cmd)
+int	exec_builtin(t_shell *shell)
 {
 	// if (ft_strcmp(cmd->argv[0], "cd"))
 	// 	return (builtin_cd(cmd));
-	if (ft_strncmp(cmd->argv[0], "echo", 4))
-		return (builtin_echo(cmd->argv));
-	// if (ft_strcmp(cmd->argv[0], "pwd"))
+	if (ft_strncmp(shell->command_list->argv[0], "echo", 4))
+		return (builtin_echo(shell->command_list->argv));
+	// if (ft_strncmp(cmd->argv[0], "pwd", 3))
 	// 	return (builtin_pwd(cmd));
-	// if (ft_strcmp(cmd->argv[0], "export"))
+	// if (ft_strncmp(cmd->argv[0], "export", 6))
 	// 	return (builtin_export(cmd));
-	// if (ft_strcmp(cmd->argv[0], "unset"))
+	// if (ft_strncmp(cmd->argv[0], "unset", 5))
 	// 	return (builtin_unset(cmd));
-	// if (ft_strcmp(cmd->argv[0], "env"))
+	// if (ft_strncmp(cmd->argv[0], "env", 3))
 	// 	return (builtin_env(cmd));
-	// if (ft_strcmp(cmd->argv[0], "exit"))
-	// 	return (builtin_exit(cmd));
+	if (ft_strncmp(shell->command_list->argv[0], "exit", 4))
+		return (builtin_exit(shell->command_list->argv, shell));
 	return (1);
 }
 

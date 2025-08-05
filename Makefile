@@ -23,9 +23,9 @@ SRCS = \
 	src/parser/extract.c \
 	src/executor/executor.c \
 	src/executor/builtin.c \
-	src/executor/heredoc.c \
 	src/builtins/echo.c \
 	src/builtins/exit.c \
+	# src/executor/heredoc.c \
 	# src/builtins/cd.c \
 	# src/builtins/env.c \
 	# src/builtins/export.c \
