@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/05 20:33:31 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/07 05:00:37 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,58 +18,23 @@ int	main(int argc, char *argv[], char *env[])
 
 	(void)argc;
 	(void)argv;
-	(void)env;
+	
 	shell.exit_status = 0;
+	init_env(&shell, env);
 	while (1)
 	{
 		shell.input = prompt();
 		if (!shell.input)
 		{
 			printf("exit\n");
-			free(shell.input);
+			shutdown_shell(&shell);
 			break ;
 		}
 		if (*shell.input)
 			add_history(shell.input);
 		process(&shell);
 	}
-	return (0);
-}
-
-void	print_commands(t_cmd *commands)
-{
-	int		i;
-	t_cmd	*cmd = commands;
-
-	while (cmd)
-	{
-		printf("Command:\n");
-		if (cmd->argv)
-		{
-			for (i = 0; cmd->argv[i]; i++)
-				printf("  argv[%d]: %s\n", i, cmd->argv[i]);
-		}
-		else
-			printf("  (No arguments)\n");
-
-		t_redir *redir = cmd->redir;
-		while (redir)
-		{
-			char *type_str = NULL;
-			if (redir->type == REDIR_IN)
-				type_str = "REDIR_IN";
-			else if (redir->type == REDIR_OUT)
-				type_str = "REDIR_OUT";
-			else if (redir->type == APPEND)
-				type_str = "APPEND";
-			else if (redir->type == HEREDOC)
-				type_str = "HEREDOC";
-
-			printf("  redir: %s -> %s\n", type_str, redir->file);
-			redir = redir->next;
-		}
-		cmd = cmd->next;
-	}
+	return (shell.exit_status);
 }
 
 void	process(t_shell *shell)
@@ -91,9 +56,8 @@ void	process(t_shell *shell)
 		return ;
 	}
 	shell->command_list = parser(shell->token_list);
-	print_commands(shell->command_list);
-	executor(shell, shell->command_list);
-	shutdown_shell(shell);
+	executor(shell);
+	// shutdown_shell(shell);
 }
 
 char	*prompt(void)

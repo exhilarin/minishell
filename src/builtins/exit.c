@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 00:33:28 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/05 03:53:09 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/07 00:41:06 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,6 @@ int	builtin_exit(char **args, t_shell *shell)
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);
 		return (1);
 	}
-	shell->exit_status = ft_atoi(args[1]) % 256;
+	shell->exit_status = (unsigned char)ft_atoi(args[1]) % 256;
 	exit(shutdown_shell(shell));
 }

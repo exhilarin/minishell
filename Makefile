@@ -25,9 +25,10 @@ SRCS = \
 	src/executor/builtin.c \
 	src/builtins/echo.c \
 	src/builtins/exit.c \
+	src/environment/env.c \
+	src/builtins/env.c \
 	# src/executor/heredoc.c \
 	# src/builtins/cd.c \
-	# src/builtins/env.c \
 	# src/builtins/export.c \
 	# src/builtins/pwd.c \
 	# src/builtins/unset.c

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:13 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/03 20:20:32 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/07 00:37:22 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ char	*extract_word(char **input);
 char	*extract_var(char **input);
 
 int		ft_isspace(char c);
+int		ft_strcmp(char *s1, char *s2);
 void	skip_whitespace(char **input);
 
 #endif
