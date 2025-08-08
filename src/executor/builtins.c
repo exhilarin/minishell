@@ -6,7 +6,11 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 04:36:45 by mugenan           #+#    #+#             */
+<<<<<<< Updated upstream:src/executor/builtins.c
 /*   Updated: 2025/08/04 07:19:46 by mugenan          ###   ########.fr       */
+=======
+/*   Updated: 2025/08/08 19:06:00 by mugenan          ###   ########.fr       */
+>>>>>>> Stashed changes:src/executor/builtin.c
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +58,16 @@ int	exec_builtin(t_cmd *cmd)
 
 int	builtin_needs_parent(char *name)
 {
+<<<<<<< Updated upstream:src/executor/builtins.c
 	return (!ft_strncmp(name, "cd", 2)
 		|| !ft_strncmp(name, "export", 6)
 		|| !ft_strncmp(name, "unset", 5)
 		|| !ft_strncmp(name, "exit", 4));
 }
+=======
+	return (ft_strncmp(name, "cd", 2)
+		|| ft_strncmp(name, "export", 6)
+		|| ft_strncmp(name, "unset", 5)
+		|| ft_strncmp(name, "exit", 4));
+}
+>>>>>>> Stashed changes:src/executor/builtin.c

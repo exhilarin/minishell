@@ -3,16 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 11:45:10 by iguney            #+#    #+#             */
-/*   Updated: 2024/11/01 18:16:59 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/08 21:25:24 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdio.h>
 
-static int	ft_countword(char const *s, char c)
+static void	ft_free(char **arr, int i)
+{
+	while (i >= 0)
+	{
+		free(arr[i]);
+		i--;
+	}
+	free(arr);
+}
+
+static int	ft_wordcount(char const *s, char c)
 {
 	int	a;
 
@@ -29,16 +40,6 @@ static int	ft_countword(char const *s, char c)
 	return (a);
 }
 
-static void	ft_dispose_arr(char **arr, int i)
-{
-	while (i >= 0)
-	{
-		free(arr[i]);
-		i--;
-	}
-	free(arr);
-}
-
 char	**ft_split(char const *s, char c)
 {
 	char	**final;
@@ -46,12 +47,12 @@ char	**ft_split(char const *s, char c)
 	int		j;
 	int		len;
 
-	len = ft_countword(s, c);
+	len = ft_wordcount(s, c);
 	final = malloc(sizeof(char *) * (len + 1));
 	if (!final)
 		return (NULL);
-	i = -1;
-	while (++i < len)
+	i = 0;
+	while (i < len)
 	{
 		while (*s == c)
 			s++;
@@ -60,8 +61,9 @@ char	**ft_split(char const *s, char c)
 			j++;
 		final[i] = ft_substr(s, 0, j);
 		if (!final[i])
-			return (ft_dispose_arr(final, i), NULL);
+			return (ft_free(final, i), NULL);
 		s += j;
+		i++;
 	}
 	final[i] = NULL;
 	return (final);
