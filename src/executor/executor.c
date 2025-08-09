@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fxc <fxc@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/07 05:06:42 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/09 14:02:21 by fxc              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	executor(t_shell *shell)
 	int		fd[2];
 	pid_t	pid;
 
-	in_fd = 0;
+	in_fd = -1;
 	if (shell->command_list && !shell->command_list->next
 		&& builtin_needs_parent(shell->command_list->argv[0]))
 		return (exec_builtin(shell));
@@ -39,7 +39,7 @@ int	executor(t_shell *shell)
 
 void	child_process(t_shell *shell, int in_fd, int fd[2])
 {
-	if (in_fd != 0)
+	if (in_fd != -1)
 		dup2(in_fd, STDIN_FILENO);
 	if (shell->command_list->next)
 	{
@@ -60,7 +60,7 @@ void	child_process(t_shell *shell, int in_fd, int fd[2])
 
 void	parent_process(t_cmd *cmds, int *in_fd, int *fd, pid_t pid)
 {
-	if (*in_fd != 0)
+	if (*in_fd != -1)
 		close(*in_fd);
 	if (cmds->next)
 	{
@@ -72,22 +72,20 @@ void	parent_process(t_cmd *cmds, int *in_fd, int *fd, pid_t pid)
 
 void	exec_command(t_shell *shell)
 {
-	printf("Trying to execute command: %s\n", shell->command_list->argv[0]);
-	printf("Resolved path: %s\n", shell->exec->cmd_path ? shell->exec->cmd_path : "NULL");
-
+	char *cmd_path;
+	
+	shell->exec = NULL;
 	if (!shell->command_list->argv[0])
 		exit(shutdown_shell(shell));
-	shell->exec->cmd_path = get_cmd_path(shell);
-	if (!shell->exec->cmd_path)
+	cmd_path = get_cmd_path(shell);
+	if (!cmd_path)
 	{
 		ft_putstr_fd("minishell: command not found: ", 2);
 		ft_putendl_fd(shell->command_list->argv[0], 2);
 		exit(127);
 	}
-	if (!shell->exec->envp)
-		shell->exec->envp = env_list_to_array(shell->env);
-	if (execve(shell->exec->cmd_path,
-			shell->command_list->argv, shell->exec->envp) == -1)
+	if (execve(cmd_path,
+			shell->command_list->argv, env_list_to_array(shell->env)) == -1)
 	{
 		perror("minishell: execve");
 		exit(126);
@@ -98,21 +96,20 @@ char	*get_cmd_path(t_shell *shell)
 {
 	char	*tmp;
 	char	*full;
-	char	*cmd; 
+	char	*cmd;
+	char 	**path;
 	int		i;
 	
 	cmd = shell->command_list->argv[0];
 	if (ft_strchr(cmd, '/') && access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
-	if (!shell->exec->paths)
-		shell->exec->paths = ft_split(
-			get_env_value(shell->env, "PATH"), ':');
-	if (!shell->exec->paths)
+	path = ft_split(get_env_value(shell->env, "PATH"), ':'); //leak condition!
+	if (!path)
 		return (NULL);
 	i = -1;
-	while (shell->exec->paths[++i])
+	while (path[++i])
 	{
-		tmp = ft_strjoin(shell->exec->paths[i], "/");
+		tmp = ft_strjoin(path[i], "/");
 		full = ft_strjoin(tmp, cmd);
 		free(tmp);
 		if (access(full, X_OK) == 0)

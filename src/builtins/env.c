@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fxc <fxc@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 23:16:40 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/07 03:19:45 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/09 23:29:26 by fxc              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_env(t_env *env)
+int	builtin_env(t_env *env)
 {
 	while (env)
 	{
@@ -20,6 +20,7 @@ void	print_env(t_env *env)
 			printf("%s=%s\n", env->key, env->value);
 		env = env->next;
 	}
+	return(0);
 }
 
 static t_env	*find_min_env(t_env *env, t_env *last_min)
@@ -39,7 +40,7 @@ static t_env	*find_min_env(t_env *env, t_env *last_min)
 	return (min);
 }
 
-void	print_env_sorted(t_env *env)
+int	builtin_export(t_env *env)
 {
     t_env	*last_min;
     t_env	*min;
@@ -56,4 +57,5 @@ void	print_env_sorted(t_env *env)
         printf("\n");
         last_min = min;
     }
+	return(0);
 }
