@@ -6,7 +6,7 @@
 /*   By: fxc <fxc@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/09 14:02:21 by fxc              ###   ########.fr       */
+/*   Updated: 2025/08/10 15:32:40 by fxc              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,19 +72,17 @@ void	parent_process(t_cmd *cmds, int *in_fd, int *fd, pid_t pid)
 
 void	exec_command(t_shell *shell)
 {
-	char *cmd_path;
-	
-	shell->exec = NULL;
+	shell->exec = init_exec();
 	if (!shell->command_list->argv[0])
 		exit(shutdown_shell(shell));
-	cmd_path = get_cmd_path(shell);
-	if (!cmd_path)
+	shell->exec->cmd_path = get_cmd_path(shell);
+	if (!shell->exec->cmd_path)
 	{
 		ft_putstr_fd("minishell: command not found: ", 2);
 		ft_putendl_fd(shell->command_list->argv[0], 2);
 		exit(127);
 	}
-	if (execve(cmd_path,
+	if (execve(shell->exec->cmd_path,
 			shell->command_list->argv, env_list_to_array(shell->env)) == -1)
 	{
 		perror("minishell: execve");
@@ -97,19 +95,18 @@ char	*get_cmd_path(t_shell *shell)
 	char	*tmp;
 	char	*full;
 	char	*cmd;
-	char 	**path;
 	int		i;
 	
 	cmd = shell->command_list->argv[0];
 	if (ft_strchr(cmd, '/') && access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
-	path = ft_split(get_env_value(shell->env, "PATH"), ':'); //leak condition!
-	if (!path)
+	shell->exec->paths = ft_split(get_env_value(shell->env, "PATH"), ':'); //leak condition!
+	if (!shell->exec->paths)
 		return (NULL);
 	i = -1;
-	while (path[++i])
+	while (shell->exec->paths[++i])
 	{
-		tmp = ft_strjoin(path[i], "/");
+		tmp = ft_strjoin(shell->exec->paths[i], "/");
 		full = ft_strjoin(tmp, cmd);
 		free(tmp);
 		if (access(full, X_OK) == 0)

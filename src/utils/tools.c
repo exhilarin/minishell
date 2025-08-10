@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tools.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fxc <fxc@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 19:49:15 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/07 00:35:20 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/10 15:35:35 by fxc              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,17 @@ t_cmd	*init_cmd(void)
 	cmd->redir = NULL;
 	cmd->next = NULL;
 	return (cmd);
+}
+
+t_exec	*init_exec()
+{
+	t_exec *exec;
+
+	exec = malloc(sizeof(t_exec));
+	exec->cmd_path = NULL;
+	exec->paths = NULL;
+	exec->envp = NULL;
+	return(exec);
 }
 
 int	ft_isspace(char c)

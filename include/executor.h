@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fxc <fxc@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:20 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/07 04:40:24 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/10 15:19:49 by fxc              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct s_exec
 	char	**envp;
 }	t_exec;
 
+t_exec	*init_exec();
 void    child_process(t_shell *shell, int in_fd, int fd[2]);
 void    parent_process(t_cmd *cmds, int *in_fd, int *fd, pid_t pid);
 
