@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:16:33 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/03 20:18:18 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/10 08:46:58 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,5 @@ void	add_cmd_to_lst(t_cmd **cmds, t_cmd *new_cmd);
 int		is_invalid_char(char *input);
 int		validate_syntax(t_token	*tokens);
 void	syntax_error(int err_code);
-void	free_tokens(t_token *tokens);
-void	free_cmd(t_cmd	*commands);
-void	free_redir(t_redir *redir);
 
 #endif

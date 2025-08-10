@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 19:51:17 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/05 20:33:39 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/10 18:53:18 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,19 @@ void	syntax_error(int err_code)
 
 int	shutdown_shell(t_shell *shell)
 {
+	int	status;
+
 	if (!shell)
-		return (shell->exit_status);
-	if (shell->token_list)
-		free_tokens(shell->token_list);
-	if (shell->command_list)
-		free_cmd(shell->command_list);
-	if (shell->input)
-		free(shell->input);
-	return (shell->exit_status);
+		return (1);
+	status = shell->exit_status;
+	free_all(shell);
+	if (shell->env)
+	{
+		free_env(shell->env);
+		shell->env = NULL;
+	}
+	rl_clear_history();
+	shell = NULL;
+	return (status);
 }
+

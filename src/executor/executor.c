@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fxc <fxc@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/10 15:32:40 by fxc              ###   ########.fr       */
+/*   Updated: 2025/08/10 23:25:23 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,10 @@ int	executor(t_shell *shell)
 	pid_t	pid;
 
 	in_fd = -1;
+	if (!shell->command_list->argv)
+		return(free_all(shell));
 	if (shell->command_list && !shell->command_list->next
-		&& builtin_needs_parent(shell->command_list->argv[0]))
+		 && builtin_needs_parent(shell->command_list->argv[0]))
 		return (exec_builtin(shell));
 	while (shell->command_list)
 	{
@@ -80,13 +82,16 @@ void	exec_command(t_shell *shell)
 	{
 		ft_putstr_fd("minishell: command not found: ", 2);
 		ft_putendl_fd(shell->command_list->argv[0], 2);
-		exit(127);
+		shell->exit_status = 127;
+		exit(shutdown_shell(shell));
 	}
 	if (execve(shell->exec->cmd_path,
 			shell->command_list->argv, env_list_to_array(shell->env)) == -1)
 	{
 		perror("minishell: execve");
-		exit(126);
+		shell->exit_status = 126;
+		exit(shutdown_shell(shell));
+
 	}
 }
 

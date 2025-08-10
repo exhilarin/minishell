@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/07 05:00:37 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/10 23:15:02 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ int	main(int argc, char *argv[], char *env[])
 
 	(void)argc;
 	(void)argv;
-	
-	shell.exit_status = 0;
+	init_shell(&shell);
 	init_env(&shell, env);
 	while (1)
 	{
@@ -27,14 +26,21 @@ int	main(int argc, char *argv[], char *env[])
 		if (!shell.input)
 		{
 			printf("exit\n");
-			shutdown_shell(&shell);
-			break ;
+			return (shutdown_shell(&shell));
 		}
 		if (*shell.input)
 			add_history(shell.input);
 		process(&shell);
 	}
-	return (shell.exit_status);
+}
+
+void	init_shell(t_shell *shell)
+{
+	shell->exit_status = 0;
+	shell->token_list = NULL;
+	shell->command_list = NULL;
+	shell->env = NULL;
+	shell->exec = NULL;
 }
 
 void	process(t_shell *shell)
@@ -43,8 +49,10 @@ void	process(t_shell *shell)
 
 	if (is_invalid_char(shell->input))
 	{
+		syntax_error(ERR_INVALID);
 		shell->exit_status = 1;
-		return (syntax_error(ERR_INVALID));
+		free_all(shell);
+		return ;
 	}
 	shell->token_list = lexer(shell->input);
 	syntax_err = validate_syntax(shell->token_list);
@@ -52,12 +60,13 @@ void	process(t_shell *shell)
 	{
 		syntax_error(syntax_err);
 		shell->exit_status = 1;
-		free_tokens(shell->token_list);
+		free_all(shell);
 		return ;
 	}
 	shell->command_list = parser(shell->token_list);
+	// var_expand(shell);
 	executor(shell);
-	// shutdown_shell(shell);
+	free_all(shell);
 }
 
 char	*prompt(void)

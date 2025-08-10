@@ -6,11 +6,34 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 02:16:45 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/03 20:13:20 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/10 23:18:13 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	free_all(t_shell *shell)
+{
+	if (!shell)
+		return (1);
+	if (shell->input)
+	{
+		free(shell->input);
+		shell->input = NULL;
+	}
+	if (shell->token_list)
+	{
+		free_tokens(shell->token_list);
+		shell->token_list = NULL;
+	}
+	if (shell->command_list)
+	{
+		free_cmd(shell->command_list);
+		shell->command_list = NULL;
+	}
+	return (0);
+}
+
 
 void	free_tokens(t_token *tokens)
 {
@@ -64,3 +87,20 @@ void	free_redir(t_redir *redir)
 		redir = tmp;
 	}
 }
+
+void	free_env(t_env *env)
+{
+	t_env	*tmp;
+
+	while (env)
+	{
+		tmp = env->next;
+		free(env->env_line);
+		free(env->key);
+		free(env->value);
+		free(env->is_exported);
+		free(env);
+		env = tmp;
+	}
+}
+

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fxc <fxc@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:24 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/09 23:30:50 by fxc              ###   ########.fr       */
+/*   Updated: 2025/08/10 08:46:47 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
-int	builtin_echo(char **args);
-int	builtin_exit(char **args, t_shell *shell);
+int		builtin_echo(char **args);
+int		builtin_exit(char **args, t_shell *shell);
 
 int		builtin_env(t_env *env);
 int		builtin_export(t_env *env);
