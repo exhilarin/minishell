@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 00:14:18 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/10 23:32:06 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/11 00:37:12 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,4 +95,24 @@ char	*extract_word(char **input)
 		(*input)++;
 	length = *input - start;
 	return (ft_substr(start, 0, length));
+}
+
+char *append_quoted_part(char **input, char *result, char quote)
+{
+	char	*tmp;
+	char	*part;
+	char	*start;
+
+	(*input)++;
+	start = *input;
+	while (**input && **input != quote)
+		(*input)++;
+	if (**input == '\0')
+		return (free(result), NULL);
+	part = ft_substr(start, 0, *input - start);
+	tmp = ft_strjoin(result, part);
+	free(result);
+	free(part);
+	(*input)++;
+	return (tmp);
 }

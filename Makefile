@@ -19,8 +19,8 @@ SRCS = \
 	src/utils/tools.c \
 	src/utils/free.c \
 	src/lexer/lexer.c \
+	src/lexer/extract.c \
 	src/parser/parser.c \
-	src/parser/extract.c \
 	src/executor/executor.c \
 	src/executor/builtin.c \
 	src/builtins/echo.c \

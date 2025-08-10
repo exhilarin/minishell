@@ -6,11 +6,54 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 15:42:55 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/03 20:14:04 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/11 00:36:25 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static char *extract_word_with_quotes(char **input)
+{
+	char    *result;
+	char    *tmp;
+	char    c[2];
+
+	result = ft_strdup("");
+	while (**input && !ft_isspace(**input)
+		&& **input != '|' && **input != '<' && **input != '>')
+	{
+		if (**input == '\'' || **input == '"')
+		{
+			result = append_quoted_part(input, result, **input);
+			if (!result)
+				return (NULL);
+		}
+		else
+		{
+			c[0] = **input;
+			c[1] = '\0';
+			tmp = ft_strjoin(result, c);
+			free(result);
+			result = tmp;
+			(*input)++;
+		}
+	}
+	return (result);
+}
+
+static int	handle_word_token(t_token **tokens, char **input)
+{
+	char	*word;
+
+	word = extract_word_with_quotes(input);
+	if (!word)
+	{
+		free_tokens(*tokens);
+		return (0);
+	}
+	add_token(tokens, WORD, word, 0);
+	return (1);
+}
 
 t_token	*lexer(char *input)
 {
@@ -29,14 +72,9 @@ t_token	*lexer(char *input)
 			add_token(&tokens, VAR, extract_var(&input), 0);
 		else if (*input == '>' || *input == '<')
 			handle_redirection(&tokens, &input);
-		else if (*input == '\'')
-			add_token(&tokens, QUOTE_SINGLE,
-				extract_single_quoted_string(&input), 1);
-		else if (*input == '"')
-			extract_double_quoted_string(&tokens, &input);
-		else
-			add_token(&tokens, WORD, extract_word(&input), 0);
-	}	
+		else if (!handle_word_token(&tokens, &input))
+			return (NULL);
+	}
 	return (tokens);
 }
 
