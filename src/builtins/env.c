@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fxc <fxc@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 23:16:40 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/09 23:29:26 by fxc              ###   ########.fr       */
+/*   Updated: 2025/08/11 00:43:18 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	builtin_env(t_env *env)
 			printf("%s=%s\n", env->key, env->value);
 		env = env->next;
 	}
-	return(0);
+	return (0);
 }
 
 static t_env	*find_min_env(t_env *env, t_env *last_min)
@@ -42,20 +42,20 @@ static t_env	*find_min_env(t_env *env, t_env *last_min)
 
 int	builtin_export(t_env *env)
 {
-    t_env	*last_min;
-    t_env	*min;
+	t_env	*last_min;
+	t_env	*min;
 
-    last_min = NULL;
-    while (1)
-    {
-        min = find_min_env(env, last_min);
-        if (!min)
-            break ;
-        printf("declare -x %s", min->key);
-        if (min->value && min->value[0])
-            printf("=\"%s\"", min->value);
-        printf("\n");
-        last_min = min;
-    }
-	return(0);
+	last_min = NULL;
+	while (1)
+	{
+		min = find_min_env(env, last_min);
+		if (!min)
+			break ;
+		printf("declare -x %s", min->key);
+		if (min->value && min->value[0])
+			printf("=\"%s\"", min->value);
+		printf("\n");
+		last_min = min;
+	}
+	return (0);
 }

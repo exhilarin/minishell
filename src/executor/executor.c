@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/10 23:25:23 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/11 07:26:20 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ int	executor(t_shell *shell)
 
 	in_fd = -1;
 	if (!shell->command_list->argv)
-		return(free_all(shell));
+		return (free_all(shell));
 	if (shell->command_list && !shell->command_list->next
-		 && builtin_needs_parent(shell->command_list->argv[0]))
+		&& builtin_needs_parent(shell->command_list->argv[0]))
 		return (exec_builtin(shell));
 	while (shell->command_list)
 	{
@@ -69,7 +69,7 @@ void	parent_process(t_cmd *cmds, int *in_fd, int *fd, pid_t pid)
 		close(fd[1]);
 		*in_fd = fd[0];
 	}
-	waitpid(pid, NULL, 0);
+	waitpid (pid, NULL, 0);
 }
 
 void	exec_command(t_shell *shell)
@@ -91,7 +91,6 @@ void	exec_command(t_shell *shell)
 		perror("minishell: execve");
 		shell->exit_status = 126;
 		exit(shutdown_shell(shell));
-
 	}
 }
 
@@ -101,11 +100,11 @@ char	*get_cmd_path(t_shell *shell)
 	char	*full;
 	char	*cmd;
 	int		i;
-	
+
 	cmd = shell->command_list->argv[0];
 	if (ft_strchr(cmd, '/') && access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
-	shell->exec->paths = ft_split(get_env_value(shell->env, "PATH"), ':'); //leak condition!
+	shell->exec->paths = ft_split(get_env_value(shell->env, "PATH"), ':');
 	if (!shell->exec->paths)
 		return (NULL);
 	i = -1;

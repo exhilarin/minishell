@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 19:51:17 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/10 18:53:18 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/11 00:48:06 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,4 +81,3 @@ int	shutdown_shell(t_shell *shell)
 	shell = NULL;
 	return (status);
 }
-

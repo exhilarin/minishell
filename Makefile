@@ -15,18 +15,19 @@ LIBFT       = $(LIBFT_DIR)/libft.a
 
 SRCS = \
 	src/main.c \
+	src/utils/init.c \
+	src/lexer/lexer.c \
+	src/parser/parser.c \
+	src/parser/expand.c \
+	src/executor/executor.c \
+	src/executor/builtins.c \
+	src/executor/environment.c \
+	src/builtins/echo.c \
+	src/builtins/exit.c \
+	src/builtins/env.c \
 	src/utils/error.c \
 	src/utils/tools.c \
 	src/utils/free.c \
-	src/lexer/lexer.c \
-	src/lexer/extract.c \
-	src/parser/parser.c \
-	src/executor/executor.c \
-	src/executor/builtin.c \
-	src/builtins/echo.c \
-	src/builtins/exit.c \
-	src/environment/env.c \
-	src/builtins/env.c \
 	# src/executor/heredoc.c \
 	# src/builtins/cd.c \
 	# src/builtins/export.c \

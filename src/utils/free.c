@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 02:16:45 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/11 00:26:32 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/11 00:47:57 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ int	free_all(t_shell *shell)
 	}
 	return (0);
 }
-
 
 void	free_tokens(t_token *tokens)
 {

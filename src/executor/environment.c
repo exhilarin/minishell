@@ -6,13 +6,13 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 22:42:30 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/10 08:56:50 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/11 07:00:40 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_env	*new_env_node(char *env_str)
+t_env	*new_env_node(char *env_str)
 {
 	t_env	*node;
 	int		i;
@@ -39,39 +39,13 @@ static t_env	*new_env_node(char *env_str)
 	return (node);
 }
 
-void	init_env(t_shell *shell, char **envp)
-{
-	t_env	*new;
-	t_env	*last;
-	int		i;
-
-	shell->env = NULL;
-	i = 0;
-	while (envp[i])
-	{
-		new = new_env_node(envp[i]);
-		if (!new)
-			return ;
-		if (!shell->env)
-			shell->env = new;
-		else
-		{
-			last = shell->env;
-			while (last->next)
-				last = last->next;
-			last->next = new;
-		}
-		i++;
-	}
-}
-
 char	**env_list_to_array(t_env *env)
 {
 	char	**envp;
 	int		i;
 	t_env	*curr;
 
-    i = 0;
+	i = 0;
 	curr = env;
 	while (curr)
 	{

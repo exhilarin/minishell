@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:13 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/11 00:37:04 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/11 07:19:36 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,6 @@ typedef enum e_token_type
 	REDIR_OUT,
 	HEREDOC,
 	APPEND,
-	VAR,
-	QUOTE_SINGLE,
-	QUOTE_DOUBLE
 }	t_token_type;
 
 typedef struct s_token
@@ -35,17 +32,16 @@ typedef struct s_token
 }	t_token;
 
 t_token	*lexer(char *input);
-void	add_token(t_token **tokens, t_token_type type, char *value, int quoted);
+
+void	add_token(t_token **tokens, t_token_type type, char *value);
 void	handle_redirection(t_token **tokens, char **input);
-char	*append_quoted_part(char **input, char *result, char quote);
-
-void	extract_double_quoted_string(t_token **tokens, char **input);
-char	*extract_single_quoted_string(char **input);
+int		handle_word_token(t_token **tokens, char **input);
 char	*extract_word(char **input);
-char	*extract_var(char **input);
 
-int		ft_isspace(char c);
+char	*append_quoted_part(char **input, char *result, char quote);
+char	*join_and_free(char *s1, char *s2);
 int		ft_strcmp(char *s1, char *s2);
 void	skip_whitespace(char **input);
+int		ft_isspace(char c);
 
 #endif

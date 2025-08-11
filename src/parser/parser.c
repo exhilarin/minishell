@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 15:13:23 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/03 20:28:04 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/11 04:48:41 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,7 @@ t_cmd	*parser(t_token *tokens)
 
 int	process_token(t_token **c_tkn, t_cmd **c_cmd, t_cmd **cmds)
 {
-	if ((*c_tkn)->type == WORD || (*c_tkn)->type == QUOTE_SINGLE
-		|| (*c_tkn)->type == QUOTE_DOUBLE || (*c_tkn)->type == VAR)
+	if ((*c_tkn)->type == WORD)
 		add_arg_to_cmd(*c_cmd, (*c_tkn)->value);
 	else if ((*c_tkn)->type == REDIR_IN || (*c_tkn)->type == REDIR_OUT
 		|| (*c_tkn)->type == APPEND || (*c_tkn)->type == HEREDOC)

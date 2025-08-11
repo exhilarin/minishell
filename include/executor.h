@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:20 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/10 16:57:49 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/11 07:36:38 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,18 @@ typedef struct s_shell	t_shell;
 typedef struct s_exec
 {
 	char	*cmd_path;
-    char    **paths;
+	char	**paths;
 	char	**envp;
 }	t_exec;
 
-t_exec	*init_exec();
-void    child_process(t_shell *shell, int in_fd, int fd[2]);
-void    parent_process(t_cmd *cmds, int *in_fd, int *fd, pid_t pid);
+void	expand(t_shell *shell);
+void	expand_args(t_shell *shell, t_cmd *cmd);
+void	expand_redirs(t_shell *shell, t_cmd *cmd);
+char	*expand_string(t_shell *shell, char *str);
+char	*expand_var(t_shell *shell, char *str, int *i);
 
-int		is_builtin(t_cmd *cmd);
-int		exec_builtin(t_shell *shell);
-int		builtin_needs_parent(char *name);
+void	child_process(t_shell *shell, int in_fd, int fd[2]);
+void	parent_process(t_cmd *cmds, int *in_fd, int *fd, pid_t pid);
 
 int		executor(t_shell *shell);
 void	exec_command(t_shell *shell);
