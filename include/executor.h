@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:20 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/11 07:36:38 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/11 21:47:35 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXECUTOR_H
 # define EXECUTOR_H
 
-# include <sys/wait.h>
 # include <sys/types.h>
 
 typedef struct s_shell	t_shell;
@@ -37,6 +36,8 @@ void	parent_process(t_cmd *cmds, int *in_fd, int *fd, pid_t pid);
 int		executor(t_shell *shell);
 void	exec_command(t_shell *shell);
 char	*get_cmd_path(t_shell *shell);
-// void	is_redir_heredoc(t_redir *redir, t_cmd *cmds);
+
+int		exec_builtin_with_redir(t_shell *shell);
+void	handle_redirections(t_shell *shell, t_redir *redir);
 
 #endif

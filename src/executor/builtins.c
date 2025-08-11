@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin.c                                          :+:      :+:    :+:   */
+/*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 04:36:45 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/11 07:23:36 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/11 21:07:30 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	exec_builtin(t_shell *shell)
 	return (1);
 }
 
-int	builtin_needs_parent(char *name)
+int	builtins_on_parent(char *name)
 {
 	return (ft_strncmp(name, "cd", 2)
 		|| ft_strncmp(name, "export", 6)

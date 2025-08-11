@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:24 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/11 07:25:55 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/11 21:38:16 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef struct s_env
 
 int		is_builtin(t_cmd *cmd);
 int		exec_builtin(t_shell *shell);
-int		builtin_needs_parent(char *name);
+int		builtins_on_parent(char *name);
 
 int		builtin_echo(char **args);
 int		builtin_exit(char **args, t_shell *shell);

@@ -22,6 +22,7 @@ SRCS = \
 	src/executor/executor.c \
 	src/executor/builtins.c \
 	src/executor/environment.c \
+	src/executor/redirections.c \
 	src/builtins/echo.c \
 	src/builtins/exit.c \
 	src/builtins/env.c \

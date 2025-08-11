@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/11 07:26:20 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/11 21:46:19 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ int	executor(t_shell *shell)
 	if (!shell->command_list->argv)
 		return (free_all(shell));
 	if (shell->command_list && !shell->command_list->next
-		&& builtin_needs_parent(shell->command_list->argv[0]))
-		return (exec_builtin(shell));
+		&& builtins_on_parent(shell->command_list->argv[0]))
+		return (exec_builtin_with_redir(shell));
 	while (shell->command_list)
 	{
 		if (shell->command_list->next && pipe(fd) == -1)
@@ -49,7 +49,8 @@ void	child_process(t_shell *shell, int in_fd, int fd[2])
 		dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
 	}
-	//handle_redirections(shell->command_list->redir);
+	if (shell->command_list->redir)
+		handle_redirections(shell, shell->command_list->redir);
 	if (!shell->command_list->argv || !shell->command_list->argv[0])
 	{
 		shell->exit_status = 0;
