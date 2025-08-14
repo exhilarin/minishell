@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 19:49:15 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/14 23:52:19 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/15 02:48:36 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ char	*join_and_free(char *s1, char *s2)
 		return (s1);
 	joined = ft_strjoin(s1, s2);
 	free(s1);
+	free(s2);
 	return (joined);
 }
 
