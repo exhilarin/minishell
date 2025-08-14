@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/14 11:45:43 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/15 00:00:44 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@ int	main(int argc, char *argv[], char *env[])
 {
 	t_shell	shell;
 
-	(void)argc;
 	(void)argv;
+	if (argc != 1)
+		return (0);
 	init_shell(&shell);
 	init_env(&shell, env);
 	while (1)
@@ -40,15 +41,8 @@ void	process(t_shell *shell)
 {
 	int		syntax_err;
 
-	if (is_invalid_char(shell->input))
-	{
-		syntax_error(ERR_INVALID);
-		shell->exit_status = 1;
-		free_all(shell);
-		return ;
-	}
 	shell->token_list = lexer(shell->input);
-	syntax_err = validate_syntax(shell->token_list);
+	syntax_err = validate_syntax(shell, shell->token_list);
 	if (syntax_err != SYNTAX_OK)
 	{
 		syntax_error(syntax_err);
@@ -60,4 +54,22 @@ void	process(t_shell *shell)
 	expand(shell);
 	executor(shell);
 	free_all(shell);
+}
+
+int	shutdown_shell(t_shell *shell)
+{
+	int	status;
+
+	if (!shell)
+		return (1);
+	status = shell->exit_status;
+	free_all(shell);
+	if (shell->env)
+	{
+		free_env(shell->env);
+		shell->env = NULL;
+	}
+	rl_clear_history();
+	shell = NULL;
+	return (status);
 }

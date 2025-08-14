@@ -6,7 +6,7 @@ INCLUDE_DIR = include
 LIBFT_DIR   = libft
 
 CC          = cc
-CFLAGS      = -Wall -Wextra -Werror -I$(INCLUDE_DIR) -I$(LIBFT_DIR)
+CFLAGS      = -Wall -Wextra -Werror -I$(INCLUDE_DIR) -I$(LIBFT_DIR) -g
 
 READLINE    = -lreadline
 RL_INC      = -I/usr/include
@@ -29,7 +29,6 @@ SRCS = \
 	src/utils/error.c \
 	src/utils/tools.c \
 	src/utils/free.c \
-	# src/builtins/clear.c \
 	# src/executor/heredoc.c \
 	# src/builtins/cd.c \
 	# src/builtins/export.c \

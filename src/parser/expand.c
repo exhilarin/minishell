@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 06:38:03 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/11 17:52:41 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/14 23:50:09 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	expand_args(t_shell *shell, t_cmd *cmd)
 	i = 0;
 	while (cmd->argv[i])
 	{
-		expanded = expand_string(shell, cmd->argv[i]);
+		expanded = expand_string(shell, cmd->argv[i], 0);
 		free(cmd->argv[i]);
 		cmd->argv[i] = expanded;
 		i++;
@@ -50,25 +50,24 @@ void	expand_redirs(t_shell *shell, t_cmd *cmd)
 	redir = cmd->redir;
 	while (redir)
 	{
-		expanded = expand_string(shell, redir->file);
+		expanded = expand_string(shell, redir->file, 0);
 		free(redir->file);
 		redir->file = expanded;
 		redir = redir->next;
 	}
 }
 
-char	*expand_string(t_shell *shell, char *str)
+char	*expand_string(t_shell *shell, char *str, int quote)
 {
 	char	*result;
-	char	quote;
 	int		i;
+	char	*substr;
 
 	result = ft_strdup("");
-	quote = 0;
 	i = 0;
 	while (str[i])
 	{
-		if ((str[i] == '\'' || str[i] == '"') && quote == 0)
+		if ((str[i] == '\'' || str[i] == '"' || str[i] == '`') && quote == 0)
 			quote = str[i++];
 		else if (str[i] == quote)
 		{
@@ -78,7 +77,10 @@ char	*expand_string(t_shell *shell, char *str)
 		else if (str[i] == '$' && quote != '\'')
 			result = join_and_free(result, expand_var(shell, &str[i], &i));
 		else
-			result = join_and_free(result, ft_substr(str, i++, 1));
+		{
+			substr = ft_substr(str, i++, 1);
+			result = join_and_free(result, substr);
+		}
 	}
 	return (result);
 }

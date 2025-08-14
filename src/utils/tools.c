@@ -6,31 +6,11 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 19:49:15 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/11 07:34:07 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/14 23:52:19 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*append_quoted_part(char **input, char *result, char quote)
-{
-	char	*tmp;
-	char	*part;
-	char	*start;
-
-	(*input)++;
-	start = *input;
-	while (**input && **input != quote)
-		(*input)++;
-	if (**input == '\0')
-		return (free(result), NULL);
-	part = ft_substr(start, 0, *input - start);
-	tmp = ft_strjoin(result, part);
-	free(result);
-	free(part);
-	(*input)++;
-	return (tmp);
-}
 
 char	*join_and_free(char *s1, char *s2)
 {
@@ -45,6 +25,27 @@ char	*join_and_free(char *s1, char *s2)
 	joined = ft_strjoin(s1, s2);
 	free(s1);
 	return (joined);
+}
+
+char	*append_quoted_part(char **input, char *result, char quote)
+{
+	char	*tmp;
+	char	c[2];
+
+	c[1] = '\0';
+	(*input)++;
+	while (**input && **input != quote)
+	{
+		c[0] = **input;
+		tmp = ft_strjoin(result, c);
+		free(result);
+		result = tmp;
+		(*input)++;
+	}
+	if (**input != quote)
+		return (free(result), NULL);
+	(*input)++;
+	return (result);
 }
 
 int	ft_strcmp(char *s1, char *s2)
