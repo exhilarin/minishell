@@ -6,13 +6,13 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 06:38:03 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/14 23:50:09 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/15 02:35:53 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	expand(t_shell *shell)
+void	expand_all(t_shell *shell)
 {
 	t_cmd	*cmd;
 
