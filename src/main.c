@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/11 07:35:51 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/14 11:45:43 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,9 @@ int	main(int argc, char *argv[], char *env[])
 	init_env(&shell, env);
 	while (1)
 	{
-		shell.input = prompt();
+		shell.input = readline("\001\033[1;36m\002minishell$ \001\033[0m\002");
+		if (!shell.input)
+			return (shell.exit_status);
 		if (!shell.input)
 		{
 			printf("exit\n");
@@ -58,47 +60,4 @@ void	process(t_shell *shell)
 	expand(shell);
 	executor(shell);
 	free_all(shell);
-}
-
-char	*prompt(void)
-{
-	char	*line;
-	char	*next_line;
-	char	*temp;
-	char	*joined;
-
-	line = readline("\001\033[1;36m\002minishell$ \001\033[0m\002");
-	if (!line)
-		return (NULL);
-	while (has_unclosed_quotes(line))
-	{
-		next_line = readline("> ");
-		if (!next_line)
-			break ;
-		temp = ft_strjoin(line, "\n");
-		joined = ft_strjoin(temp, next_line);
-		free(temp);
-		free(line);
-		free(next_line);
-		line = joined;
-	}
-	return (line);
-}
-
-int	has_unclosed_quotes(const char *input)
-{
-	int	s_quote;
-	int	d_quote;
-
-	s_quote = 0;
-	d_quote = 0;
-	while (*input)
-	{
-		if (*input == '\'' && d_quote == 0)
-			s_quote = !s_quote;
-		else if (*input == '"' && s_quote == 0)
-			d_quote = !d_quote;
-		input++;
-	}
-	return (s_quote || d_quote);
 }

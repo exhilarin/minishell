@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:03 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/11 21:38:28 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/14 11:45:20 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,8 @@ typedef struct s_shell
 	int		exit_status;
 }	t_shell;
 
-char	*prompt(void);
 void	process(t_shell *shell);
 int		shutdown_shell(t_shell *shell);
-int		has_unclosed_quotes(const char *input);
 
 void	init_shell(t_shell *shell);
 void	init_env(t_shell *shell, char **envp);
