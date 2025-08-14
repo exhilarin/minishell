@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 04:36:45 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/11 21:07:30 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/14 11:41:05 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,22 @@ int	is_builtin(t_cmd *cmd)
 	if (!cmd || !cmd->argv
 		|| !cmd->argv[0])
 		return (0);
-	if (ft_strncmp(cmd->argv[0], "cd", 2))
+	if (ft_strlen(cmd->argv[0]) == 2 && ft_strncmp(cmd->argv[0], "cd", 2))
 		return (1);
-	if (ft_strncmp(cmd->argv[0], "echo", 4))
+	if (ft_strlen(cmd->argv[0]) == 4 && ft_strncmp(cmd->argv[0], "echo", 4))
 		return (1);
-	if (ft_strncmp(cmd->argv[0], "pwd", 3))
+	if (ft_strlen(cmd->argv[0]) == 3 && ft_strncmp(cmd->argv[0], "pwd", 3))
 		return (1);
-	if (ft_strncmp(cmd->argv[0], "export", 6))
+	if (ft_strlen(cmd->argv[0]) == 6 && ft_strncmp(cmd->argv[0], "export", 6))
 		return (1);
-	if (ft_strncmp(cmd->argv[0], "unset", 5))
+	if (ft_strlen(cmd->argv[0]) == 5 && ft_strncmp(cmd->argv[0], "unset", 5))
 		return (1);
-	if (ft_strncmp(cmd->argv[0], "env", 3))
+	if (ft_strlen(cmd->argv[0]) == 3 && ft_strncmp(cmd->argv[0], "env", 3))
 		return (1);
-	if (ft_strncmp(cmd->argv[0], "exit", 4))
+	if (ft_strlen(cmd->argv[0]) == 4 && ft_strncmp(cmd->argv[0], "exit", 4))
 		return (1);
+	// if (ft_strlen(cmd->argv[0]) == 4 && ft_strncmp(cmd->argv[0], "clear", 5))
+	// 	return (1);
 	return (0);
 }
 
@@ -50,6 +52,8 @@ int	exec_builtin(t_shell *shell)
 		return (builtin_env(shell->env));
 	if (ft_strncmp(shell->command_list->argv[0], "exit", 4))
 		return (builtin_exit(shell->command_list->argv, shell));
+	// if (ft_strncmp(shell->command_list->argv[0], "clear", 5))
+	// 	return (builtin_exit(shell->command_list->argv, shell));
 	return (1);
 }
 

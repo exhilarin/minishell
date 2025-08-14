@@ -29,6 +29,7 @@ SRCS = \
 	src/utils/error.c \
 	src/utils/tools.c \
 	src/utils/free.c \
+	# src/builtins/clear.c \
 	# src/executor/heredoc.c \
 	# src/builtins/cd.c \
 	# src/builtins/export.c \
