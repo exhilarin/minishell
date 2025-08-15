@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 15:13:23 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/15 06:33:22 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/15 06:48:11 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ void	add_arg_to_cmd(t_cmd *current_cmd, char *token_value)
 	char	**new_argv;
 
 	argc = 0;
+	if (!current_cmd || !token_value)
+        return ;
 	if (!token_value)
 		return ;
 	if (current_cmd->argv)
