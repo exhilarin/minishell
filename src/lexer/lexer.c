@@ -41,7 +41,7 @@ void	add_token(t_token **tokens, t_token_type type, char *value)
 	if (!ft_strlen(value))
 	{
 		free(value);
-		return;
+		return ;
 	}
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
