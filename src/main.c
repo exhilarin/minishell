@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/15 06:39:56 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/15 06:42:28 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,6 @@ int	shutdown_shell(t_shell *shell)
 	{
 		free_env(shell->env);
 		shell->env = NULL;
-	}
-	if (shell->exec)
-	{
-		free_exec(shell->exec);
-		shell->exec = NULL;
 	}
 	rl_clear_history();
 	shell = NULL;
