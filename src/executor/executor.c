@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/11 21:46:19 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/15 04:59:28 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	child_process(t_shell *shell, int in_fd, int fd[2])
 		exit(shutdown_shell(shell));
 	}
 	if (is_builtin(shell->command_list))
-		exit (exec_builtin(shell));
+		exit(exec_builtin(shell));
 	exec_command(shell);
 }
 

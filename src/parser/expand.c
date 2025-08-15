@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 06:38:03 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/15 02:35:53 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/15 04:36:55 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ char	*expand_string(t_shell *shell, char *str, int quote)
 	i = 0;
 	while (str[i])
 	{
-		if ((str[i] == '\'' || str[i] == '"' || str[i] == '`') && quote == 0)
+		if ((str[i] == '\'' || str[i] == '"') && quote == 0)
 			quote = str[i++];
 		else if (str[i] == quote)
 		{

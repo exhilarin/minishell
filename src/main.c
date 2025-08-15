@@ -6,11 +6,13 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/15 02:59:37 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/15 06:39:56 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+volatile sig_atomic_t	g_signal = 0;
 
 int	main(int argc, char *argv[], char *env[])
 {
@@ -19,13 +21,12 @@ int	main(int argc, char *argv[], char *env[])
 	(void)argv;
 	if (argc != 1)
 		return (0);
+	init_signal();
 	init_shell(&shell);
 	init_env(&shell, env);
 	while (1)
 	{
 		shell.input = readline("\001\033[1;36m\002minishell$ \001\033[0m\002");
-		if (!shell.input)
-			return (shell.exit_status);
 		if (!shell.input)
 		{
 			printf("exit\n");
@@ -68,6 +69,11 @@ int	shutdown_shell(t_shell *shell)
 	{
 		free_env(shell->env);
 		shell->env = NULL;
+	}
+	if (shell->exec)
+	{
+		free_exec(shell->exec);
+		shell->exec = NULL;
 	}
 	rl_clear_history();
 	shell = NULL;

@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 15:42:55 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/15 02:51:12 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/15 05:23:20 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	add_token(t_token **tokens, t_token_type type, char *value)
 		return ;
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
-		return (free(value));
+		return (free_tokens(*tokens), free(value));
 	new_token->type = type;
 	new_token->value = value;
 	new_token->next = NULL;

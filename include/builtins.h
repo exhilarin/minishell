@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:24 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/11 21:38:16 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/15 05:24:13 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ typedef struct s_env
 	char			*env_line;
 	char			*key;
 	char			*value;
-	int				*is_exported;
 	struct s_env	*next;
 }	t_env;
 

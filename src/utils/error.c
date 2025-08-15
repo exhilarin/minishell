@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 19:51:17 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/14 23:57:10 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/15 04:38:36 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,7 @@ int	is_unclosed_quotes(const char *input)
 	i = 0;
 	while (input[i])
 	{
-		if ((input[i] == '"' || input[i] == '\''
-				|| input[i] == '`') && quote == 0)
+		if ((input[i] == '"' || input[i] == '\'') && quote == 0)
 			quote = input[i];
 		else if (input[i] == quote)
 			quote = 0;

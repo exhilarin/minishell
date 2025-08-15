@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:20 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/15 02:35:48 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/15 05:01:50 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,7 @@ char	*get_cmd_path(t_shell *shell);
 
 int		exec_builtin_with_redir(t_shell *shell);
 void	handle_redirections(t_shell *shell, t_redir *redir);
+
+void	free_exec(t_exec *exec);
 
 #endif

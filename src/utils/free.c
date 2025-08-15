@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 02:16:45 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/14 19:20:12 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/15 06:38:28 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ void	free_env(t_env *env)
 		free(env->env_line);
 		free(env->key);
 		free(env->value);
-		free(env->is_exported);
 		free(env);
 		env = tmp;
 	}
