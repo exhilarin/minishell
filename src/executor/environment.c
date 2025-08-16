@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 22:42:30 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/15 05:20:10 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/16 19:53:22 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,19 @@ char	*get_env_value(t_env *env, char *key)
 		env = env->next;
 	}
 	return (NULL);
+}
+
+void	free_env(t_env *env)
+{
+	t_env	*tmp;
+
+	while (env)
+	{
+		tmp = env->next;
+		free(env->env_line);
+		free(env->key);
+		free(env->value);
+		free(env);
+		env = tmp;
+	}
 }

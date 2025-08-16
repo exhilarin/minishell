@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 20:43:35 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/16 02:24:01 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/16 17:50:30 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void	handle_redirections(t_shell *shell, t_redir *redir)
 		else if (redir->type == APPEND)
 			redir_append(shell, redir);
 		else if (redir->type == HEREDOC)
-			redir_heredoc(shell, redir);
+			redir_heredoc(shell, redir, 0);
 		redir = redir->next;
 	}
 }

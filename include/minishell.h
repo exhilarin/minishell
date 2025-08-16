@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:03 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/15 06:40:30 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/16 20:20:54 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,5 +57,7 @@ void	free_tokens(t_token *tokens);
 void	free_cmd(t_cmd	*commands);
 void	free_redir(t_redir *redir);
 void	free_env(t_env *env);
+void	free_exec(t_exec *exec);
+void	free_argv(char **new_argv, int i);
 
 #endif

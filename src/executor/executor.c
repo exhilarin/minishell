@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/16 08:57:43 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/16 19:42:12 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	executor(t_shell *shell) //Heredoc artık çalışır durumda fakat kodun ya
 	}
 	while (shell->command_list)
 	{
-		if (shell->command_list->redir->type == HEREDOC)
+		if (shell->command_list->redir && shell->command_list->redir->type == HEREDOC)
 			redir_heredoc(shell, shell->command_list->redir, &heredoc_fd);
 		if (shell->command_list->next && pipe(fd) == -1)
 			return (perror("pipe"), 1);
@@ -69,7 +69,10 @@ void	child_process(t_shell *shell, int in_fd, int fd[2], int heredoc_fd)
 		exit(shutdown_shell(shell));
 	}
 	if (is_builtin(shell->command_list))
-		exit(exec_builtin(shell));
+	{
+		shell->exit_status = exec_builtin(shell);
+		exit(shutdown_shell(shell));
+	}
 	exec_command(shell);
 }
 

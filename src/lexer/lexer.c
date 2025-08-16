@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 15:42:55 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/15 07:15:57 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/16 20:18:38 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,33 +31,6 @@ t_token	*lexer(char *input)
 			return (NULL);
 	}
 	return (tokens);
-}
-
-void	add_token(t_token **tokens, t_token_type type, char *value)
-{
-	t_token	*new_token;
-	t_token	*current;
-
-	if (!ft_strlen(value))
-	{
-		free(value);
-		return ;
-	}
-	new_token = malloc(sizeof(t_token));
-	if (!new_token)
-		return (free_tokens(*tokens), free(value));
-	new_token->type = type;
-	new_token->value = value;
-	new_token->next = NULL;
-	if (!*tokens)
-		*tokens = new_token;
-	else
-	{
-		current = *tokens;
-		while (current->next)
-			current = current->next;
-		current->next = new_token;
-	}
 }
 
 void	handle_redirection(t_token **tokens, char **input)

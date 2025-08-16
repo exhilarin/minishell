@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 02:16:45 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/15 06:38:28 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/16 20:24:47 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,11 @@ int	free_all(t_shell *shell)
 	{
 		free_cmd(shell->command_list);
 		shell->command_list = NULL;
+	}
+	if (shell->exec)
+	{
+		free_exec(shell->exec);
+		shell->exec = NULL;
 	}
 	return (0);
 }
@@ -87,17 +92,9 @@ void	free_redir(t_redir *redir)
 	}
 }
 
-void	free_env(t_env *env)
+void	free_argv(char **new_argv, int i)
 {
-	t_env	*tmp;
-
-	while (env)
-	{
-		tmp = env->next;
-		free(env->env_line);
-		free(env->key);
-		free(env->value);
-		free(env);
-		env = tmp;
-	}
+	while (--i >= 0)
+		free(new_argv[i]);
+	free(new_argv);
 }

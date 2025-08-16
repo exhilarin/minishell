@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 04:36:45 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/16 08:48:51 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/16 20:27:30 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,41 @@ int	builtins_on_parent(char *name)
 		|| ft_strncmp(name, "export", 6)
 		|| ft_strncmp(name, "unset", 5)
 		|| ft_strncmp(name, "exit", 4));
+}
+
+static void	free_char_array(char **array)
+{
+	int	i;
+
+	i = 0;
+	if (!array)
+		return ;
+	while (array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
+}
+
+void	free_exec(t_exec *exec)
+{
+	if (!exec)
+		return ;
+	if (exec->cmd_path)
+	{
+		free(exec->cmd_path);
+		exec->cmd_path = NULL;
+	}
+	if (exec->paths)
+	{
+		free_char_array(exec->paths);
+		exec->paths = NULL;
+	}
+	if (exec->envp)
+	{
+		free_char_array(exec->envp);
+		exec->envp = NULL;
+	}
+	free(exec);
 }

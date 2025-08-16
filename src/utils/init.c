@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 06:55:45 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/16 03:03:41 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/16 19:58:56 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,26 +24,29 @@ void	init_shell(t_shell *shell)
 void	init_env(t_shell *shell, char **envp)
 {
 	t_env	*new;
-	t_env	*last;
+	t_env	*current;
 	int		i;
 
 	shell->env = NULL;
-	i = 0;
-	while (envp[i])
+	i = -1;
+	while (envp[++i])
 	{
 		new = new_env_node(envp[i]);
 		if (!new)
+		{
+			free_env(shell->env);
+			shell->env = NULL;
 			return ;
+		}
 		if (!shell->env)
 			shell->env = new;
 		else
 		{
-			last = shell->env;
-			while (last->next)
-				last = last->next;
-			last->next = new;
+			current = shell->env;
+			while (current->next)
+				current = current->next;
+			current->next = new;
 		}
-		i++;
 	}
 }
 
@@ -65,6 +68,8 @@ t_exec	*init_exec(void)
 	t_exec	*exec;
 
 	exec = malloc(sizeof(t_exec));
+	if (!exec)
+		return (NULL);
 	exec->cmd_path = NULL;
 	exec->paths = NULL;
 	exec->envp = NULL;

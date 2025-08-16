@@ -31,6 +31,7 @@ SRCS = \
 	src/utils/error.c \
 	src/utils/tools.c \
 	src/utils/free.c \
+	src/utils/add.c \
 	# src/builtins/cd.c \
 	# src/builtins/export.c \
 	# src/builtins/pwd.c \
@@ -55,6 +56,9 @@ clean:
 	@rm -rf $(BUILD_DIR)
 	@$(MAKE) -C $(LIBFT_DIR) clean
 	@echo "🧹 Object files cleaned."
+
+leak:all
+	valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp ./minishell
 
 fclean: clean
 	@rm -f $(NAME)
