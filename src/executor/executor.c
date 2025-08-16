@@ -3,22 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/15 04:59:28 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/16 07:27:50 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	executor(t_shell *shell)
-{
-	int		in_fd;
+int	executor(t_shell *shell) //Heredoc artık çalışır durumda fakat kodun yazımıyla alakalı ciddi bir
+{							 //okuma zorluğu var üzerinde çalışıcam. Leak düzeltmeleri ile beraber kod
+	int		in_fd;			 //daha okunabilir bir hal alacak.
 	int		fd[2];
 	pid_t	pid;
+	int		heredoc_fd;
 
 	in_fd = -1;
+	heredoc_fd = -1;
 	if (!shell->command_list->argv)
 		return (free_all(shell));
 	if (shell->command_list && !shell->command_list->next
@@ -26,23 +28,30 @@ int	executor(t_shell *shell)
 		return (exec_builtin_with_redir(shell));
 	while (shell->command_list)
 	{
+		if (shell->command_list->redir->type == HEREDOC)
+			redir_heredoc(shell, shell->command_list->redir, &heredoc_fd);
 		if (shell->command_list->next && pipe(fd) == -1)
 			return (perror("pipe"), 1);
 		pid = fork();
 		if (pid == -1)
 			return (perror("fork"), 1);
 		if (pid == 0)
-			child_process(shell, in_fd, fd);
+			child_process(shell, in_fd, fd, heredoc_fd);
 		parent_process(shell->command_list, &in_fd, fd, pid);
+		if (heredoc_fd != -1)
+			close(heredoc_fd);
+		heredoc_fd = -1;
 		shell->command_list = shell->command_list->next;
 	}
 	return (0);
 }
 
-void	child_process(t_shell *shell, int in_fd, int fd[2])
+void	child_process(t_shell *shell, int in_fd, int fd[2], int heredoc_fd)
 {
 	if (in_fd != -1)
 		dup2(in_fd, STDIN_FILENO);
+	else if (heredoc_fd != -1)
+		dup2(heredoc_fd, STDIN_FILENO);
 	if (shell->command_list->next)
 	{
 		close(fd[0]);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:20 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/15 05:01:50 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/16 07:16:04 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	expand_redirs(t_shell *shell, t_cmd *cmd);
 char	*expand_string(t_shell *shell, char *str, int quote);
 char	*expand_var(t_shell *shell, char *str, int *i);
 
-void	child_process(t_shell *shell, int in_fd, int fd[2]);
+void	child_process(t_shell *shell, int in_fd, int fd[2], int heredoc_fd);
 void	parent_process(t_cmd *cmds, int *in_fd, int *fd, pid_t pid);
 
 int		executor(t_shell *shell);
@@ -40,6 +40,6 @@ char	*get_cmd_path(t_shell *shell);
 int		exec_builtin_with_redir(t_shell *shell);
 void	handle_redirections(t_shell *shell, t_redir *redir);
 
-void	free_exec(t_exec *exec);
+void	redir_heredoc(t_shell *shell, t_redir *redir, int *heredoc_fd);
 
 #endif

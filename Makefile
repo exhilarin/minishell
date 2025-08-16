@@ -20,6 +20,7 @@ SRCS = \
 	src/lexer/lexer.c \
 	src/parser/parser.c \
 	src/parser/expand.c \
+	src/executor/heredoc.c \
 	src/executor/executor.c \
 	src/executor/builtins.c \
 	src/executor/environment.c \
@@ -30,7 +31,6 @@ SRCS = \
 	src/utils/error.c \
 	src/utils/tools.c \
 	src/utils/free.c \
-	# src/executor/heredoc.c \
 	# src/builtins/cd.c \
 	# src/builtins/export.c \
 	# src/builtins/pwd.c \

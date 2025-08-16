@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 20:43:35 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/11 21:48:54 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/16 02:24:01 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,12 +118,7 @@ void	handle_redirections(t_shell *shell, t_redir *redir)
 		else if (redir->type == APPEND)
 			redir_append(shell, redir);
 		else if (redir->type == HEREDOC)
-		{
-			ft_putendl_fd(
-				"minishell: heredoc not supported yet", STDERR_FILENO);
-			shell->exit_status = 1;
-			exit(shutdown_shell(shell));
-		}
+			redir_heredoc(shell, redir);
 		redir = redir->next;
 	}
 }

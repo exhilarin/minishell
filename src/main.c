@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/15 07:32:10 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/16 03:05:15 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,16 @@ void	process(t_shell *shell)
 	syntax_err = validate_syntax(shell, shell->token_list);
 	if (syntax_err != SYNTAX_OK)
 	{
-		syntax_error(syntax_err);
 		shell->exit_status = 1;
+		if (syntax_err == ERR_INVALID)
+			shell->exit_status = 2;
+		syntax_error(syntax_err);
 		free_all(shell);
 		return ;
 	}
 	shell->command_list = parser(shell->token_list);
 	expand_all(shell);
-	executor(shell);
+	shell->exit_status = executor(shell);
 	free_all(shell);
 }
 
