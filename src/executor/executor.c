@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/16 07:27:50 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/16 08:57:43 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ int	executor(t_shell *shell) //Heredoc artık çalışır durumda fakat kodun ya
 		return (free_all(shell));
 	if (shell->command_list && !shell->command_list->next
 		&& builtins_on_parent(shell->command_list->argv[0]))
-		return (exec_builtin_with_redir(shell));
+	{
+		shell->exit_status = exec_builtin_with_redir(shell);
+		return (shell->exit_status);
+	}
 	while (shell->command_list)
 	{
 		if (shell->command_list->redir->type == HEREDOC)
@@ -85,6 +88,8 @@ void	parent_process(t_cmd *cmds, int *in_fd, int *fd, pid_t pid)
 void	exec_command(t_shell *shell)
 {
 	shell->exec = init_exec();
+	if (!shell->exec)
+		exit(shutdown_shell(shell));
 	if (!shell->command_list->argv[0])
 		exit(shutdown_shell(shell));
 	shell->exec->cmd_path = get_cmd_path(shell);
