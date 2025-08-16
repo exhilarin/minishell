@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 20:25:38 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/16 20:26:33 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/16 20:29:12 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,32 +51,4 @@ int	process_token(t_token **c_tkn, t_cmd **c_cmd, t_cmd **cmds)
 			return (0);
 	}
 	return (1);
-}
-
-char	**create_new_argv(char **old_argv, char *token_value, int argc)
-{
-	char	**new_argv;
-	int		i;
-
-	new_argv = malloc(sizeof(char *) * (argc + 2));
-	if (!new_argv)
-		return (NULL);
-	i = -1;
-	while (++i < argc)
-	{
-		new_argv[i] = ft_strdup(old_argv[i]);
-		if (!new_argv[i])
-		{
-			free_argv(new_argv, i);
-			return (NULL);
-		}
-	}
-	new_argv[argc] = ft_strdup(token_value);
-	if (!new_argv[argc])
-	{
-		free_argv(new_argv, i);
-		return (NULL);
-	}
-	new_argv[argc + 1] = NULL;
-	return (new_argv);
 }

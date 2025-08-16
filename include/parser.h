@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:16:33 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/16 20:16:47 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/16 20:30:35 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,7 @@ typedef struct s_cmd
 
 t_cmd	*parser(t_token *tokens);
 
-void	add_arg_to_cmd(t_cmd *current_cmd, char *token_value);
-void	add_redir_to_cmd(t_cmd *cmd, int type, char *file);
-void	add_cmd_to_lst(t_cmd **cmds, t_cmd *new_cmd);
-
 int		process_token(t_token **c_tkn, t_cmd **c_cmd, t_cmd **cmds);
-char	**create_new_argv(char **old_argv, char *token_value, int argc);
 int		is_invalid_char(char *input);
 int		is_unclosed_quotes(const char *input);
 int		validate_syntax(t_shell *shell, t_token *tokens);

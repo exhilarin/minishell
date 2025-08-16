@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:13 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/14 23:55:18 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/16 20:30:23 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ typedef struct s_token
 
 t_token	*lexer(char *input);
 
-void	add_token(t_token **tokens, t_token_type type, char *value);
 void	handle_redirection(t_token **tokens, char **input);
 int		handle_word_token(t_token **tokens, char **input);
 char	*extract_word(char **input);

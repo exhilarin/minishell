@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:03 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/16 20:20:54 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/16 20:30:38 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,12 @@ void	init_shell(t_shell *shell);
 void	init_env(t_shell *shell, char **envp);
 t_cmd	*init_cmd(void);
 t_exec	*init_exec(void);
+
+void	add_token(t_token **tokens, t_token_type type, char *value);
+void	add_arg_to_cmd(t_cmd *current_cmd, char *token_value);
+void	add_redir_to_cmd(t_cmd *cmd, int type, char *file);
+void	add_cmd_to_lst(t_cmd **cmds, t_cmd *new_cmd);
+char	**add_argv(char **old_argv, char *token_value, int argc);
 
 int		free_all(t_shell *shell);
 void	free_tokens(t_token *tokens);

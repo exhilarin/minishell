@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 20:25:01 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/16 20:25:25 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/16 20:29:56 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	add_arg_to_cmd(t_cmd *current_cmd, char *token_value)
 	if (current_cmd->argv)
 		while (current_cmd->argv[argc])
 			argc++;
-	new_argv = create_new_argv(current_cmd->argv, token_value, argc);
+	new_argv = add_argv(current_cmd->argv, token_value, argc);
 	if (!new_argv)
 		return ;
 	if (current_cmd->argv)
@@ -108,4 +108,32 @@ void	add_cmd_to_lst(t_cmd **cmds, t_cmd *new_cmd)
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new_cmd;
+}
+
+char	**add_argv(char **old_argv, char *token_value, int argc)
+{
+	char	**new_argv;
+	int		i;
+
+	new_argv = malloc(sizeof(char *) * (argc + 2));
+	if (!new_argv)
+		return (NULL);
+	i = -1;
+	while (++i < argc)
+	{
+		new_argv[i] = ft_strdup(old_argv[i]);
+		if (!new_argv[i])
+		{
+			free_argv(new_argv, i);
+			return (NULL);
+		}
+	}
+	new_argv[argc] = ft_strdup(token_value);
+	if (!new_argv[argc])
+	{
+		free_argv(new_argv, i);
+		return (NULL);
+	}
+	new_argv[argc + 1] = NULL;
+	return (new_argv);
 }
