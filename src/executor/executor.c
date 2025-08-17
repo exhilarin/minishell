@@ -3,24 +3,49 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/17 10:22:06 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/18 02:53:36 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	executor(t_shell *shell) //Heredoc artık çalışır durumda fakat kodun yazımıyla alakalı ciddi bir
-{							 //okuma zorluğu var üzerinde çalışıcam. Leak düzeltmeleri ile beraber kod
-	int		in_fd;			 //daha okunabilir bir hal alacak.
+int	executor(t_shell *shell)
+{
+	int		return_value;
 	int		fd[2];
 	pid_t	pid;
-	int		heredoc_fd;
 
-	in_fd = -1;
-	heredoc_fd = -1;
+	shell->in_fd = -1;
+	shell->heredoc_fd = -1;
+	return_value = check_special_case(shell);
+	if (return_value != -1)
+		return (return_value);
+	while (shell->command_list)
+	{
+		if (shell->command_list->redir
+			&& shell->command_list->redir->type == HEREDOC)
+			redir_heredoc(shell, shell->command_list->redir);
+		if (shell->command_list->next && pipe(fd) == -1)
+			return (perror("minishell: pipe"), 1);
+		pid = fork();
+		if (pid == -1)
+			return (perror("minishell: fork"), 1);
+		if (pid == 0)
+			child_process(shell, fd);
+		parent_process(shell, fd, pid);
+		if (shell->heredoc_fd != -1)
+			close(shell->heredoc_fd);
+		shell->heredoc_fd = -1;
+		shell->command_list = shell->command_list->next;
+	}
+	return (0);
+}
+
+int	check_special_case(t_shell *shell)
+{
 	if (!shell->command_list->argv)
 		return (free_all(shell));
 	if (shell->command_list && !shell->command_list->next
@@ -29,32 +54,15 @@ int	executor(t_shell *shell) //Heredoc artık çalışır durumda fakat kodun ya
 		shell->exit_status = exec_builtin_with_redir(shell);
 		return (shell->exit_status);
 	}
-	while (shell->command_list)
-	{
-		if (shell->command_list->redir && shell->command_list->redir->type == HEREDOC)
-			redir_heredoc(shell, shell->command_list->redir, &heredoc_fd);
-		if (shell->command_list->next && pipe(fd) == -1)
-			return (perror("pipe"), 1);
-		pid = fork();
-		if (pid == -1)
-			return (perror("fork"), 1);
-		if (pid == 0)
-			child_process(shell, in_fd, fd, heredoc_fd);
-		parent_process(shell->command_list, &in_fd, fd, pid);
-		if (heredoc_fd != -1)
-			close(heredoc_fd);
-		heredoc_fd = -1;
-		shell->command_list = shell->command_list->next;
-	}
-	return (0);
+	return (-1);
 }
 
-void	child_process(t_shell *shell, int in_fd, int fd[2], int heredoc_fd)
+void	child_process(t_shell *shell, int fd[2])
 {
-	if (in_fd != -1)
-		dup2(in_fd, STDIN_FILENO);
-	else if (heredoc_fd != -1)
-		dup2(heredoc_fd, STDIN_FILENO);
+	if (shell->in_fd != -1)
+		dup2(shell->in_fd, STDIN_FILENO);
+	else if (shell->heredoc_fd != -1)
+		dup2(shell->heredoc_fd, STDIN_FILENO);
 	if (shell->command_list->next)
 	{
 		close(fd[0]);
@@ -76,16 +84,16 @@ void	child_process(t_shell *shell, int in_fd, int fd[2], int heredoc_fd)
 	exec_command(shell);
 }
 
-void	parent_process(t_cmd *cmds, int *in_fd, int *fd, pid_t pid)
+void	parent_process(t_shell *shell, int fd[2], pid_t pid)
 {
-	if (*in_fd != -1)
-		close(*in_fd);
-	if (cmds->next)
+	if (shell->in_fd != -1)
+		close(shell->in_fd);
+	if (shell->command_list->next)
 	{
 		close(fd[1]);
-		*in_fd = fd[0];
+		shell->in_fd = fd[0];
 	}
-	waitpid (pid, NULL, 0);
+	waitpid(pid, NULL, 0);
 }
 
 void	exec_command(t_shell *shell)

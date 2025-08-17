@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 06:55:45 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/16 19:58:56 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/18 02:40:12 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 void	init_shell(t_shell *shell)
 {
 	shell->exit_status = 0;
+	shell->in_fd = -1;
+	shell->heredoc_fd = -1;
 	shell->token_list = NULL;
 	shell->command_list = NULL;
 	shell->env = NULL;

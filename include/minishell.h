@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:03 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/16 20:30:38 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/18 02:39:30 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ typedef struct s_shell
 	t_token	*token_list;
 	t_cmd	*command_list;
 	int		exit_status;
+	int		heredoc_fd;
+	int		in_fd;
 }	t_shell;
 
 void	signal_handler(int sig);
