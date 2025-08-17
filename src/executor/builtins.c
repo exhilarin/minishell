@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 04:36:45 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/16 20:27:30 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/17 09:21:17 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	exec_builtin(t_shell *shell)
 		return (builtin_export(shell->env));
 	// if (ft_strncmp(shell->command_list->argv[0], "unset", 5))
 	// 	return (builtin_unset(shell->command_list));
-	if (ft_strlen(shell->command_list->argv[0]) == 4
+	if (ft_strlen(shell->command_list->argv[0]) == 3
 		&& ft_strncmp(shell->command_list->argv[0], "env", 3))
 		return (builtin_env(shell->env));
 	if (ft_strlen(shell->command_list->argv[0]) == 4

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 20:25:38 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/16 20:29:12 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/17 09:57:51 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_cmd	*parser(t_token *tokens)
 	while (current_token)
 	{
 		if (!process_token(&current_token, &current_cmd, &commands))
-			return (NULL);
+			return (free_cmd(current_cmd), NULL);
 		current_token = current_token->next;
 	}
 	add_cmd_to_lst(&commands, current_cmd);
