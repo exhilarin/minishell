@@ -25,6 +25,7 @@ SRCS = \
 	src/executor/builtins.c \
 	src/executor/environment.c \
 	src/executor/redirections.c \
+	src/builtins/cd.c \
 	src/builtins/env.c \
 	src/builtins/exit.c \
 	src/builtins/echo.c \
@@ -35,7 +36,6 @@ SRCS = \
 	src/utils/tools.c \
 	src/utils/error.c \
 	src/utils/helper.c \
-	# src/builtins/cd.c \
 	# src/builtins/pwd.c \
 
 OBJS = $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)

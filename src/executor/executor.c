@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/18 09:00:10 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/18 19:06:34 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,6 @@ void	child_process(t_shell *shell, int fd[2])
 		shell->exit_status = 0;
 		exit(shutdown_shell(shell));
 	}
-	if (is_builtin(shell->command_list))
-	{
-		shell->exit_status = exec_builtin(shell);
-		exit(shutdown_shell(shell));
-	}
 	exec_command(shell);
 }
 
@@ -89,6 +84,11 @@ void	parent_process(t_shell *shell, int fd[2], pid_t pid)
 
 void	exec_command(t_shell *shell)
 {
+	if (is_builtin(shell->command_list))
+	{
+		shell->exit_status = exec_builtin(shell);
+		exit(shutdown_shell(shell));
+	}
 	shell->exec = init_exec();
 	if (!shell->exec)
 		exit(shutdown_shell(shell));
