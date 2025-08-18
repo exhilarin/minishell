@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/18 02:53:36 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/18 04:30:56 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,12 @@ int	executor(t_shell *shell)
 	int		fd[2];
 	pid_t	pid;
 
-	shell->in_fd = -1;
-	shell->heredoc_fd = -1;
-	return_value = check_special_case(shell);
+	return_value = check_special_case(shell, shell->command_list->redir);
 	if (return_value != -1)
 		return (return_value);
 	while (shell->command_list)
 	{
-		if (shell->command_list->redir
-			&& shell->command_list->redir->type == HEREDOC)
-			redir_heredoc(shell, shell->command_list->redir);
+		handle_heredoc(shell, shell->command_list->redir);
 		if (shell->command_list->next && pipe(fd) == -1)
 			return (perror("minishell: pipe"), 1);
 		pid = fork();
@@ -44,19 +40,6 @@ int	executor(t_shell *shell)
 	return (0);
 }
 
-int	check_special_case(t_shell *shell)
-{
-	if (!shell->command_list->argv)
-		return (free_all(shell));
-	if (shell->command_list && !shell->command_list->next
-		&& builtins_on_parent(shell->command_list->argv[0]))
-	{
-		shell->exit_status = exec_builtin_with_redir(shell);
-		return (shell->exit_status);
-	}
-	return (-1);
-}
-
 void	child_process(t_shell *shell, int fd[2])
 {
 	if (shell->in_fd != -1)
@@ -70,7 +53,7 @@ void	child_process(t_shell *shell, int fd[2])
 		close(fd[1]);
 	}
 	if (shell->command_list->redir)
-		handle_redirections(shell, shell->command_list->redir);
+		handle_redirections(shell, shell->command_list->redir, 0);
 	if (!shell->command_list->argv || !shell->command_list->argv[0])
 	{
 		shell->exit_status = 0;
@@ -118,30 +101,4 @@ void	exec_command(t_shell *shell)
 		shell->exit_status = 126;
 		exit(shutdown_shell(shell));
 	}
-}
-
-char	*get_cmd_path(t_shell *shell)
-{
-	char	*tmp;
-	char	*full;
-	char	*cmd;
-	int		i;
-
-	cmd = shell->command_list->argv[0];
-	if (ft_strchr(cmd, '/') && access(cmd, X_OK) == 0)
-		return (ft_strdup(cmd));
-	shell->exec->paths = ft_split(get_env_value(shell->env, "PATH"), ':');
-	if (!shell->exec->paths)
-		return (NULL);
-	i = -1;
-	while (shell->exec->paths[++i])
-	{
-		tmp = ft_strjoin(shell->exec->paths[i], "/");
-		full = ft_strjoin(tmp, cmd);
-		free(tmp);
-		if (access(full, X_OK) == 0)
-			return (full);
-		free(full);
-	}
-	return (NULL);
 }

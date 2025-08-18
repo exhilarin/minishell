@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 04:36:45 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/17 09:21:17 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/18 04:14:40 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 int	is_builtin(t_cmd *cmd)
 {
-	if (!cmd || !cmd->argv
-		|| !cmd->argv[0])
+	if (!cmd || !cmd->argv || !cmd->argv[0])
 		return (0);
 	if (ft_strlen(cmd->argv[0]) == 2 && ft_strncmp(cmd->argv[0], "cd", 2))
 		return (1);
@@ -36,35 +35,23 @@ int	is_builtin(t_cmd *cmd)
 
 int	exec_builtin(t_shell *shell)
 {
+	if (ft_strncmp(shell->command_list->argv[0], "echo", 4))
+		return (builtin_echo(shell->command_list->argv));
+	if (ft_strncmp(shell->command_list->argv[0], "export", 6))
+		return (builtin_export(shell->env));
+	if (ft_strncmp(shell->command_list->argv[0], "env", 3))
+		return (builtin_env(shell->env));
+	if (ft_strncmp(shell->command_list->argv[0], "exit", 4))
+		return (builtin_exit(shell->command_list->argv, shell));
 	// if (ft_strcmp(shell->command_list->argv[0], "cd"))
 	// 	return (builtin_cd(shell->command_list));
-	if (ft_strlen(shell->command_list->argv[0]) == 2
-		&& ft_strncmp(shell->command_list->argv[0], "echo", 4))
-		return (builtin_echo(shell->command_list->argv));
 	// if (ft_strncmp(shell->command_list->argv[0], "pwd", 3))
 	// 	return (builtin_pwd(shell->command_list));
-	if (ft_strlen(shell->command_list->argv[0]) == 4
-		&& ft_strncmp(shell->command_list->argv[0], "export", 6))
-		return (builtin_export(shell->env));
 	// if (ft_strncmp(shell->command_list->argv[0], "unset", 5))
 	// 	return (builtin_unset(shell->command_list));
-	if (ft_strlen(shell->command_list->argv[0]) == 3
-		&& ft_strncmp(shell->command_list->argv[0], "env", 3))
-		return (builtin_env(shell->env));
-	if (ft_strlen(shell->command_list->argv[0]) == 4
-		&& ft_strncmp(shell->command_list->argv[0], "exit", 4))
-		return (builtin_exit(shell->command_list->argv, shell));
 	// if (ft_strncmp(shell->command_list->argv[0], "clear", 5))
 	// 	return (builtin_exit(shell->command_list->argv, shell));
 	return (1);
-}
-
-int	builtins_on_parent(char *name)
-{
-	return (ft_strncmp(name, "cd", 2)
-		|| ft_strncmp(name, "export", 6)
-		|| ft_strncmp(name, "unset", 5)
-		|| ft_strncmp(name, "exit", 4));
 }
 
 static void	free_char_array(char **array)

@@ -25,13 +25,14 @@ SRCS = \
 	src/executor/builtins.c \
 	src/executor/environment.c \
 	src/executor/redirections.c \
-	src/builtins/echo.c \
-	src/builtins/exit.c \
 	src/builtins/env.c \
-	src/utils/error.c \
-	src/utils/tools.c \
-	src/utils/free.c \
+	src/builtins/exit.c \
+	src/builtins/echo.c \
 	src/utils/add.c \
+	src/utils/free.c \
+	src/utils/tools.c \
+	src/utils/error.c \
+	src/utils/helper.c \
 	# src/builtins/cd.c \
 	# src/builtins/export.c \
 	# src/builtins/pwd.c \

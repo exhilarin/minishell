@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 20:43:35 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/18 02:28:01 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/18 04:37:31 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	exec_builtin_with_redir(t_shell *shell)
 		exit(shutdown_shell(shell));
 	}
 	if (shell->command_list->redir)
-		handle_redirections(shell, shell->command_list->redir);
+		handle_redirections(shell, shell->command_list->redir, 1);
 	return_value = exec_builtin(shell);
 	if (dup2(stdin_backup, STDIN_FILENO) == -1
 		|| dup2(stdout_backup, STDOUT_FILENO) == -1)
@@ -107,7 +107,7 @@ static void	redir_append(t_shell *shell, t_redir *redir)
 	close(fd);
 }
 
-void	handle_redirections(t_shell *shell, t_redir *redir)
+void	handle_redirections(t_shell *shell, t_redir *redir, int proccess)
 {
 	while (redir)
 	{
@@ -117,6 +117,8 @@ void	handle_redirections(t_shell *shell, t_redir *redir)
 			redir_out(shell, redir);
 		else if (redir->type == APPEND)
 			redir_append(shell, redir);
+		else if (redir->type == HEREDOC && proccess == 1)
+			redir_heredoc(shell, redir);
 		redir = redir->next;
 	}
 }
