@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 06:38:03 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/15 04:36:55 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/18 23:54:06 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,16 +70,14 @@ char	*expand_string(t_shell *shell, char *str, int quote)
 		if ((str[i] == '\'' || str[i] == '"') && quote == 0)
 			quote = str[i++];
 		else if (str[i] == quote)
-		{
-			quote = 0;
-			i++;
-		}
+			quote = 0, i++;
 		else if (str[i] == '$' && quote != '\'')
-			result = join_and_free(result, expand_var(shell, &str[i], &i));
+			result = join_and_free(result, expand_var(shell, str, &i));
 		else
 		{
-			substr = ft_substr(str, i++, 1);
+			substr = ft_substr(str, i, 1);
 			result = join_and_free(result, substr);
+			i++;
 		}
 	}
 	return (result);
@@ -97,8 +95,10 @@ char	*expand_var(t_shell *shell, char *str, int *i)
 		(*i)++;
 		return (ft_itoa(shell->exit_status));
 	}
+	if (!ft_isalpha(str[*i]) && str[*i] != '_')
+		return (ft_strdup("$"));
 	start = *i;
-	while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_'))
+	while (ft_isalnum(str[*i]) || str[*i] == '_')
 		(*i)++;
 	var_name = ft_substr(str, start, *i - start);
 	value = get_env_value(shell->env, var_name);
