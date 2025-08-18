@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 04:36:45 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/18 04:14:40 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/18 08:41:52 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,19 +38,17 @@ int	exec_builtin(t_shell *shell)
 	if (ft_strncmp(shell->command_list->argv[0], "echo", 4))
 		return (builtin_echo(shell->command_list->argv));
 	if (ft_strncmp(shell->command_list->argv[0], "export", 6))
-		return (builtin_export(shell->env));
+		return (builtin_export(&shell->env, shell->command_list));
 	if (ft_strncmp(shell->command_list->argv[0], "env", 3))
 		return (builtin_env(shell->env));
 	if (ft_strncmp(shell->command_list->argv[0], "exit", 4))
 		return (builtin_exit(shell->command_list->argv, shell));
+	if (ft_strncmp(shell->command_list->argv[0], "unset", 5))
+		return (builtin_unset(&shell->env, shell->command_list));
 	// if (ft_strcmp(shell->command_list->argv[0], "cd"))
 	// 	return (builtin_cd(shell->command_list));
 	// if (ft_strncmp(shell->command_list->argv[0], "pwd", 3))
 	// 	return (builtin_pwd(shell->command_list));
-	// if (ft_strncmp(shell->command_list->argv[0], "unset", 5))
-	// 	return (builtin_unset(shell->command_list));
-	// if (ft_strncmp(shell->command_list->argv[0], "clear", 5))
-	// 	return (builtin_exit(shell->command_list->argv, shell));
 	return (1);
 }
 

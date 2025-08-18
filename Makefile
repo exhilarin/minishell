@@ -28,15 +28,15 @@ SRCS = \
 	src/builtins/env.c \
 	src/builtins/exit.c \
 	src/builtins/echo.c \
+	src/builtins/unset.c \
+	src/builtins/export.c \
 	src/utils/add.c \
 	src/utils/free.c \
 	src/utils/tools.c \
 	src/utils/error.c \
 	src/utils/helper.c \
 	# src/builtins/cd.c \
-	# src/builtins/export.c \
 	# src/builtins/pwd.c \
-	# src/builtins/unset.c
 
 OBJS = $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 

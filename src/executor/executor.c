@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/18 04:30:56 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/18 09:00:10 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,10 @@ int	executor(t_shell *shell)
 void	child_process(t_shell *shell, int fd[2])
 {
 	if (shell->in_fd != -1)
+	{
 		dup2(shell->in_fd, STDIN_FILENO);
+		close(shell->in_fd);
+	}
 	else if (shell->heredoc_fd != -1)
 		dup2(shell->heredoc_fd, STDIN_FILENO);
 	if (shell->command_list->next)
@@ -75,6 +78,11 @@ void	parent_process(t_shell *shell, int fd[2], pid_t pid)
 	{
 		close(fd[1]);
 		shell->in_fd = fd[0];
+	}
+	else if (shell->in_fd != -1)
+	{
+		close(fd[0]);
+		shell->in_fd = -1;
 	}
 	waitpid(pid, NULL, 0);
 }

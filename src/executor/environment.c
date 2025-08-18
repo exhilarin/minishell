@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 22:42:30 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/16 19:53:22 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/18 09:10:07 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,9 +86,12 @@ void	free_env(t_env *env)
 	while (env)
 	{
 		tmp = env->next;
-		free(env->env_line);
-		free(env->key);
-		free(env->value);
+		if (env->env_line)
+			free(env->env_line);
+		if (env->key)
+			free(env->key);
+		if (env->value)
+			free(env->value);
 		free(env);
 		env = tmp;
 	}
