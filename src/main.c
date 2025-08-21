@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/22 01:15:30 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/22 01:33:31 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	process(t_shell *shell)
 	}
 	shell->command_list = parser(shell->token_list);
 	expand_all(shell);
-	shell->exit_status = executor(shell);
+	shell->exit_status = executor(shell, shell->command_list);
 	free_all(shell);
 }
 

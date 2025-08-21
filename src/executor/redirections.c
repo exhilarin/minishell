@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 20:43:35 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/18 04:37:31 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/22 01:36:35 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	exec_builtin_with_redir(t_shell *shell)
+int	exec_builtin_with_redir(t_shell *shell, t_cmd *cmd)
 {
 	int	stdin_backup;
 	int	stdout_backup;
@@ -26,9 +26,9 @@ int	exec_builtin_with_redir(t_shell *shell)
 		shell->exit_status = 1;
 		exit(shutdown_shell(shell));
 	}
-	if (shell->command_list->redir)
-		handle_redirections(shell, shell->command_list->redir, 1);
-	return_value = exec_builtin(shell);
+	if (cmd->redir)
+		handle_redirections(shell, cmd->redir, 1);
+	return_value = exec_builtin(shell, cmd);
 	if (dup2(stdin_backup, STDIN_FILENO) == -1
 		|| dup2(stdout_backup, STDOUT_FILENO) == -1)
 	{
