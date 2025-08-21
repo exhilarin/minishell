@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 06:38:03 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/18 23:54:06 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/22 02:56:57 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,10 @@ char	*expand_string(t_shell *shell, char *str, int quote)
 		if ((str[i] == '\'' || str[i] == '"') && quote == 0)
 			quote = str[i++];
 		else if (str[i] == quote)
-			quote = 0, i++;
+		{
+			quote = 0;
+			i++;
+		}
 		else if (str[i] == '$' && quote != '\'')
 			result = join_and_free(result, expand_var(shell, str, &i));
 		else
