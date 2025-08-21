@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:24 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/19 00:32:07 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/22 01:03:06 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct s_env
 int		is_builtin(t_cmd *cmd);
 int		exec_builtin(t_shell *shell);
 
+int		builtin_pwd(void);
 int		builtin_env(t_env *env);
 int		builtin_echo(char **args);
 int		builtin_print_export(t_env *env);

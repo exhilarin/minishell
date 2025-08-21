@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 04:36:45 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/18 19:02:25 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/22 01:05:52 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ int	exec_builtin(t_shell *shell)
 		return (builtin_unset(&shell->env, shell->command_list));
 	if (ft_strncmp(shell->command_list->argv[0], "cd", 2))
 		return (builtin_cd(shell, shell->command_list));
-	// if (ft_strncmp(shell->command_list->argv[0], "pwd", 3))
-	// 	return (builtin_pwd(shell->command_list));
+	if (ft_strncmp(shell->command_list->argv[0], "pwd", 3))
+		return (builtin_pwd());
 	return (1);
 }
 
