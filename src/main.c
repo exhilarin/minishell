@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/22 01:33:31 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/23 00:40:50 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,33 +46,12 @@ void	process(t_shell *shell)
 	syntax_err = validate_syntax(shell, shell->token_list);
 	if (syntax_err != SYNTAX_OK)
 	{
-		shell->exit_status = 1;
-		if (syntax_err == ERR_INVALID)
-			shell->exit_status = 2;
-		syntax_error(syntax_err);
+		syntax_error(shell, syntax_err);
 		free_all(shell);
 		return ;
 	}
 	shell->command_list = parser(shell->token_list);
 	expand_all(shell);
-	shell->exit_status = executor(shell, shell->command_list);
+	executor(shell, shell->command_list);
 	free_all(shell);
-}
-
-int	shutdown_shell(t_shell *shell)
-{
-	int	status;
-
-	if (!shell)
-		return (1);
-	status = shell->exit_status;
-	free_all(shell);
-	if (shell->env)
-	{
-		free_env(shell->env);
-		shell->env = NULL;
-	}
-	rl_clear_history();
-	shell = NULL;
-	return (status);
 }

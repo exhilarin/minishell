@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 01:15:50 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/18 04:10:26 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/23 01:05:21 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	builtin_echo(char **args)
+void	builtin_echo(char **args)
 {
 	int	i;
 	int	j;
@@ -38,5 +38,4 @@ int	builtin_echo(char **args)
 	}
 	if (newline)
 		printf("\n");
-	return (0);
 }

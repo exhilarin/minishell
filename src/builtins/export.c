@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 00:31:37 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/22 04:13:45 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/23 01:27:56 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static t_env	*find_min_env(t_env *env, t_env *last_min)
 	return (min);
 }
 
-static int	builtin_print_export(t_env *env)
+static void	builtin_print_export(t_env *env)
 {
 	t_env	*last_min;
 	t_env	*min;
@@ -46,7 +46,6 @@ static int	builtin_print_export(t_env *env)
 		printf("\n");
 		last_min = min;
 	}
-	return (0);
 }
 
 static int	update_env(t_env **env, t_env *node)
@@ -91,22 +90,28 @@ static void	append_env_node(t_env **env, t_env *node)
 	current->next = node;
 }
 
-int	builtin_export(t_env **env, t_cmd *cmd)
+void	builtin_export(t_shell *shell, t_cmd *cmd)
 {
 	t_env	*node;
 	int		i;
 
 	if (!cmd->argv[1])
-		return (builtin_print_export(*env));
+	{
+		builtin_print_export(shell->env);
+		return ;
+	}
 	i = 1;
 	while (cmd->argv[i])
 	{
 		node = new_env_node(cmd->argv[i]);
 		if (!node)
-			return (1);
-		if (!update_env(env, node))
-			append_env_node(env, node);
+		{
+			print_error("minishell: export: allocation failed\n", shell, 1);
+			return ;
+		}
+		if (!update_env(&shell->env, node))
+			append_env_node(&shell->env, node);
 		i++;
 	}
-	return (0);
 }
+

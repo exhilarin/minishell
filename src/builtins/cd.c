@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 18:36:30 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/18 19:02:01 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/23 01:15:23 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,31 +54,44 @@ static void	set_env_value(t_env **env, char *key, char *value)
 	add_env_node(env, key, value);
 }
 
-int	builtin_cd(t_shell *shell, t_cmd *cmd)
+static int	change_directory(t_shell *shell, char *path, char *oldpwd)
 {
-	char	*path;
-	char	*oldpwd;
 	char	cwd[PATH_MAX];
 
-	oldpwd = getcwd(NULL, 0);
-	if (!oldpwd)
-		return (perror("getcwd"), 1);
-	path = cmd->argv[1];
-	if (!path)
-		path = get_env_value(shell->env, "HOME");
 	if (!path || chdir(path) == -1)
 	{
-		ft_putstr_fd("minishell: cd: ", 2);
 		if (path)
-			ft_putendl_fd(path, 2);
-		else
-			ft_putendl_fd("HOME not set", 2);
-		free(oldpwd);
-		return (1);
+		{
+			print_error("minishell: cd: ", shell, 1);
+			ft_putendl_fd(path, STDERR_FILENO);
+		}
+		return (0);
 	}
 	set_env_value(&shell->env, "OLDPWD", oldpwd);
 	if (getcwd(cwd, sizeof(cwd)))
 		set_env_value(&shell->env, "PWD", cwd);
+	return (1);
+}
+
+void	builtin_cd(t_shell *shell, t_cmd *cmd)
+{
+	char	*oldpwd;
+	char	*path;
+
+	oldpwd = getcwd(NULL, 0);
+	if (!oldpwd)
+	{
+		print_error("minishell: cd: getcwd failed\n", shell, 1);
+		return ;
+	}
+	path = cmd->argv[1];
+	if (!path)
+		path = get_env_value(shell->env, "HOME");
+	if (!change_directory(shell, path, oldpwd))
+	{
+		free(oldpwd);
+		return ;
+	}
 	free(oldpwd);
-	return (0);
+	shell->exit_status = 0;
 }

@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 04:22:09 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/22 01:56:19 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/23 01:39:07 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,15 @@ int	check_special_case(t_shell *shell, t_cmd *cmd, t_redir *redir)
 	if (!cmd && redir)
 	{
 		handle_redirections(shell, redir, 1);
-		return (free_all(shell));
+		free_all(shell);
+		return (1);
 	}
-	if (cmd && !cmd->next)
+	else if ((cmd && !cmd->next) && is_builtin(cmd))
 	{
-		if (is_builtin(cmd))
-		{
-			shell->exit_status = exec_builtin_with_redir(shell, cmd);
-			return (shell->exit_status);
-		}
+		exec_builtin_with_redir(shell, cmd);
+		return (1);
 	}
-	return (-1);
+	return (0);
 }
 
 void	handle_heredoc(t_shell *shell, t_redir *redir)

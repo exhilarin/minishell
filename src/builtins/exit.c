@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 00:33:28 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/07 00:41:06 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/23 01:22:59 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	is_numeric(const char *str)
 	return (1);
 }
 
-int	builtin_exit(char **args, t_shell *shell)
+void	builtin_exit(char **args, t_shell *shell)
 {
 	ft_putendl_fd("exit", STDERR_FILENO);
 	if (!args[1])
@@ -43,13 +43,13 @@ int	builtin_exit(char **args, t_shell *shell)
 		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 		ft_putstr_fd(args[1], STDERR_FILENO);
 		ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-		shell->exit_status = 255;
+		print_error("", shell, 255);
 		exit(shutdown_shell(shell));
 	}
 	if (args[2])
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);
-		return (1);
+		print_error("", shell, 1);
 	}
 	shell->exit_status = (unsigned char)ft_atoi(args[1]) % 256;
 	exit(shutdown_shell(shell));

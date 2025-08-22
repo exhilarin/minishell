@@ -34,8 +34,9 @@ SRCS = \
 	src/builtins/export.c \
 	src/utils/add.c \
 	src/utils/free.c \
-	src/utils/tools.c \
 	src/utils/error.c \
+	src/utils/tools.c \
+	src/utils/syntax.c \
 	src/utils/helper.c \
 
 OBJS = $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)

@@ -6,29 +6,27 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/22 01:56:12 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/23 01:38:16 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	executor(t_shell *shell, t_cmd *cmd)
+void	executor(t_shell *shell, t_cmd *cmd)
 {
-	int		return_value;
 	int		fd[2];
 	pid_t	pid;
 
-	return_value = check_special_case(shell, cmd, cmd->redir);
-	if (return_value != -1)
-		return (return_value);
+	if(check_special_case(shell, cmd, cmd->redir))
+		return ;
 	while (cmd)
 	{
 		handle_heredoc(shell, cmd->redir);
 		if (cmd->next && pipe(fd) == -1)
-			return (perror("minishell: pipe"), 1);
+			print_error("minishell: pipe failed", shell, 1);
 		pid = fork();
 		if (pid == -1)
-			return (perror("minishell: fork"), 1);
+			print_error("minishell: fork failed", shell, 1);
 		if (pid == 0)
 			child_process(shell, cmd, fd);
 		parent_process(shell, cmd, fd, pid);
@@ -37,7 +35,6 @@ int	executor(t_shell *shell, t_cmd *cmd)
 		shell->heredoc_fd = -1;
 		cmd = cmd->next;
 	}
-	return (0);
 }
 
 void	child_process(t_shell *shell, t_cmd *cmd, int fd[2])
@@ -89,7 +86,7 @@ void	exec_command(t_shell *shell, t_cmd *cmd)
 {
 	if (is_builtin(cmd))
 	{
-		shell->exit_status = exec_builtin(shell, cmd);
+		exec_builtin(shell, cmd);
 		exit(shutdown_shell(shell));
 	}
 	shell->exec = init_exec();
@@ -100,15 +97,15 @@ void	exec_command(t_shell *shell, t_cmd *cmd)
 	shell->exec->cmd_path = get_cmd_path(shell, cmd);
 	if (!shell->exec->cmd_path)
 	{
-		ft_putstr_fd("minishell: command not found: ", 2);
-		ft_putendl_fd(cmd->argv[0], 2);
-		shell->exit_status = 127;
+		print_error("minishell: command not found: ", shell, 127);
+		ft_putendl_fd(cmd->argv[0], STDERR_FILENO);
 		exit(shutdown_shell(shell));
 	}
-	if (execve(shell->exec->cmd_path, cmd->argv, env_list_to_array(shell->env)) == -1)
+	if (execve(shell->exec->cmd_path,
+		cmd->argv, env_list_to_array(shell->env)) == -1)
 	{
-		perror("minishell: execve");
-		shell->exit_status = 126;
+		print_error("minishell: permission denied: ", shell, 126);
+		ft_putendl_fd(cmd->argv[0], STDERR_FILENO);
 		exit(shutdown_shell(shell));
 	}
 }

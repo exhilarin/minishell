@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 23:16:40 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/18 08:09:40 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/23 01:22:35 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	builtin_env(t_env *env)
+void	builtin_env(t_env *env)
 {
 	while (env)
 	{
@@ -20,5 +20,4 @@ int	builtin_env(t_env *env)
 			printf("%s=%s\n", env->key, env->value);
 		env = env->next;
 	}
-	return (0);
 }

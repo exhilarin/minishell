@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 08:21:04 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/18 09:11:57 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/23 01:28:16 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	delete_node(t_env **head, t_env *prev, t_env *current)
 	free(current);
 }
 
-int	builtin_unset(t_env **env, t_cmd *cmd)
+void	builtin_unset(t_env **env, t_cmd *cmd)
 {
 	t_env	*current;
 	t_env	*prev;
@@ -47,5 +47,4 @@ int	builtin_unset(t_env **env, t_cmd *cmd)
 		}
 		i++;
 	}
-	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:16:33 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/16 20:30:35 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/23 00:29:15 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,6 @@ int		is_invalid_char(char *input);
 int		is_unclosed_quotes(const char *input);
 int		validate_syntax(t_shell *shell, t_token *tokens);
 int		validate_redir(t_token *tokens);
-void	syntax_error(int err_code);
+void	syntax_error(t_shell *shell, int err_code);
 
 #endif
