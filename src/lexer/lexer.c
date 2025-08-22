@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 15:42:55 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/16 20:18:38 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/22 03:12:26 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ char	*extract_word(char **input)
 	while (**input && !ft_isspace(**input)
 		&& **input != '|' && **input != '<' && **input != '>')
 	{
-		if (**input == '\'' || **input == '"')
+		if (**input == '"')
 		{
 			result = append_quoted_part(input, result, **input);
 			if (!result)
