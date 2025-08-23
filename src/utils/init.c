@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 06:55:45 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/18 02:40:12 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/23 18:20:03 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,5 +75,6 @@ t_exec	*init_exec(void)
 	exec->cmd_path = NULL;
 	exec->paths = NULL;
 	exec->envp = NULL;
+	exec->flag = 0;
 	return (exec);
 }

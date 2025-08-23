@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helper.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 04:22:09 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/23 01:39:07 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/23 19:07:45 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,28 +38,58 @@ void	handle_heredoc(t_shell *shell, t_redir *redir)
 	}
 }
 
-char	*get_cmd_path(t_shell *shell, t_cmd *cmd)
+static	void split_path(t_shell *shell)
 {
-	char	*tmp;
-	char	*full;
-	char	*cmd_name;
-	int		i;
+	char	*path_line;
 
-	cmd_name = cmd->argv[0];
-	if (ft_strchr(cmd_name, '/') && access(cmd_name, X_OK) == 0)
-		return (ft_strdup(cmd_name));
-	shell->exec->paths = ft_split(get_env_value(shell->env, "PATH"), ':');
-	if (!shell->exec->paths)
-		return (NULL);
+	path_line = NULL;
+	path_line = get_env_value(shell->env, "PATH");
+	if(!path_line)
+	{
+		shell->exec->flag = 1;
+		return ;
+	}
+	shell->exec->paths = ft_split(path_line, ':');
+}
+
+static char	*search_in_paths(t_shell *shell, char *cmd_name)
+{
+	int			i;
+	char		*tmp;
+	char		*full;
+	struct stat	st;
+
 	i = -1;
 	while (shell->exec->paths[++i])
 	{
 		tmp = ft_strjoin(shell->exec->paths[i], "/");
 		full = ft_strjoin(tmp, cmd_name);
 		free(tmp);
-		if (access(full, X_OK) == 0)
+		if (access(full, X_OK) == 0
+			&& stat(full, &st) == 0
+			&& S_ISREG(st.st_mode))
 			return (full);
 		free(full);
 	}
 	return (NULL);
+}
+
+char	*get_cmd_path(t_shell *shell, t_cmd *cmd)
+{
+	struct stat	st;
+	char		*cmd_name;
+
+	cmd_name = cmd->argv[0];
+	if (ft_strchr(cmd_name, '/'))
+	{
+		if (access(cmd_name, X_OK) == 0
+			&& stat(cmd_name, &st) == 0
+			&& S_ISREG(st.st_mode))
+			return (ft_strdup(cmd_name));
+		return (NULL);
+	}
+	split_path(shell);
+	if (!shell->exec->paths)
+		return (NULL);
+	return (search_in_paths(shell, cmd_name));
 }

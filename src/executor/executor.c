@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/23 01:38:16 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/23 18:56:12 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,22 @@ void	parent_process(t_shell *shell, t_cmd *cmd, int fd[2], pid_t pid)
 	}
 	waitpid(pid, NULL, 0);
 }
+static	void exec_error(t_shell *shell)
+{
+	if (shell->exec->flag == 1)
+	{
+		print_error("minishell: ", shell, 127);
+		ft_putstr_fd(shell->command_list->argv[0], STDERR_FILENO);
+		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		exit(shutdown_shell(shell));
+	}
+	else if (!shell->exec->cmd_path)
+	{
+		ft_putstr_fd(shell->command_list->argv[0], STDERR_FILENO);
+		print_error(": command not found\n", shell, 127);
+		exit(shutdown_shell(shell));
+	}
+}
 
 void	exec_command(t_shell *shell, t_cmd *cmd)
 {
@@ -95,12 +111,7 @@ void	exec_command(t_shell *shell, t_cmd *cmd)
 	if (!cmd->argv[0])
 		exit(shutdown_shell(shell));
 	shell->exec->cmd_path = get_cmd_path(shell, cmd);
-	if (!shell->exec->cmd_path)
-	{
-		print_error("minishell: command not found: ", shell, 127);
-		ft_putendl_fd(cmd->argv[0], STDERR_FILENO);
-		exit(shutdown_shell(shell));
-	}
+	exec_error(shell);
 	if (execve(shell->exec->cmd_path,
 		cmd->argv, env_list_to_array(shell->env)) == -1)
 	{

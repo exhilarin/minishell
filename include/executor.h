@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:20 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/23 01:39:25 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/23 18:51:28 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,13 @@
 # define EXECUTOR_H
 
 # include <sys/types.h>
+# include <sys/stat.h>
 
 typedef struct s_shell	t_shell;
 
 typedef struct s_exec
 {
+	int		flag;
 	char	*cmd_path;
 	char	**paths;
 	char	**envp;
