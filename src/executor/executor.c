@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/23 18:56:12 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/23 19:51:25 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,19 +81,26 @@ void	parent_process(t_shell *shell, t_cmd *cmd, int fd[2], pid_t pid)
 	}
 	waitpid(pid, NULL, 0);
 }
-static	void exec_error(t_shell *shell)
+
+static void	exec_error(t_shell *shell, t_cmd *cmd)
 {
 	if (shell->exec->flag == 1)
 	{
-		print_error("minishell: ", shell, 127);
-		ft_putstr_fd(shell->command_list->argv[0], STDERR_FILENO);
-		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
+		ft_putendl_fd(": No such file or directory", STDERR_FILENO);
 		exit(shutdown_shell(shell));
 	}
 	else if (!shell->exec->cmd_path)
 	{
-		ft_putstr_fd(shell->command_list->argv[0], STDERR_FILENO);
+		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
 		print_error(": command not found\n", shell, 127);
+		exit(shutdown_shell(shell));
+	}
+	else if (access(shell->exec->cmd_path, X_OK) != 0)
+	{
+		print_error("minishell: permission denied: ", shell, 126);
+		ft_putendl_fd(cmd->argv[0], STDERR_FILENO);
 		exit(shutdown_shell(shell));
 	}
 }
@@ -106,16 +113,14 @@ void	exec_command(t_shell *shell, t_cmd *cmd)
 		exit(shutdown_shell(shell));
 	}
 	shell->exec = init_exec();
-	if (!shell->exec)
-		exit(shutdown_shell(shell));
-	if (!cmd->argv[0])
+	if (!shell->exec || !cmd->argv[0])
 		exit(shutdown_shell(shell));
 	shell->exec->cmd_path = get_cmd_path(shell, cmd);
-	exec_error(shell);
+	exec_error(shell, cmd);
 	if (execve(shell->exec->cmd_path,
 		cmd->argv, env_list_to_array(shell->env)) == -1)
 	{
-		print_error("minishell: permission denied: ", shell, 126);
+		print_error("minishell: execution failed: ", shell, 126);
 		ft_putendl_fd(cmd->argv[0], STDERR_FILENO);
 		exit(shutdown_shell(shell));
 	}

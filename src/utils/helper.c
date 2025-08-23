@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 04:22:09 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/23 19:07:45 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/23 19:50:44 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,7 @@ static char	*search_in_paths(t_shell *shell, char *cmd_name)
 		tmp = ft_strjoin(shell->exec->paths[i], "/");
 		full = ft_strjoin(tmp, cmd_name);
 		free(tmp);
-		if (access(full, X_OK) == 0
-			&& stat(full, &st) == 0
-			&& S_ISREG(st.st_mode))
+		if (stat(full, &st) == 0 && S_ISREG(st.st_mode))
 			return (full);
 		free(full);
 	}
@@ -82,9 +80,7 @@ char	*get_cmd_path(t_shell *shell, t_cmd *cmd)
 	cmd_name = cmd->argv[0];
 	if (ft_strchr(cmd_name, '/'))
 	{
-		if (access(cmd_name, X_OK) == 0
-			&& stat(cmd_name, &st) == 0
-			&& S_ISREG(st.st_mode))
+		if (stat(cmd_name, &st) == 0 && S_ISREG(st.st_mode))
 			return (ft_strdup(cmd_name));
 		return (NULL);
 	}
