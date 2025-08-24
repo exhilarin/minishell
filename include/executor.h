@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:20 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/23 18:51:28 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/24 19:35:04 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ char	*get_cmd_path(t_shell *shell, t_cmd *cmd);
 int		check_special_case(t_shell *shell, t_cmd *cmd, t_redir *redir);
 
 void	exec_builtin_with_redir(t_shell *shell, t_cmd *cmd);
-void	redir_heredoc(t_shell *shell, t_redir *redir);
-void	handle_heredoc(t_shell *shell, t_redir *redir);
+int		redir_heredoc(t_shell *shell, t_redir *redir);
+int		handle_heredoc(t_shell *shell, t_redir *redir);
 void	handle_redirections(t_shell *shell, t_redir *redir, int proccess);
 
 #endif

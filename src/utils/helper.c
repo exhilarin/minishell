@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 04:22:09 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/23 19:50:44 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/24 19:33:45 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,15 @@ int	check_special_case(t_shell *shell, t_cmd *cmd, t_redir *redir)
 	return (0);
 }
 
-void	handle_heredoc(t_shell *shell, t_redir *redir)
+int	handle_heredoc(t_shell *shell, t_redir *redir)
 {
 	while (redir)
 	{
-		if (redir->type == HEREDOC)
-			redir_heredoc(shell, redir);
+		if (redir->type == HEREDOC && redir_heredoc(shell, redir))
+			return (1);
 		redir = redir->next;
 	}
+	return (0);
 }
 
 static	void split_path(t_shell *shell)

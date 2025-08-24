@@ -14,6 +14,8 @@ void	exec_builtin_with_redir(t_shell *shell, t_cmd *cmd)
 	}
 	if (cmd->redir)
 		handle_redirections(shell, cmd->redir, 1);
+	if (shell->exit_status == 130)
+		return ;
 	exec_builtin(shell, cmd);
 	if (dup2(stdin_backup, STDIN_FILENO) == -1
 		|| dup2(stdout_backup, STDOUT_FILENO) == -1)

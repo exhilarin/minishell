@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:03 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/23 01:01:56 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/24 23:52:20 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,11 @@ typedef struct s_shell
 	int		in_fd;
 }	t_shell;
 
+t_shell	*set_get_shell(t_shell *sh);
 void	signal_handler(int sig);
 void	process(t_shell *shell);
 int		shutdown_shell(t_shell *shell);
+void	exit_shell(int code);
 void	print_error(char *msg, t_shell *shell, int code);
 
 void	init_signal(void);

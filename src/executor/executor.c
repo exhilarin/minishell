@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/23 19:51:25 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/24 19:35:28 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ void	executor(t_shell *shell, t_cmd *cmd)
 		return ;
 	while (cmd)
 	{
-		handle_heredoc(shell, cmd->redir);
+		if (handle_heredoc(shell, cmd->redir))
+			return ;
 		if (cmd->next && pipe(fd) == -1)
 			print_error("minishell: pipe failed", shell, 1);
 		pid = fork();
