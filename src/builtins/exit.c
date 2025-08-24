@@ -6,7 +6,7 @@
 /*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 00:33:28 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/23 05:06:07 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/24 16:57:01 by ilyas-guney      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,13 @@ void	builtin_exit(char **args, t_shell *shell)
 		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 		ft_putstr_fd(args[1], STDERR_FILENO);
 		ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-		print_error("", shell, 255);
+		shell->exit_status = 255;
 		exit(shutdown_shell(shell));
 	}
 	if (args[2])
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);
-		print_error("", shell, 1);
+		shell->exit_status = 1;
 		return ;
 	}
 	shell->exit_status = (unsigned char)ft_atoi(args[1]) % 256;
