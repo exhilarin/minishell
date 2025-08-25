@@ -32,7 +32,7 @@ void	expand_args(t_shell *shell, t_cmd *cmd)
 
 	if (!cmd->argv)
 		return ;
-	i = 0;
+	i = 1;
 	while (cmd->argv[i])
 	{
 		expanded = expand_string(shell, cmd->argv[i], 0);
