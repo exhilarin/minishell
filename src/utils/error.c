@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 00:22:09 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/25 02:47:38 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/26 01:49:51 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	shutdown_shell(t_shell *shell)
 		free_env(shell->env);
 		shell->env = NULL;
 	}
-	rl_clear_history();
 	shell = NULL;
 	return (status);
 }
@@ -38,13 +37,10 @@ void	print_error(char *msg, t_shell *shell, int code)
 
 void	exit_shell(int code)
 {
-	t_shell	*sh;
+	t_shell	*shell;
 
-	sh = set_get_shell(NULL);
-	if (sh)
-	{
-		sh->exit_status = code;
-		shutdown_shell(sh);
-	}
+	shell = set_get_shell(NULL);
+	if (shell)
+		shutdown_shell(shell);
 	exit(code);
 }

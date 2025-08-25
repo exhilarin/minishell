@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:03 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/25 03:07:26 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/26 01:44:59 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-extern volatile sig_atomic_t	g_signal;
+extern int	g_signal_code;
 
 typedef struct s_shell
 {
@@ -46,6 +46,7 @@ typedef struct s_shell
 
 t_shell	*set_get_shell(t_shell *sh);
 void	signal_handler(int sig);
+void	discard_signals(void);
 void	process(t_shell *shell);
 int		shutdown_shell(t_shell *shell);
 void	exit_shell(int code);
