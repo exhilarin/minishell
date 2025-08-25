@@ -3,14 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 06:55:45 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/23 18:20:03 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/25 02:47:42 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_shell	*set_get_shell(t_shell *sh)
+{
+	static t_shell	*stored;
+
+	if (sh)
+		stored = sh;
+	return (stored);
+}
 
 void	init_shell(t_shell *shell)
 {

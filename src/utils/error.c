@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 00:22:09 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/24 23:50:26 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/25 02:47:38 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,6 @@ int	shutdown_shell(t_shell *shell)
 	rl_clear_history();
 	shell = NULL;
 	return (status);
-}
-
-t_shell	*set_get_shell(t_shell *sh)
-{
-	static t_shell	*stored;
-
-	if (sh)
-		stored = sh;
-	return (stored);
 }
 
 void	print_error(char *msg, t_shell *shell, int code)

@@ -19,6 +19,7 @@ SRCS = \
 	src/utils/signal.c \
 	src/lexer/lexer.c \
 	src/parser/parser.c \
+	src/parser/handle.c \
 	src/parser/expand.c \
 	src/executor/heredoc.c \
 	src/executor/executor.c \

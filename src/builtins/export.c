@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 00:31:37 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/23 17:59:59 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/25 04:47:01 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,4 +114,3 @@ void	builtin_export(t_shell *shell, t_cmd *cmd)
 		i++;
 	}
 }
-

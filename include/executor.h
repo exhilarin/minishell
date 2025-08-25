@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:20 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/24 19:35:04 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/25 04:32:41 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,15 @@ typedef struct s_exec
 	char	**envp;
 }	t_exec;
 
-void	expand_all(t_shell *shell);
-void	expand_args(t_shell *shell, t_cmd *cmd);
-void	expand_redirs(t_shell *shell, t_cmd *cmd);
-char	*expand_string(t_shell *shell, char *str, int quote);
-char	*expand_var(t_shell *shell, char *str, int *i);
+char	*handle_quoted_part(char **str, char quote);
+char	*handle_quote(char **str, int *quote);
+char	*handle_char(char *str, int *i);
+
+void    expand_all(t_shell *shell);
+void    expand_args(t_shell *shell, t_cmd *cmd);
+void    expand_redirs(t_shell *shell, t_cmd *cmd);
+char    *expand_string(t_shell *shell, char *str);
+char    *expand_var(t_shell *shell, char *str, char **ptr_i);
 
 void	executor(t_shell *shell, t_cmd *cmd);
 void	exec_command(t_shell *shell, t_cmd *cmd);
