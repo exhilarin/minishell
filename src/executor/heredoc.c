@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 06:51:59 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/26 01:45:21 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/26 02:22:32 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,35 +28,13 @@ static void	heredoc_child(t_redir *redir, int wfd)
 		free(line);
 	}
 	close(wfd);
-	exit_shell(0);
+	exit_shell(0, NULL);
 }
 
-int	redir_heredoc(t_shell *shell, t_redir *redir)
+static int	redir_heredoc_parent(t_shell *shell, int fd[2], pid_t pid)
 {
-	int		fd[2];
-	int		status;
-	pid_t	pid;
+	int	status;
 
-	if (pipe(fd) == -1)
-	{
-		print_error("minishell: pipe failed", shell, 1);
-		exit_shell(1);
-	}
-	discard_signals();
-	g_signal_code = 2;
-	pid = fork();
-	if (pid == -1)
-	{
-		close(fd[0]);
-		close(fd[1]);
-		exit_shell(1);
-	}
-	if (pid == 0)
-	{
-		close(fd[0]);
-		init_signal();
-		heredoc_child(redir, fd[1]);
-	}
 	close(fd[1]);
 	waitpid(pid, &status, 0);
 	if (WIFSIGNALED(status))
@@ -65,5 +43,31 @@ int	redir_heredoc(t_shell *shell, t_redir *redir)
 		return (WEXITSTATUS(status));
 	shell->heredoc_fd = fd[0];
 	return (0);
+}
+
+int	redir_heredoc(t_shell *shell, t_redir *redir)
+{
+	int		fd[2];
+	pid_t	pid;
+
+	if (pipe(fd) == -1)
+		exit_shell(1, "minishell: pipe failed\n");
+	discard_signals();
+	g_signal_code = 2;
+	pid = fork();
+	if (pid == -1)
+	{
+		close(fd[0]);
+		close(fd[1]);
+		exit_shell(1, "minishell: fork failed\n");
+	}
+	if (pid == 0)
+	{
+		close(fd[0]);
+		init_signal();
+		heredoc_child(redir, fd[1]);
+	}
+	close(fd[1]);
+	return (redir_heredoc_parent(shell, fd, pid));
 }
 

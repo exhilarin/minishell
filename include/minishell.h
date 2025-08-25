@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:03 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/26 01:44:59 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/26 02:11:53 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	signal_handler(int sig);
 void	discard_signals(void);
 void	process(t_shell *shell);
 int		shutdown_shell(t_shell *shell);
-void	exit_shell(int code);
+void exit_shell(int code, char *msg);
 void	print_error(char *msg, t_shell *shell, int code);
 
 void	init_signal(void);

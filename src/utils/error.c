@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 00:22:09 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/26 01:49:51 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/26 02:11:36 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,15 @@ void	print_error(char *msg, t_shell *shell, int code)
 	shell->exit_status = code;
 }
 
-void	exit_shell(int code)
+void	exit_shell(int code, char *msg)
 {
-	t_shell	*shell;
+    t_shell *shell = set_get_shell(NULL);
 
-	shell = set_get_shell(NULL);
-	if (shell)
-		shutdown_shell(shell);
-	exit(code);
+    if (msg)
+        ft_putstr_fd(msg, STDERR_FILENO);
+
+    if (shell)
+        shutdown_shell(shell);
+
+    exit(code);
 }

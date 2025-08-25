@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 03:55:36 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/26 01:42:13 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/26 02:34:48 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,22 @@ int	g_signal_code = 0;
 void	signal_handler(int sig)
 {
 	(void)sig;
-	if (g_signal_code == 0) // normal prompt
+	if (g_signal_code == 0)
 	{
 		write(1, "\n", 1);
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
-		g_signal_code = 130;
 	}
-	else if (g_signal_code == 1) // komut çalışırken
+	else if (g_signal_code == 1)
 	{
 		write(1, "\n", 1);
-		g_signal_code = 130;
+		set_get_shell(NULL)->exit_status = 130;
 	}
-	else if (g_signal_code == 2) // heredoc modunda
+	else if (g_signal_code == 2)
 	{
 		write(1, "\n", 1);
-		exit_shell(130);
+		exit_shell(130, NULL);
 	}
 }
 
