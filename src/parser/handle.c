@@ -6,7 +6,7 @@
 /*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 04:04:56 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/25 04:48:25 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/25 05:13:51 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*handle_quoted_part(char **str, char quote)
 	char	*result;
 	int		len;
 	int		i;
-	
+
 	i = 0;
 	len = 0;
 	if (**str == quote)
