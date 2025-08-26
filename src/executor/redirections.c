@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirections.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/26 18:10:34 by mugenan           #+#    #+#             */
+/*   Updated: 2025/08/26 18:11:19 by mugenan          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	exec_builtin_with_redir(t_shell *shell, t_cmd *cmd)
@@ -11,7 +23,7 @@ void	exec_builtin_with_redir(t_shell *shell, t_cmd *cmd)
 		exit_shell(1, "minishell: dup failed\n");
 	if (cmd->redir)
 		handle_redirections(shell, cmd->redir, 1);
-	if (shell->exit_status == 130)
+	if (exit_status_manager(0, 0) == 130)
 		return ;
 	exec_builtin(shell, cmd);
 	if (dup2(stdin_backup, STDIN_FILENO) == -1

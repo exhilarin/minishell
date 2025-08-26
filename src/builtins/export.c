@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 00:31:37 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/25 04:47:01 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/26 17:54:10 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ static void	builtin_print_export(t_env *env)
 		printf("\n");
 		last_min = min;
 	}
+	exit_status_manager(0, 1);
 }
 
 static int	update_env(t_env **env, t_env *node)
@@ -106,11 +107,13 @@ void	builtin_export(t_shell *shell, t_cmd *cmd)
 		node = new_env_node(cmd->argv[i]);
 		if (!node)
 		{
-			print_error("minishell: export: allocation failed\n", shell, 1);
+			print_error("minishell: export: allocation failed\n", 1);
+			exit_status_manager(1, 1);
 			return ;
 		}
 		if (!update_env(&shell->env, node))
 			append_env_node(&shell->env, node);
 		i++;
 	}
+	exit_status_manager(0, 1);
 }

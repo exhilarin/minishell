@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 08:21:04 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/23 01:28:16 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/26 17:55:03 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,5 @@ void	builtin_unset(t_env **env, t_cmd *cmd)
 		}
 		i++;
 	}
+	exit_status_manager(0, 1);
 }

@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 06:51:59 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/26 02:22:32 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/26 16:56:55 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,20 @@ static void	heredoc_child(t_redir *redir, int wfd)
 static int	redir_heredoc_parent(t_shell *shell, int fd[2], pid_t pid)
 {
 	int	status;
+	int	exit_code;
 
 	close(fd[1]);
 	waitpid(pid, &status, 0);
 	if (WIFSIGNALED(status))
-		return (128 + WTERMSIG(status));
+		exit_code = 128 + WTERMSIG(status);
 	else if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
-		return (WEXITSTATUS(status));
+		exit_code = WEXITSTATUS(status);
+	else
+		exit_code = 0;
+	if (exit_code != 0)
+		exit_status_manager(exit_code, 1);
 	shell->heredoc_fd = fd[0];
-	return (0);
+	return (exit_code);
 }
 
 int	redir_heredoc(t_shell *shell, t_redir *redir)
@@ -70,4 +75,3 @@ int	redir_heredoc(t_shell *shell, t_redir *redir)
 	close(fd[1]);
 	return (redir_heredoc_parent(shell, fd, pid));
 }
-

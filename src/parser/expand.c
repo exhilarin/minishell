@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 04:04:56 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/25 04:34:39 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/26 16:40:41 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ char	*expand_var(t_shell *shell, char *str, char **ptr_i)
 	if (**ptr_i == '?')
 	{
 		(*ptr_i)++;
-		return (ft_itoa(shell->exit_status));
+		return (ft_itoa(exit_status_manager(0, 0)));
 	}
 	if (!ft_isalpha(**ptr_i) && **ptr_i != '_')
 		return (ft_strdup("$"));

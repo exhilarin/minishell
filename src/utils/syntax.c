@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 19:51:17 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/23 00:28:50 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/26 17:07:30 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,18 +79,18 @@ int	validate_redir(t_token *tokens)
 	return (SYNTAX_OK);
 }
 
-void	syntax_error(t_shell *shell, int err_code)
+void	syntax_error(int err_code)
 {
 	if (err_code == ERR_INVALID)
-		print_error("syntax error: unexpected token\n", shell, 2);
+		print_error("syntax error: unexpected token\n", 2);
 	if (err_code == ERR_PIPE_START)
-		print_error("syntax error: unexpected pipe at start\n", shell, 2);
+		print_error("syntax error: unexpected pipe at start\n", 2);
 	else if (err_code == ERR_PIPE_DOUBLE)
-		print_error("syntax error: double pipe `||`\n", shell, 2);
+		print_error("syntax error: double pipe `||`\n", 2);
 	else if (err_code == ERR_REDIR_EOF)
-		print_error("syntax error: redirection without target\n", shell, 2);
+		print_error("syntax error: redirection without target\n", 2);
 	else if (err_code == ERR_PIPE_EOF)
-		print_error("syntax error: unexpected token\n", shell, 2);
+		print_error("syntax error: unexpected token\n", 2);
 	else if (err_code == ERR_UNCLOSED_QUOTES)
-		print_error("syntax error: unclosed quote\n", shell, 2);
+		print_error("syntax error: unclosed quote\n", 2);
 }

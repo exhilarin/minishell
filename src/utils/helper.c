@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 04:22:09 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/24 19:33:45 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/26 18:11:35 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@ int	handle_heredoc(t_shell *shell, t_redir *redir)
 	return (0);
 }
 
-static	void split_path(t_shell *shell)
+static	void	split_path(t_shell *shell)
 {
 	char	*path_line;
 
 	path_line = NULL;
 	path_line = get_env_value(shell->env, "PATH");
-	if(!path_line)
+	if (!path_line)
 	{
 		shell->exec->flag = 1;
 		return ;

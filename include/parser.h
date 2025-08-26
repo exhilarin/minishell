@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:16:33 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/23 00:29:15 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/26 18:05:24 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,11 @@ typedef struct s_cmd
 
 t_cmd	*parser(t_token *tokens);
 
-int		process_token(t_token **c_tkn, t_cmd **c_cmd, t_cmd **cmds);
 int		is_invalid_char(char *input);
+int		validate_redir(t_token *tokens);
 int		is_unclosed_quotes(const char *input);
 int		validate_syntax(t_shell *shell, t_token *tokens);
-int		validate_redir(t_token *tokens);
-void	syntax_error(t_shell *shell, int err_code);
+int		process_token(t_token **c_tkn, t_cmd **c_cmd, t_cmd **cmds);
+void	syntax_error(int err_code);
 
 #endif

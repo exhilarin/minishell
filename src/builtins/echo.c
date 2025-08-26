@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 01:15:50 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/23 01:05:21 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/26 17:51:50 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,14 @@
 void	builtin_echo(char **args)
 {
 	int	i;
-	int	j;
 	int	newline;
 
-	i = 0;
+	i = 1;
 	newline = 1;
-	while (args[++i] && ft_strncmp(args[1], "-n", 2))
+	while (args[i] && ft_strncmp(args[i], "-n", 2) == 0)
 	{
-		j = 2;
-		while (args[i][j] == 'n')
-			j++;
-		if (args[i][j] != '\0')
-			break ;
 		newline = 0;
+		i++;
 	}
 	while (args[i])
 	{
@@ -38,4 +33,5 @@ void	builtin_echo(char **args)
 	}
 	if (newline)
 		printf("\n");
+	exit_status_manager(0, 1);
 }

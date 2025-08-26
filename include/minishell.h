@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:03 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/26 02:11:53 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/26 18:05:07 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,24 +39,29 @@ typedef struct s_shell
 	t_exec	*exec;
 	t_token	*token_list;
 	t_cmd	*command_list;
-	int		exit_status;
 	int		heredoc_fd;
 	int		in_fd;
 }	t_shell;
 
+t_cmd	*init_cmd(void);
+t_exec	*init_exec(void);
 t_shell	*set_get_shell(t_shell *sh);
+
+int		shutdown_shell(t_shell *shell);
+int		exit_status_manager(int status, int mode);
+
+void	process(t_shell *shell);
+
 void	signal_handler(int sig);
 void	discard_signals(void);
-void	process(t_shell *shell);
-int		shutdown_shell(t_shell *shell);
-void exit_shell(int code, char *msg);
-void	print_error(char *msg, t_shell *shell, int code);
+
+void	exec_error(t_shell *shell, t_cmd *cmd);
+void	exit_shell(int code, char *msg);
+void	print_error(char *msg, int code);
 
 void	init_signal(void);
 void	init_shell(t_shell *shell);
 void	init_env(t_shell *shell, char **envp);
-t_cmd	*init_cmd(void);
-t_exec	*init_exec(void);
 
 void	add_token(t_token **tokens, t_token_type type, char *value);
 void	add_arg_to_cmd(t_cmd *current_cmd, char *token_value);

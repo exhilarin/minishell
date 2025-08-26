@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 03:55:36 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/26 02:34:48 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/26 17:26:22 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	signal_handler(int sig)
 	else if (g_signal_code == 1)
 	{
 		write(1, "\n", 1);
-		set_get_shell(NULL)->exit_status = 130;
+		exit_status_manager(130, 1);
 	}
 	else if (g_signal_code == 2)
 	{

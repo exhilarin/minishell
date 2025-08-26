@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 04:36:45 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/23 01:34:24 by ilyas-guney      ###   ########.fr       */
+/*   Updated: 2025/08/26 18:01:28 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,13 @@ void	exec_builtin(t_shell *shell, t_cmd *cmd)
 	else if (ft_strncmp(cmd->argv[0], "env", 3))
 		builtin_env(shell->env);
 	else if (ft_strncmp(cmd->argv[0], "exit", 4))
-		builtin_exit(cmd->argv, shell);
+		builtin_exit(cmd->argv);
 	else if (ft_strncmp(cmd->argv[0], "unset", 5))
 		builtin_unset(&shell->env, cmd);
 	else if (ft_strncmp(cmd->argv[0], "cd", 2))
 		builtin_cd(shell, cmd);
 	else if (ft_strncmp(cmd->argv[0], "pwd", 3))
-		builtin_pwd(shell);
+		builtin_pwd();
 }
 
 static void	free_char_array(char **array)

@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 23:16:40 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/23 18:00:25 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/26 18:08:59 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,5 @@ void	builtin_env(t_env *env)
 			printf("%s=%s\n", env->key, env->value);
 		env = env->next;
 	}
+	exit_status_manager(0, 1);
 }

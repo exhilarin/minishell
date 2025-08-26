@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/24 23:52:51 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/26 18:08:50 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	process(t_shell *shell)
 	syntax_err = validate_syntax(shell, shell->token_list);
 	if (syntax_err != SYNTAX_OK)
 	{
-		syntax_error(shell, syntax_err);
+		syntax_error(syntax_err);
 		free_all(shell);
 		return ;
 	}

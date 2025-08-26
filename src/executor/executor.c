@@ -6,39 +6,34 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/26 02:38:55 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/26 18:12:02 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	executor(t_shell *shell, t_cmd *cmd)
+static	void	exec_command(t_shell *shell, t_cmd *cmd)
 {
-	int		fd[2];
-	pid_t	pid;
-
-	if (check_special_case(shell, cmd, cmd->redir))
-		return ;
-	while (cmd)
+	if (is_builtin(cmd))
 	{
-		if (handle_heredoc(shell, cmd->redir))
-			return ;
-		if (cmd->next && pipe(fd) == -1)
-			exit_shell(1, "minishell: pipe failed\n");
-		pid = fork();
-		if (pid == -1)
-			exit_shell(1, "minishell: fork failed\n");
-		if (pid == 0)
-			child_process(shell, cmd, fd);
-		parent_process(shell, cmd, fd, pid);
-		if (shell->heredoc_fd != -1)
-			close(shell->heredoc_fd);
-		shell->heredoc_fd = -1;
-		cmd = cmd->next;
+		exec_builtin(shell, cmd);
+		exit_shell(exit_status_manager(0, 0), NULL);
+	}
+	shell->exec = init_exec();
+	if (!shell->exec || !cmd->argv[0])
+		exit_shell(1, NULL);
+	shell->exec->cmd_path = get_cmd_path(shell, cmd);
+	exec_error(shell, cmd);
+	if (execve(shell->exec->cmd_path, cmd->argv,
+			env_list_to_array(shell->env)) == -1)
+	{
+		ft_putstr_fd("minishell: execution failed: ", STDERR_FILENO);
+		ft_putendl_fd(cmd->argv[0], STDERR_FILENO);
+		exit_shell(126, NULL);
 	}
 }
 
-void	child_process(t_shell *shell, t_cmd *cmd, int fd[2])
+static	void	child_process(t_shell *shell, t_cmd *cmd, int fd[2])
 {
 	if (shell->in_fd != -1)
 	{
@@ -66,7 +61,7 @@ void	child_process(t_shell *shell, t_cmd *cmd, int fd[2])
 	exec_command(shell, cmd);
 }
 
-void	parent_process(t_shell *shell, t_cmd *cmd, int fd[2], pid_t pid)
+static	void	parent_process(t_shell *shell, t_cmd *cmd, int fd[2])
 {
 	if (shell->in_fd != -1)
 		close(shell->in_fd);
@@ -80,45 +75,48 @@ void	parent_process(t_shell *shell, t_cmd *cmd, int fd[2], pid_t pid)
 		close(fd[0]);
 		shell->in_fd = -1;
 	}
-	waitpid(pid, NULL, 0);
 }
 
-static void	exec_error(t_shell *shell, t_cmd *cmd)
+static void	run_command_process(t_shell *shell, t_cmd *cmd, int fd[2],
+		pid_t *pid)
 {
-	if (shell->exec->flag == 1)
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
-		ft_putendl_fd(": No such file or directory", STDERR_FILENO);
-		exit_shell(1, NULL);
-	}
-	else if (!shell->exec->cmd_path)
-		exit_shell(127, "minishell: command not found\n");
-	else if (access(shell->exec->cmd_path, X_OK) != 0)
-	{
-		ft_putstr_fd("minishell: permission denied: ", STDERR_FILENO);
-		ft_putendl_fd(cmd->argv[0], STDERR_FILENO);
-		exit_shell(126, NULL);
-	}
+	if (handle_heredoc(shell, cmd->redir))
+		return ;
+	if (cmd->next && pipe(fd) == -1)
+		exit_shell(1, "minishell: pipe failed\n");
+	*pid = fork();
+	if (*pid == -1)
+		exit_shell(1, "minishell: fork failed\n");
+	if (*pid == 0)
+		child_process(shell, cmd, fd);
+	parent_process(shell, cmd, fd);
 }
 
-void	exec_command(t_shell *shell, t_cmd *cmd)
+void	executor(t_shell *shell, t_cmd *cmd)
 {
-	if (is_builtin(cmd))
+	int		fd[2];
+	pid_t	pids[1024];
+	int		count;
+	int		status;
+
+	count = 0;
+	if (check_special_case(shell, cmd, cmd->redir))
+		return ;
+	while (cmd)
 	{
-		exec_builtin(shell, cmd);
-		exit_shell(shell->exit_status, NULL);
+		run_command_process(shell, cmd, fd, &pids[count]);
+		if (shell->heredoc_fd != -1)
+			close(shell->heredoc_fd);
+		shell->heredoc_fd = -1;
+		count++;
+		cmd = cmd->next;
 	}
-	shell->exec = init_exec();
-	if (!shell->exec || !cmd->argv[0])
-		exit_shell(1, NULL);
-	shell->exec->cmd_path = get_cmd_path(shell, cmd);
-	exec_error(shell, cmd);
-	if (execve(shell->exec->cmd_path, cmd->argv,
-			env_list_to_array(shell->env)) == -1)
+	while (count-- > 0)
 	{
-		ft_putstr_fd("minishell: execution failed: ", STDERR_FILENO);
-		ft_putendl_fd(cmd->argv[0], STDERR_FILENO);
-		exit_shell(126, NULL);
+		waitpid(pids[count], &status, 0);
+		if (WIFEXITED(status))
+			exit_status_manager(WEXITSTATUS(status), 1);
+		else if (WIFSIGNALED(status))
+			exit_status_manager(128 + WTERMSIG(status), 1);
 	}
 }
