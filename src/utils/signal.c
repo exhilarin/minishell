@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 03:55:36 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/26 17:26:22 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/26 18:33:44 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	signal_handler(int sig)
 	}
 	else if (g_signal_code == 1)
 	{
+		rl_on_new_line();
 		write(1, "\n", 1);
 		exit_status_manager(130, 1);
 	}

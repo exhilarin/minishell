@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/26 18:08:50 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/26 18:38:47 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	main(int argc, char *argv[], char *env[])
 	init_env(&shell, env);
 	while (1)
 	{
+		g_signal_code = 0;
 		shell.input = readline("\001\033[1;36m\002minishell$ \001\033[0m\002");
 		if (!shell.input)
 		{

@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/26 18:12:02 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/26 18:52:31 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,8 @@ void	executor(t_shell *shell, t_cmd *cmd)
 	int		status;
 
 	count = 0;
+	status = 0;
+	g_signal_code = 1;
 	if (check_special_case(shell, cmd, cmd->redir))
 		return ;
 	while (cmd)
