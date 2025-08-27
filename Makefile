@@ -24,7 +24,8 @@ SRCS = \
 	src/executor/executor.c \
 	src/executor/builtins.c \
 	src/executor/environment.c \
-	src/executor/redirections.c \
+	src/executor/redirections/redir_builtin.c \
+	src/executor/redirections/redir_funcs.c \
 	src/builtins/cd.c \
 	src/builtins/env.c \
 	src/builtins/pwd.c \
