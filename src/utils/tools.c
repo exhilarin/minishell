@@ -28,21 +28,27 @@ char	*join_and_free(char *s1, char *s2)
 	return (joined);
 }
 
-char	*append_quoted_part(char **input, char *result, char quote)
+static char	*add_quote_marker(char *result, char quote, char **input)
+{
+	char	*tmp;
+	char	*marker;
+
+	if (quote == '\'')
+		marker = "\001";
+	else
+		marker = "\002";
+	tmp = ft_strjoin(result, marker);
+	free(result);
+	(*input)++;
+	return (tmp);
+}
+
+static char	*process_quote_content(char *result, char **input, char quote)
 {
 	char	*tmp;
 	char	c[2];
-	char	*marker;
 
 	c[1] = '\0';
-	if (quote == '\'')
-		marker = "\001";  /* Single quote marker */
-	else
-		marker = "\002";  /* Double quote marker */
-	tmp = ft_strjoin(result, marker);
-	free(result);
-	result = tmp;
-	(*input)++;
 	while (**input && **input != quote)
 	{
 		c[0] = **input;
@@ -51,14 +57,28 @@ char	*append_quoted_part(char **input, char *result, char quote)
 		result = tmp;
 		(*input)++;
 	}
-	if (**input != quote)
-		return (free(result), NULL);
-	marker = "\003";  /* End quote marker */
+	return (result);
+}
+
+static char	*add_end_marker(char *result, char **input)
+{
+	char	*tmp;
+	char	*marker;
+
+	marker = "\003";
 	tmp = ft_strjoin(result, marker);
 	free(result);
-	result = tmp;
 	(*input)++;
-	return (result);
+	return (tmp);
+}
+
+char	*append_quoted_part(char **input, char *result, char quote)
+{
+	result = add_quote_marker(result, quote, input);
+	result = process_quote_content(result, input, quote);
+	if (**input != quote)
+		return (free(result), NULL);
+	return (add_end_marker(result, input));
 }
 
 int	ft_strcmp(char *s1, char *s2)

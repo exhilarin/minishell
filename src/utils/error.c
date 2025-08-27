@@ -57,36 +57,46 @@ void	exit_shell(int code, char *msg)
 	exit(code);
 }
 
-void	exec_error(t_shell *shell, t_cmd *cmd)
+static void	handle_flag_error(t_cmd *cmd)
 {
-	if (shell->exec->flag == 1)
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
+	ft_putendl_fd(": No such file or directory", STDERR_FILENO);
+	exit_shell(1, NULL);
+}
+
+static void	handle_no_cmd_path(t_cmd *cmd)
+{
+	if (ft_strchr(cmd->argv[0], '/'))
 	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
-		ft_putendl_fd(": No such file or directory", STDERR_FILENO);
-		exit_shell(1, NULL);
-	}
-	else if (!shell->exec->cmd_path)
-	{
-		if (ft_strchr(cmd->argv[0], '/'))
-		{
-			ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
-			ft_putstr_fd(": ", STDERR_FILENO);
-			ft_putendl_fd(strerror(errno), STDERR_FILENO);
-			exit_shell(127, NULL);
-		}
-		else
-		{
-			ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
-			exit_shell(127, ": command not found\n");
-		}
-	}
-	else if (access(shell->exec->cmd_path, X_OK) != 0)
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
 		ft_putstr_fd(": ", STDERR_FILENO);
 		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-		exit_shell(126, NULL);
+		exit_shell(127, NULL);
 	}
+	else
+	{
+		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
+		exit_shell(127, ": command not found\n");
+	}
+}
+
+static void	handle_access_error(t_shell *shell, t_cmd *cmd)
+{
+	(void)shell;
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putendl_fd(strerror(errno), STDERR_FILENO);
+	exit_shell(126, NULL);
+}
+
+void	exec_error(t_shell *shell, t_cmd *cmd)
+{
+	if (shell->exec->flag == 1)
+		handle_flag_error(cmd);
+	else if (!shell->exec->cmd_path)
+		handle_no_cmd_path(cmd);
+	else if (access(shell->exec->cmd_path, X_OK) != 0)
+		handle_access_error(shell, cmd);
 }

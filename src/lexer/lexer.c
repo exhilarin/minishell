@@ -139,6 +139,25 @@ static int	handle_regular_char(char **input, char **result)
 	return (1);
 }
 
+static int	process_word_chars(char **input, char **result, int *quote_type)
+{
+	while (**input && !ft_isspace(**input)
+		&& **input != '|' && **input != '<' && **input != '>')
+	{
+		if (**input == '"' || **input == '\'')
+		{
+			if (!handle_quote_char(input, result, quote_type))
+				return (0);
+		}
+		else
+		{
+			if (!handle_regular_char(input, result))
+				return (0);
+		}
+	}
+	return (1);
+}
+
 int	extract_word_with_quote(char **input, char **word)
 {
 	char	*result;
@@ -147,25 +166,10 @@ int	extract_word_with_quote(char **input, char **word)
 	if (!init_word_extraction(&result, word))
 		return (0);
 	quote_type = 0;
-	while (**input && !ft_isspace(**input)
-		&& **input != '|' && **input != '<' && **input != '>')
+	if (!process_word_chars(input, &result, &quote_type))
 	{
-		if (**input == '"' || **input == '\'')
-		{
-			if (!handle_quote_char(input, &result, &quote_type))
-			{
-				*word = NULL;
-				return (0);
-			}
-		}
-		else
-		{
-			if (!handle_regular_char(input, &result))
-			{
-				*word = NULL;
-				return (0);
-			}
-		}
+		*word = NULL;
+		return (0);
 	}
 	*word = result;
 	return (quote_type);
