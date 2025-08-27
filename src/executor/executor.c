@@ -14,8 +14,6 @@
 
 static	void	child_process(t_shell *shell, t_cmd *cmd, int fd[2])
 {
-	if (handle_heredoc(shell, cmd->redir))
-		exit_shell(1, NULL);
 	if (shell->heredoc_fd != -1)
 	{
 		if (dup2(shell->heredoc_fd, STDIN_FILENO) == -1)
@@ -82,6 +80,8 @@ static void	exec_command(t_shell *shell, t_cmd *cmd)
 static void	run_command_process(t_shell *shell, t_cmd *cmd, int fd[2],
 		pid_t *pid)
 {
+	if (handle_heredoc(shell, cmd->redir))
+		return ;
 	if (cmd->next && pipe(fd) == -1)
 		exit_shell(1, "minishell: pipe failed\n");
 	*pid = fork();
