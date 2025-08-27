@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yenyilma <yyenerkaan1@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 04:04:56 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/27 22:02:53 by iguney           ###   ########.fr       */
+/*   Updated: 2025/08/28 02:14:46 by yenyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,9 @@ void	expand_args(t_shell *shell, t_cmd *cmd)
 
 	if (!cmd->argv)
 		return ;
-	i = 0;
-	while (cmd->argv[i])
+	i = -1;
+	while (cmd->argv[++i])
 	{
-		// Export builtin için özel expansion mantığı
 		if (i == 0 || !cmd->argv[0] || ft_strcmp(cmd->argv[0], "export") != 0)
 		{
 			expanded = expand_string(shell, cmd->argv[i]);
@@ -72,16 +71,13 @@ void	expand_args(t_shell *shell, t_cmd *cmd)
 		}
 		else
 		{
-			// Export argümanları için sadece assignment içeren argümanları expand et
 			if (ft_strchr(cmd->argv[i], '='))
 			{
 				expanded = expand_string(shell, cmd->argv[i]);
 				free(cmd->argv[i]);
 				cmd->argv[i] = expanded;
 			}
-			// '=' içermeyenler expand edilmez (değişken adları olarak kalır)
 		}
-		i++;
 	}
 	cmd->argv = filter_empty_args(cmd->argv);
 }
