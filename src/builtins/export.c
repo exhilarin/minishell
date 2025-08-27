@@ -41,93 +41,81 @@ static void	builtin_print_export(t_env *env)
 		if (!min)
 			break ;
 		printf("declare -x %s", min->key);
-		if (min->value && min->value[0])
-			printf("=\"%s\"", min->value);
+		if (min->value)
+		{
+			if (min->value[0])
+				printf("=\"%s\"", min->value);
+			else
+				printf("=\"\"");
+		}
 		printf("\n");
 		last_min = min;
 	}
 	exit_status_manager(0, 1);
 }
 
-static int	update_env(t_env **env, t_env *node)
+static t_env	*ms_export_get(t_env *env, char *key)
+{
+	while (env)
+	{
+		if (!ft_strcmp(env->key, key))
+			return (env);
+		env = env->next;
+	}
+	return (NULL);
+}
+
+static void	ms_export_set(t_env **env, char *key, char *value)
 {
 	t_env	*curr;
+	t_env	*new_node;
 
-	if (!env || !*env || !node)
-		return (0);
-	curr = *env;
-	while (curr)
+	curr = ms_export_get(*env, key);
+	if (curr)
 	{
-		if (!ft_strcmp(curr->key, node->key))
-		{
-			if (curr->value)
-				free(curr->value);
-			curr->value = node->value;
-			if (curr->env_line)
-				free(curr->env_line);
-			curr->env_line = ft_strdup(node->env_line);
-			free(node->key);
-			free(node->env_line);
-			free(node);
-			return (1);
-		}
-		curr = curr->next;
-	}
-	return (0);
-}
-
-static void	append_env_node(t_env **env, t_env *node)
-{
-	t_env	*current;
-
-	if (!*env)
-	{
-		*env = node;
+		if (curr->value)
+			free(curr->value);
+		curr->value = value ? ft_strdup(value) : NULL;
+		if (curr->env_line)
+			free(curr->env_line);
+		if (value)
+			curr->env_line = ms_join_kv(key, value);
+		else
+			curr->env_line = NULL;
 		return ;
 	}
-	current = *env;
-	while (current->next)
-		current = current->next;
-	current->next = node;
+	new_node = malloc(sizeof(t_env));
+	if (!new_node)
+		return ;
+	new_node->key = ft_strdup(key);
+	new_node->value = value ? ft_strdup(value) : NULL;
+	new_node->env_line = value ? ms_join_kv(key, value) : NULL;
+	new_node->next = NULL;
+	if (!*env)
+		*env = new_node;
+	else
+	{
+		curr = *env;
+		while (curr->next)
+			curr = curr->next;
+		curr->next = new_node;
+	}
 }
 
-static int	is_valid_identifier(char *arg)
+static void	ms_export_print_error(char *arg)
 {
-	int		i;
-	char	*equal_pos;
-
-	if (!arg || !*arg)
-		return (0);
-	equal_pos = ft_strchr(arg, '=');
-	if (equal_pos)
-		*equal_pos = '\0';
-	if (!ft_isalpha(arg[0]) && arg[0] != '_')
-	{
-		if (equal_pos)
-			*equal_pos = '=';
-		return (0);
-	}
-	i = 1;
-	while (arg[i])
-	{
-		if (!ft_isalnum(arg[i]) && arg[i] != '_')
-		{
-			if (equal_pos)
-				*equal_pos = '=';
-			return (0);
-		}
-		i++;
-	}
-	if (equal_pos)
-		*equal_pos = '=';
-	return (1);
+	ft_putstr_fd("minishell: export: `", STDERR_FILENO);
+	ft_putstr_fd(arg, STDERR_FILENO);
+	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 }
 
 void	builtin_export(t_shell *shell, t_cmd *cmd)
 {
-	t_env	*node;
 	int		i;
-	int		error_found;
+	int		status;
+	char	*key;
+	char	*val;
+	t_env	*var;
 
 	if (!cmd->argv[1])
 	{
@@ -135,28 +123,35 @@ void	builtin_export(t_shell *shell, t_cmd *cmd)
 		return ;
 	}
 	i = 1;
-	error_found = 0;
+	status = 0;
 	while (cmd->argv[i])
 	{
-		if (!is_valid_identifier(cmd->argv[i]))
+		if (!ms_is_valid_key(cmd->argv[i]))
 		{
-			ft_putstr_fd("minishell: export: `", STDERR_FILENO);
-			ft_putstr_fd(cmd->argv[i], STDERR_FILENO);
-			ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
-			error_found = 1;
+			ms_export_print_error(cmd->argv[i]);
+			status = 1;
 			i++;
 			continue ;
 		}
-		node = new_env_node(cmd->argv[i]);
-		if (!node)
+		key = ms_key_from_arg(cmd->argv[i]);
+		if (ms_has_plus_equal(cmd->argv[i]) || ft_strchr(cmd->argv[i], '='))
 		{
-			print_error("minishell: export: allocation failed\n", 1);
-			exit_status_manager(1, 1);
-			return ;
+			val = ms_val_from_arg(cmd->argv[i]);
+			if (ms_has_plus_equal(cmd->argv[i]))
+			{
+				var = ms_export_get(shell->env, key);
+				if (var && var->value)
+					val = ms_strjoin_free(ft_strdup(var->value), val);
+			}
+			ms_export_set(&shell->env, key, val);
+			free(val);
 		}
-		if (!update_env(&shell->env, node))
-			append_env_node(&shell->env, node);
+		else
+		{
+			ms_export_set(&shell->env, key, NULL);
+		}
+		free(key);
 		i++;
 	}
-	exit_status_manager(error_found, 1);
+	exit_status_manager(status, 1);
 }

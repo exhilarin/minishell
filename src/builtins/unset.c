@@ -33,17 +33,20 @@ void	builtin_unset(t_env **env, t_cmd *cmd)
 	i = 1;
 	while (cmd->argv[i])
 	{
-		prev = NULL;
-		current = *env;
-		while (current)
+		if (ms_is_valid_key(cmd->argv[i]))
 		{
-			if (ft_strcmp(current->key, cmd->argv[i]) == 0)
+			prev = NULL;
+			current = *env;
+			while (current)
 			{
-				delete_node(env, prev, current);
-				break ;
+				if (ft_strcmp(current->key, cmd->argv[i]) == 0)
+				{
+					delete_node(env, prev, current);
+					break ;
+				}
+				prev = current;
+				current = current->next;
 			}
-			prev = current;
-			current = current->next;
 		}
 		i++;
 	}

@@ -44,4 +44,11 @@ char	*get_env_value(t_env *env, char *key);
 void	add_env_node(t_env **env, char *key, char *value);
 void	set_env_value(t_env **env, char *key, char *value);
 
+int		ms_is_valid_key(const char *s);
+int		ms_has_plus_equal(const char *s);
+char	*ms_key_from_arg(const char *arg);
+char	*ms_val_from_arg(const char *arg);
+char	*ms_strjoin_free(char *s1, char *s2);
+char	*ms_join_kv(char *key, char *value);
+
 #endif
