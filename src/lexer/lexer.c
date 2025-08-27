@@ -62,6 +62,7 @@ int	handle_word_token(t_token **tokens, char **input)
 	char	*word;
 	int		quote_type;
 
+	word = NULL;
 	quote_type = extract_word_with_quote(input, &word);
 	if (!word)
 	{
@@ -109,6 +110,11 @@ int	extract_word_with_quote(char **input, char **word)
 	int		quote_type;
 
 	result = ft_strdup("");
+	if (!result)
+	{
+		*word = NULL;
+		return (0);
+	}
 	quote_type = 0;
 	while (**input && !ft_isspace(**input)
 		&& **input != '|' && **input != '<' && **input != '>')
@@ -119,7 +125,10 @@ int	extract_word_with_quote(char **input, char **word)
 				quote_type = 1;
 			result = append_quoted_part(input, result, **input);
 			if (!result)
+			{
+				*word = NULL;
 				return (0);
+			}
 		}
 		else
 		{
@@ -128,6 +137,11 @@ int	extract_word_with_quote(char **input, char **word)
 			tmp = ft_strjoin(result, c);
 			free(result);
 			result = tmp;
+			if (!tmp)
+			{
+				*word = NULL;
+				return (0);
+			}
 			(*input)++;
 		}
 	}
