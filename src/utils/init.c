@@ -6,20 +6,11 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 06:55:45 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/26 17:25:41 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/27 22:41:02 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_shell	*set_get_shell(t_shell *sh)
-{
-	static t_shell	*shell = NULL;
-
-	if (sh != NULL)
-		shell = sh;
-	return (shell);
-}
 
 void	init_shell(t_shell *shell)
 {
@@ -58,6 +49,20 @@ void	init_env(t_shell *shell, char **envp)
 			current->next = new;
 		}
 	}
+}
+
+t_env	*init_env_node(void)
+{
+	t_env	*node;
+
+	node = malloc(sizeof(t_env));
+	if (!node)
+		return (NULL);
+	node->env_line = NULL;
+	node->key = NULL;
+	node->value = NULL;
+	node->next = NULL;
+	return (node);
 }
 
 t_cmd	*init_cmd(void)

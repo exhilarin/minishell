@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 06:51:59 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/26 18:45:44 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/27 22:15:06 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,15 @@ int	redir_heredoc(t_shell *shell, t_redir *redir)
 	}
 	close(fd[1]);
 	return (redir_heredoc_parent(shell, fd, pid));
+}
+
+int	handle_heredoc(t_shell *shell, t_redir *redir)
+{
+	while (redir)
+	{
+		if (redir->type == HEREDOC && redir_heredoc(shell, redir))
+			return (1);
+		redir = redir->next;
+	}
+	return (0);
 }

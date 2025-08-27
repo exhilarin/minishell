@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yenyilma <yyenerkaan1@student.42.fr>       +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 04:20:36 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/27 19:46:38 by yenyilma         ###   ########.fr       */
+/*   Updated: 2025/08/27 22:11:21 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,62 +70,6 @@ int	handle_word_token(t_token **tokens, char **input)
 		return (0);
 	}
 	add_token_with_quote(tokens, WORD, word, quote_type);
-	return (1);
-}
-
-static int	init_word_extraction(char **result, char **word)
-{
-	*result = ft_strdup("");
-	if (!*result)
-	{
-		*word = NULL;
-		return (0);
-	}
-	return (1);
-}
-
-static int	handle_quote_char(char **input, char **result, int *quote_type)
-{
-	if (**input == '\'')
-		*quote_type = 1;
-	*result = append_quoted_part(input, *result, **input);
-	if (!*result)
-		return (0);
-	return (1);
-}
-
-static int	handle_regular_char(char **input, char **result)
-{
-	char	*tmp;
-	char	c[2];
-
-	c[0] = **input;
-	c[1] = '\0';
-	tmp = ft_strjoin(*result, c);
-	free(*result);
-	*result = tmp;
-	if (!tmp)
-		return (0);
-	(*input)++;
-	return (1);
-}
-
-static int	process_word_chars(char **input, char **result, int *quote_type)
-{
-	while (**input && !ft_isspace(**input)
-		&& **input != '|' && **input != '<' && **input != '>')
-	{
-		if (**input == '"' || **input == '\'')
-		{
-			if (!handle_quote_char(input, result, quote_type))
-				return (0);
-		}
-		else
-		{
-			if (!handle_regular_char(input, result))
-				return (0);
-		}
-	}
 	return (1);
 }
 

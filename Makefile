@@ -18,8 +18,11 @@ SRCS = \
 	src/utils/init.c \
 	src/utils/signal.c \
 	src/lexer/lexer.c \
+	src/lexer/tokenizer.c \
 	src/parser/parser.c \
-	src/parser/expand.c \
+	src/parser/expand/expand.c \
+	src/parser/expand/handle.c \
+	src/parser/expand/expand_utils.c \
 	src/executor/heredoc.c \
 	src/executor/executor.c \
 	src/executor/builtins.c \
@@ -33,12 +36,17 @@ SRCS = \
 	src/builtins/echo.c \
 	src/builtins/unset.c \
 	src/builtins/export.c \
-	src/utils/add.c \
-	src/utils/free.c \
-	src/utils/error.c \
-	src/utils/tools.c \
+	src/utils/add/add_cmd.c \
+	src/utils/add/add_token.c \
+	src/utils/free/free_funcs.c \
+	src/utils/free/free_shell.c \
+	src/utils/error/exit_error.c \
+	src/utils/error/handle_error.c \
+	src/utils/tools/env_tools.c \
+	src/utils/tools/func_tools.c \
+	src/utils/tools/quote_tools.c \
+	src/utils/tools/export_tools.c \
 	src/utils/syntax.c \
-	src/utils/helper.c \
 
 OBJS = $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 

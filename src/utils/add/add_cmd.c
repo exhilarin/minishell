@@ -1,80 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   add.c                                              :+:      :+:    :+:   */
+/*   add_cmd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilyas-guney <ilyas-guney@student.42.fr>    +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/16 20:25:01 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/17 10:04:26 by ilyas-guney      ###   ########.fr       */
+/*   Created: 2025/08/27 23:03:20 by mugenan           #+#    #+#             */
+/*   Updated: 2025/08/27 23:29:29 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	free_argv(char **new_argv, int i)
-{
-	while (--i >= 0)
-		free(new_argv[i]);
-	free(new_argv);
-}
-
-void	add_token(t_token **tokens, t_token_type type, char *value)
-{
-	t_token	*new_token;
-	t_token	*current;
-
-	if (!ft_strlen(value))
-	{
-		free(value);
-		return ;
-	}
-	new_token = malloc(sizeof(t_token));
-	if (!new_token)
-		return (free_tokens(*tokens), free(value));
-	new_token->type = type;
-	new_token->value = value;
-	new_token->quoted = 0;
-	new_token->next = NULL;
-	if (!*tokens)
-		*tokens = new_token;
-	else
-	{
-		current = *tokens;
-		while (current->next)
-			current = current->next;
-		current->next = new_token;
-	}
-}
-
-void	add_token_with_quote(t_token **tokens, t_token_type type,
-		char *value, int quote_type)
-{
-	t_token	*new_token;
-	t_token	*current;
-
-	if (!ft_strlen(value))
-	{
-		free(value);
-		return ;
-	}
-	new_token = malloc(sizeof(t_token));
-	if (!new_token)
-		return (free_tokens(*tokens), free(value));
-	new_token->type = type;
-	new_token->value = value;
-	new_token->quoted = quote_type;
-	new_token->next = NULL;
-	if (!*tokens)
-		*tokens = new_token;
-	else
-	{
-		current = *tokens;
-		while (current->next)
-			current = current->next;
-		current->next = new_token;
-	}
-}
 
 void	add_arg_to_cmd(t_cmd *current_cmd, char *token_value)
 {
@@ -145,6 +81,13 @@ void	add_cmd_to_lst(t_cmd **cmds, t_cmd *new_cmd)
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new_cmd;
+}
+
+void	free_argv(char **new_argv, int i)
+{
+	while (--i >= 0)
+		free(new_argv[i]);
+	free(new_argv);
 }
 
 char	**add_argv(char **old_argv, char *token_value, int argc)

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   free_shell.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 02:16:45 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/27 21:00:16 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/27 22:37:56 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,31 +78,42 @@ void	free_cmd(t_cmd *cmd)
 	}
 }
 
-void	free_redir(t_redir *redir)
+void	free_exec(t_exec *exec)
 {
-	t_redir	*tmp;
-
-	while (redir)
+	if (!exec)
+		return ;
+	if (exec->cmd_path)
 	{
-		tmp = redir->next;
-		if (redir->file)
-			free(redir->file);
-		free(redir);
-		redir = tmp;
+		free(exec->cmd_path);
+		exec->cmd_path = NULL;
 	}
+	if (exec->paths)
+	{
+		free_char_array(exec->paths);
+		exec->paths = NULL;
+	}
+	if (exec->envp)
+	{
+		free_char_array(exec->envp);
+		exec->envp = NULL;
+	}
+	free(exec);
 }
 
-void	free_envp(char **envp)
+void	free_env(t_env *env)
 {
-	int	i;
+	t_env	*tmp;
 
-	i = 0;
-	if (!envp)
-		return ;
-	while (envp[i])
+	while (env)
 	{
-		free(envp[i]);
-		i++;
+		tmp = env->next;
+		if (env->env_line)
+			free(env->env_line);
+		if (env->key)
+			free(env->key);
+		if (env->value)
+			free(env->value);
+		free(env);
+		env = tmp;
 	}
-	free(envp);
 }

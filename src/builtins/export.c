@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yenyilma <yyenerkaan1@student.42.fr>       +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 00:31:37 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/27 19:18:40 by yenyilma         ###   ########.fr       */
+/*   Updated: 2025/08/27 23:24:46 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,92 +54,6 @@ static void	builtin_print_export(t_env *env)
 	exit_status_manager(0, 1);
 }
 
-static t_env	*ms_export_get(t_env *env, char *key)
-{
-	while (env)
-	{
-		if (!ft_strcmp(env->key, key))
-			return (env);
-		env = env->next;
-	}
-	return (NULL);
-}
-
-static void	update_existing_env(t_env *curr, char *key, char *value)
-{
-	if (curr->value)
-		free(curr->value);
-	if (value)
-		curr->value = ft_strdup(value);
-	else
-		curr->value = NULL;
-	if (curr->env_line)
-		free(curr->env_line);
-	if (value)
-		curr->env_line = ms_join_kv(key, value);
-	else
-		curr->env_line = NULL;
-}
-
-static t_env	*create_new_env_node(char *key, char *value)
-{
-	t_env	*new_node;
-
-	new_node = malloc(sizeof(t_env));
-	if (!new_node)
-		return (NULL);
-	new_node->key = ft_strdup(key);
-	if (value)
-		new_node->value = ft_strdup(value);
-	else
-		new_node->value = NULL;
-	if (value)
-		new_node->env_line = ms_join_kv(key, value);
-	else
-		new_node->env_line = NULL;
-	new_node->next = NULL;
-	return (new_node);
-}
-
-static void	add_to_env_list(t_env **env, t_env *new_node)
-{
-	t_env	*curr;
-
-	if (!*env)
-		*env = new_node;
-	else
-	{
-		curr = *env;
-		while (curr->next)
-			curr = curr->next;
-		curr->next = new_node;
-	}
-}
-
-static void	ms_export_set(t_env **env, char *key, char *value)
-{
-	t_env	*curr;
-	t_env	*new_node;
-
-	curr = ms_export_get(*env, key);
-	if (curr)
-	{
-		update_existing_env(curr, key, value);
-		return ;
-	}
-	new_node = create_new_env_node(key, value);
-	if (!new_node)
-		return ;
-	add_to_env_list(env, new_node);
-}
-
-static void	ms_export_print_error(char *arg)
-{
-	ft_putstr_fd("minishell: export: `", STDERR_FILENO);
-	ft_putstr_fd(arg, STDERR_FILENO);
-	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
-}
-
 static void	handle_export_value(t_shell *shell, char *key, char *arg)
 {
 	char	*val;
@@ -162,7 +76,9 @@ static int	process_export_arg(t_shell *shell, char *arg)
 
 	if (!ms_is_valid_key(arg))
 	{
-		ms_export_print_error(arg);
+		ft_putstr_fd("minishell: export: `", STDERR_FILENO);
+		ft_putstr_fd(arg, STDERR_FILENO);
+		ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 		return (1);
 	}
 	key = ms_key_from_arg(arg);

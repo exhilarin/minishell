@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:03 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/27 21:02:06 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/27 23:33:01 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "lexer.h"
 # include "parser.h"
+# include "expand.h"
 # include "executor.h"
 # include "builtins.h"
 # include "../libft/libft.h"
@@ -45,27 +46,32 @@ typedef struct s_shell
 
 t_cmd	*init_cmd(void);
 t_exec	*init_exec(void);
+t_env	*init_env_node(void);
 t_shell	*set_get_shell(t_shell *sh);
+void	init_shell(t_shell *shell);
+void	init_env(t_shell *shell, char **envp);
 
 int		shutdown_shell(t_shell *shell);
 int		exit_status_manager(int status, int mode);
 
 void	process(t_shell *shell);
 
-void	exec_error(t_shell *shell, t_cmd *cmd);
 void	exit_shell(int code, char *msg);
 void	print_error(char *msg, int code);
+void	exec_error(t_shell *shell, t_cmd *cmd);
+
+void	handle_no_cmd_path(t_cmd *cmd);
+void	handle_flag_error(t_cmd *cmd);
+void	handle_access_error(t_shell *shell, t_cmd *cmd);
 
 void	init_signal(void);
 void	discard_signals(void);
 void	wait_and_set_status(pid_t *pids, int count);
-void	init_shell(t_shell *shell);
-void	init_env(t_shell *shell, char **envp);
 
-void	add_token(t_token **tokens, t_token_type type, char *value);
-void	add_arg_to_cmd(t_cmd *current_cmd, char *token_value);
-void	add_redir_to_cmd(t_cmd *cmd, int type, char *file);
 void	add_cmd_to_lst(t_cmd **cmds, t_cmd *new_cmd);
+void	add_redir_to_cmd(t_cmd *cmd, int type, char *file);
+void	add_arg_to_cmd(t_cmd *current_cmd, char *token_value);
+void	add_token(t_token **tokens, t_token_type type, char *value);
 char	**add_argv(char **old_argv, char *token_value, int argc);
 
 int		free_all(t_shell *shell);
@@ -75,5 +81,7 @@ void	free_exec(t_exec *exec);
 void	free_cmd(t_cmd	*commands);
 void	free_redir(t_redir *redir);
 void	free_tokens(t_token *tokens);
+void	free_char_array(char **array);
+void	free_argv(char **new_argv, int i);
 
 #endif

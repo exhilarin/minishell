@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/26 18:38:47 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/27 22:41:12 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,13 @@ void	process(t_shell *shell)
 	expand_all(shell);
 	executor(shell, shell->command_list);
 	free_all(shell);
+}
+
+t_shell	*set_get_shell(t_shell *sh)
+{
+	static t_shell	*shell = NULL;
+
+	if (sh != NULL)
+		shell = sh;
+	return (shell);
 }

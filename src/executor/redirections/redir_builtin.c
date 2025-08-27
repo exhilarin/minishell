@@ -6,12 +6,11 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 21:34:43 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/27 21:34:58 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/27 21:38:24 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 static int	backup_fds(int *stdin_bak, int *stdout_bak)
 {

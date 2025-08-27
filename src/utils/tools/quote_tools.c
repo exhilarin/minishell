@@ -1,47 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tools.c                                            :+:      :+:    :+:   */
+/*   quote_tools.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yenyilma <yyenerkaan1@student.42.fr>       +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 19:49:15 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/27 19:46:38 by yenyilma         ###   ########.fr       */
+/*   Updated: 2025/08/27 23:04:43 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*join_and_free(char *s1, char *s2)
-{
-	char	*joined;
-
-	if (!s1 && !s2)
-		return (NULL);
-	if (!s1)
-		return (ft_strdup(s2));
-	if (!s2)
-		return (s1);
-	joined = ft_strjoin(s1, s2);
-	free(s1);
-	free(s2);
-	return (joined);
-}
-
-static char	*add_quote_marker(char *result, char quote, char **input)
-{
-	char	*tmp;
-	char	*marker;
-
-	if (quote == '\'')
-		marker = "\001";
-	else
-		marker = "\002";
-	tmp = ft_strjoin(result, marker);
-	free(result);
-	(*input)++;
-	return (tmp);
-}
 
 static char	*process_quote_content(char *result, char **input, char quote)
 {
@@ -58,18 +27,6 @@ static char	*process_quote_content(char *result, char **input, char quote)
 		(*input)++;
 	}
 	return (result);
-}
-
-static char	*add_end_marker(char *result, char **input)
-{
-	char	*tmp;
-	char	*marker;
-
-	marker = "\003";
-	tmp = ft_strjoin(result, marker);
-	free(result);
-	(*input)++;
-	return (tmp);
 }
 
 char	*append_quoted_part(char **input, char *result, char quote)

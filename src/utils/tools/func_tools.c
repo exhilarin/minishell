@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   helper.c                                           :+:      :+:    :+:   */
+/*   func_tools.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yenyilma <yyenerkaan1@student.42.fr>       +#+  +:+       +#+        */
+/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 04:22:09 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/27 08:07:18 by yenyilma         ###   ########.fr       */
+/*   Updated: 2025/08/27 22:14:58 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,6 @@ int	check_special_case(t_shell *shell, t_cmd *cmd, t_redir *redir)
 	{
 		exec_builtin_with_redir(shell, cmd);
 		return (1);
-	}
-	return (0);
-}
-
-int	handle_heredoc(t_shell *shell, t_redir *redir)
-{
-	while (redir)
-	{
-		if (redir->type == HEREDOC && redir_heredoc(shell, redir))
-			return (1);
-		redir = redir->next;
 	}
 	return (0);
 }
