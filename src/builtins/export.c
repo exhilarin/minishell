@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yenyilma <yyenerkaan1@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 00:31:37 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/26 17:54:10 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/27 19:18:40 by yenyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,32 +65,46 @@ static t_env	*ms_export_get(t_env *env, char *key)
 	return (NULL);
 }
 
-static void	ms_export_set(t_env **env, char *key, char *value)
+static void	update_existing_env(t_env *curr, char *key, char *value)
 {
-	t_env	*curr;
+	if (curr->value)
+		free(curr->value);
+	if (value)
+		curr->value = ft_strdup(value);
+	else
+		curr->value = NULL;
+	if (curr->env_line)
+		free(curr->env_line);
+	if (value)
+		curr->env_line = ms_join_kv(key, value);
+	else
+		curr->env_line = NULL;
+}
+
+static t_env	*create_new_env_node(char *key, char *value)
+{
 	t_env	*new_node;
 
-	curr = ms_export_get(*env, key);
-	if (curr)
-	{
-		if (curr->value)
-			free(curr->value);
-		curr->value = value ? ft_strdup(value) : NULL;
-		if (curr->env_line)
-			free(curr->env_line);
-		if (value)
-			curr->env_line = ms_join_kv(key, value);
-		else
-			curr->env_line = NULL;
-		return ;
-	}
 	new_node = malloc(sizeof(t_env));
 	if (!new_node)
-		return ;
+		return (NULL);
 	new_node->key = ft_strdup(key);
-	new_node->value = value ? ft_strdup(value) : NULL;
-	new_node->env_line = value ? ms_join_kv(key, value) : NULL;
+	if (value)
+		new_node->value = ft_strdup(value);
+	else
+		new_node->value = NULL;
+	if (value)
+		new_node->env_line = ms_join_kv(key, value);
+	else
+		new_node->env_line = NULL;
 	new_node->next = NULL;
+	return (new_node);
+}
+
+static void	add_to_env_list(t_env **env, t_env *new_node)
+{
+	t_env	*curr;
+
 	if (!*env)
 		*env = new_node;
 	else
@@ -102,6 +116,23 @@ static void	ms_export_set(t_env **env, char *key, char *value)
 	}
 }
 
+static void	ms_export_set(t_env **env, char *key, char *value)
+{
+	t_env	*curr;
+	t_env	*new_node;
+
+	curr = ms_export_get(*env, key);
+	if (curr)
+	{
+		update_existing_env(curr, key, value);
+		return ;
+	}
+	new_node = create_new_env_node(key, value);
+	if (!new_node)
+		return ;
+	add_to_env_list(env, new_node);
+}
+
 static void	ms_export_print_error(char *arg)
 {
 	ft_putstr_fd("minishell: export: `", STDERR_FILENO);
@@ -109,13 +140,44 @@ static void	ms_export_print_error(char *arg)
 	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 }
 
-void	builtin_export(t_shell *shell, t_cmd *cmd)
+static void	handle_export_value(t_shell *shell, char *key, char *arg)
 {
-	int		i;
-	int		status;
-	char	*key;
 	char	*val;
 	t_env	*var;
+
+	val = ms_val_from_arg(arg);
+	if (ms_has_plus_equal(arg))
+	{
+		var = ms_export_get(shell->env, key);
+		if (var && var->value)
+			val = ms_strjoin_free(ft_strdup(var->value), val);
+	}
+	ms_export_set(&shell->env, key, val);
+	free(val);
+}
+
+static int	process_export_arg(t_shell *shell, char *arg)
+{
+	char	*key;
+
+	if (!ms_is_valid_key(arg))
+	{
+		ms_export_print_error(arg);
+		return (1);
+	}
+	key = ms_key_from_arg(arg);
+	if (ms_has_plus_equal(arg) || ft_strchr(arg, '='))
+		handle_export_value(shell, key, arg);
+	else
+		ms_export_set(&shell->env, key, NULL);
+	free(key);
+	return (0);
+}
+
+void	builtin_export(t_shell *shell, t_cmd *cmd)
+{
+	int	i;
+	int	status;
 
 	if (!cmd->argv[1])
 	{
@@ -126,31 +188,8 @@ void	builtin_export(t_shell *shell, t_cmd *cmd)
 	status = 0;
 	while (cmd->argv[i])
 	{
-		if (!ms_is_valid_key(cmd->argv[i]))
-		{
-			ms_export_print_error(cmd->argv[i]);
+		if (process_export_arg(shell, cmd->argv[i]))
 			status = 1;
-			i++;
-			continue ;
-		}
-		key = ms_key_from_arg(cmd->argv[i]);
-		if (ms_has_plus_equal(cmd->argv[i]) || ft_strchr(cmd->argv[i], '='))
-		{
-			val = ms_val_from_arg(cmd->argv[i]);
-			if (ms_has_plus_equal(cmd->argv[i]))
-			{
-				var = ms_export_get(shell->env, key);
-				if (var && var->value)
-					val = ms_strjoin_free(ft_strdup(var->value), val);
-			}
-			ms_export_set(&shell->env, key, val);
-			free(val);
-		}
-		else
-		{
-			ms_export_set(&shell->env, key, NULL);
-		}
-		free(key);
 		i++;
 	}
 	exit_status_manager(status, 1);

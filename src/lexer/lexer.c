@@ -102,29 +102,57 @@ char	*extract_word(char **input)
 	return (result);
 }
 
-int	extract_word_with_quote(char **input, char **word)
+static int	init_word_extraction(char **result, char **word)
 {
-	char	*result;
-	char	*tmp;
-	char	c[2];
-	int		quote_type;
-
-	result = ft_strdup("");
-	if (!result)
+	*result = ft_strdup("");
+	if (!*result)
 	{
 		*word = NULL;
 		return (0);
 	}
+	return (1);
+}
+
+static int	handle_quote_char(char **input, char **result, int *quote_type)
+{
+	if (**input == '\'')
+		*quote_type = 1;
+	*result = append_quoted_part(input, *result, **input);
+	if (!*result)
+		return (0);
+	return (1);
+}
+
+static int	handle_regular_char(char **input, char **result)
+{
+	char	*tmp;
+	char	c[2];
+
+	c[0] = **input;
+	c[1] = '\0';
+	tmp = ft_strjoin(*result, c);
+	free(*result);
+	*result = tmp;
+	if (!tmp)
+		return (0);
+	(*input)++;
+	return (1);
+}
+
+int	extract_word_with_quote(char **input, char **word)
+{
+	char	*result;
+	int		quote_type;
+
+	if (!init_word_extraction(&result, word))
+		return (0);
 	quote_type = 0;
 	while (**input && !ft_isspace(**input)
 		&& **input != '|' && **input != '<' && **input != '>')
 	{
 		if (**input == '"' || **input == '\'')
 		{
-			if (**input == '\'')
-				quote_type = 1;
-			result = append_quoted_part(input, result, **input);
-			if (!result)
+			if (!handle_quote_char(input, &result, &quote_type))
 			{
 				*word = NULL;
 				return (0);
@@ -132,17 +160,11 @@ int	extract_word_with_quote(char **input, char **word)
 		}
 		else
 		{
-			c[0] = **input;
-			c[1] = '\0';
-			tmp = ft_strjoin(result, c);
-			free(result);
-			result = tmp;
-			if (!tmp)
+			if (!handle_regular_char(input, &result))
 			{
 				*word = NULL;
 				return (0);
 			}
-			(*input)++;
 		}
 	}
 	*word = result;

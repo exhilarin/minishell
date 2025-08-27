@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yenyilma <yyenerkaan1@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 18:36:30 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/26 17:52:31 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/27 19:18:40 by yenyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,9 @@ static int	change_directory(t_shell *shell, char *path, char *oldpwd)
 	return (1);
 }
 
-void	builtin_cd(t_shell *shell, t_cmd *cmd)
+static int	count_cd_args(t_cmd *cmd)
 {
-	char	*oldpwd;
-	char	*path;
-	int		arg_count;
+	int	arg_count;
 
 	arg_count = 0;
 	while (cmd->argv[arg_count])
@@ -48,18 +46,46 @@ void	builtin_cd(t_shell *shell, t_cmd *cmd)
 	{
 		ft_putendl_fd("minishell: cd: too many arguments", STDERR_FILENO);
 		exit_status_manager(1, 1);
-		return ;
+		return (0);
 	}
+	return (1);
+}
+
+static char	*get_cd_oldpwd(void)
+{
+	char	*oldpwd;
+
 	oldpwd = getcwd(NULL, 0);
 	if (!oldpwd)
 	{
 		ft_putendl_fd("minishell: cd: getcwd failed", STDERR_FILENO);
 		exit_status_manager(1, 1);
-		return ;
+		return (NULL);
 	}
+	return (oldpwd);
+}
+
+static char	*determine_cd_path(t_shell *shell, t_cmd *cmd)
+{
+	char	*path;
+
 	path = cmd->argv[1];
 	if (!path)
 		path = get_env_value(shell->env, "HOME");
+	return (path);
+}
+
+void	builtin_cd(t_shell *shell, t_cmd *cmd)
+{
+	char	*oldpwd;
+	char	*path;
+
+	if (!count_cd_args(cmd))
+		return ;
+	oldpwd = get_cd_oldpwd();
+	if (!oldpwd)
+		return ;
+	path = determine_cd_path(shell, cmd);
 	if (!change_directory(shell, path, oldpwd))
 	{
 		free(oldpwd);

@@ -3,14 +3,61 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yenyilma <yyenerkaan1@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 04:04:56 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/26 16:40:41 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/27 19:18:40 by yenyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	is_simple_single_quote(char *str)
+{
+	if (!str)
+		return (0);
+	if (str[0] != '\001')
+		return (0);
+	if (ft_strchr(str, '\002'))
+		return (0);
+	if (ft_strchr(str, '\003'))
+		return (0);
+	return (1);
+}
+
+static void	handle_quote_chars(char **str_ptr, int *in_single_quotes)
+{
+	if (**str_ptr == '\001')
+	{
+		*in_single_quotes = 1;
+		(*str_ptr)++;
+	}
+	else if (**str_ptr == '\002')
+	{
+		*in_single_quotes = 0;
+		(*str_ptr)++;
+	}
+	else if (**str_ptr == '\003')
+	{
+		*in_single_quotes = 0;
+		(*str_ptr)++;
+	}
+}
+
+static char	*handle_regular_char(t_shell *shell, char *str, char **str_ptr,
+			int in_single_quotes)
+{
+	char	*expanded_part;
+
+	if (**str_ptr == '$' && !in_single_quotes)
+		expanded_part = expand_var(shell, str, str_ptr);
+	else
+	{
+		expanded_part = ft_substr(*str_ptr, 0, 1);
+		(*str_ptr)++;
+	}
+	return (expanded_part);
+}
 
 char	*expand_string(t_shell *shell, char *str)
 {
@@ -19,39 +66,19 @@ char	*expand_string(t_shell *shell, char *str)
 	char	*str_ptr;
 	int		in_single_quotes;
 
-	if (str && str[0] == '\001' && !ft_strchr(str, '\002') && !ft_strchr(str, '\003'))
+	if (is_simple_single_quote(str))
 		return (ft_strdup(str + 1));
 	result = ft_strdup("");
 	str_ptr = str;
 	in_single_quotes = 0;
 	while (*str_ptr)
 	{
-		if (*str_ptr == '\001')  /* Start single quote */
-		{
-			in_single_quotes = 1;
-			str_ptr++;
-		}
-		else if (*str_ptr == '\002')  /* Start double quote */
-		{
-			in_single_quotes = 0;
-			str_ptr++;
-		}
-		else if (*str_ptr == '\003')  /* End quote */
-		{
-			in_single_quotes = 0;
-			str_ptr++;
-		}
-		else if (*str_ptr == '$' && !in_single_quotes)
-		{
-			expanded_part = expand_var(shell, str, &str_ptr);
-			if (!expanded_part)
-				return (free(result), NULL);
-			result = join_and_free(result, expanded_part);
-		}
+		if (*str_ptr == '\001' || *str_ptr == '\002' || *str_ptr == '\003')
+			handle_quote_chars(&str_ptr, &in_single_quotes);
 		else
 		{
-			expanded_part = ft_substr(str_ptr, 0, 1);
-			str_ptr++;
+			expanded_part = handle_regular_char(shell, str, &str_ptr,
+					in_single_quotes);
 			if (!expanded_part)
 				return (free(result), NULL);
 			result = join_and_free(result, expanded_part);
@@ -73,12 +100,10 @@ void	expand_all(t_shell *shell)
 	}
 }
 
-static char	**filter_empty_args(char **argv)
+static int	count_non_empty_args(char **argv)
 {
-	char	**new_argv;
-	int		i;
-	int		j;
-	int		count;
+	int	i;
+	int	count;
 
 	i = 0;
 	count = 0;
@@ -88,9 +113,14 @@ static char	**filter_empty_args(char **argv)
 			count++;
 		i++;
 	}
-	new_argv = malloc(sizeof(char *) * (count + 1));
-	if (!new_argv)
-		return (NULL);
+	return (count);
+}
+
+static void	copy_non_empty_args(char **argv, char **new_argv)
+{
+	int	i;
+	int	j;
+
 	i = 0;
 	j = 0;
 	while (argv[i])
@@ -102,6 +132,18 @@ static char	**filter_empty_args(char **argv)
 		i++;
 	}
 	new_argv[j] = NULL;
+}
+
+static char	**filter_empty_args(char **argv)
+{
+	char	**new_argv;
+	int		count;
+
+	count = count_non_empty_args(argv);
+	new_argv = malloc(sizeof(char *) * (count + 1));
+	if (!new_argv)
+		return (NULL);
+	copy_non_empty_args(argv, new_argv);
 	free(argv);
 	return (new_argv);
 }
@@ -139,14 +181,8 @@ void	expand_redirs(t_shell *shell, t_cmd *cmd)
 	}
 }
 
-char	*expand_var(t_shell *shell, char *str, char **ptr_i)
+static char	*handle_special_vars(char **ptr_i)
 {
-	int		start;
-	char	*var_name;
-	char	*value;
-
-	(void)str;
-	(*ptr_i)++;
 	if (**ptr_i == '?')
 	{
 		(*ptr_i)++;
@@ -157,8 +193,15 @@ char	*expand_var(t_shell *shell, char *str, char **ptr_i)
 		(*ptr_i)++;
 		return (ft_itoa(getpid()));
 	}
-	if (!ft_isalpha(**ptr_i) && **ptr_i != '_')
-		return (ft_strdup("$"));
+	return (NULL);
+}
+
+static char	*extract_var_name(t_shell *shell, char **ptr_i)
+{
+	int		start;
+	char	*var_name;
+	char	*value;
+
 	start = 0;
 	while (ft_isalnum((*ptr_i)[start]) || (*ptr_i)[start] == '_')
 		start++;
@@ -169,6 +212,20 @@ char	*expand_var(t_shell *shell, char *str, char **ptr_i)
 	if (!value)
 		return (ft_strdup(""));
 	return (ft_strdup(value));
+}
+
+char	*expand_var(t_shell *shell, char *str, char **ptr_i)
+{
+	char	*result;
+
+	(void)str;
+	(*ptr_i)++;
+	result = handle_special_vars(ptr_i);
+	if (result)
+		return (result);
+	if (!ft_isalpha(**ptr_i) && **ptr_i != '_')
+		return (ft_strdup("$"));
+	return (extract_var_name(shell, ptr_i));
 }
 
 char	*handle_single_quotes(char **str_ptr)
