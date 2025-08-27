@@ -73,6 +73,7 @@ static void	handle_export_value(t_shell *shell, char *key, char *arg)
 static int	process_export_arg(t_shell *shell, char *arg)
 {
 	char	*key;
+	t_env	*existing_var;
 
 	if (!ms_is_valid_key(arg))
 	{
@@ -85,7 +86,20 @@ static int	process_export_arg(t_shell *shell, char *arg)
 	if (ms_has_plus_equal(arg) || ft_strchr(arg, '='))
 		handle_export_value(shell, key, arg);
 	else
-		ms_export_set(&shell->env, key, NULL);
+	{
+		// Değişken zaten varsa değerini koru, yoksa NULL ile oluştur
+		existing_var = ms_export_get(shell->env, key);
+		if (existing_var)
+		{
+			// Değişken zaten export edilmiş, değerini değiştirme
+			// Sadece export durumunu koru (zaten export edilmiş)
+		}
+		else
+		{
+			// Yeni değişken oluştur, değer olmadan
+			ms_export_set(&shell->env, key, NULL);
+		}
+	}
 	free(key);
 	return (0);
 }

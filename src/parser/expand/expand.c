@@ -63,9 +63,24 @@ void	expand_args(t_shell *shell, t_cmd *cmd)
 	i = 0;
 	while (cmd->argv[i])
 	{
-		expanded = expand_string(shell, cmd->argv[i]);
-		free(cmd->argv[i]);
-		cmd->argv[i] = expanded;
+		// Export builtin için özel expansion mantığı
+		if (i == 0 || !cmd->argv[0] || ft_strcmp(cmd->argv[0], "export") != 0)
+		{
+			expanded = expand_string(shell, cmd->argv[i]);
+			free(cmd->argv[i]);
+			cmd->argv[i] = expanded;
+		}
+		else
+		{
+			// Export argümanları için sadece assignment içeren argümanları expand et
+			if (ft_strchr(cmd->argv[i], '='))
+			{
+				expanded = expand_string(shell, cmd->argv[i]);
+				free(cmd->argv[i]);
+				cmd->argv[i] = expanded;
+			}
+			// '=' içermeyenler expand edilmez (değişken adları olarak kalır)
+		}
 		i++;
 	}
 	cmd->argv = filter_empty_args(cmd->argv);
