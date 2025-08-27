@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:03 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/26 18:05:07 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/27 21:02:06 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,13 @@ int		exit_status_manager(int status, int mode);
 
 void	process(t_shell *shell);
 
-void	discard_signals(void);
-
 void	exec_error(t_shell *shell, t_cmd *cmd);
 void	exit_shell(int code, char *msg);
 void	print_error(char *msg, int code);
 
 void	init_signal(void);
+void	discard_signals(void);
+void	wait_and_set_status(pid_t *pids, int count);
 void	init_shell(t_shell *shell);
 void	init_env(t_shell *shell, char **envp);
 
@@ -69,10 +69,11 @@ void	add_cmd_to_lst(t_cmd **cmds, t_cmd *new_cmd);
 char	**add_argv(char **old_argv, char *token_value, int argc);
 
 int		free_all(t_shell *shell);
-void	free_tokens(t_token *tokens);
+void	free_env(t_env *env);
+void	free_envp(char **envp);
+void	free_exec(t_exec *exec);
 void	free_cmd(t_cmd	*commands);
 void	free_redir(t_redir *redir);
-void	free_env(t_env *env);
-void	free_exec(t_exec *exec);
+void	free_tokens(t_token *tokens);
 
 #endif
