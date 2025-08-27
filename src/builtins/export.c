@@ -91,10 +91,43 @@ static void	append_env_node(t_env **env, t_env *node)
 	current->next = node;
 }
 
+static int	is_valid_identifier(char *arg)
+{
+	int		i;
+	char	*equal_pos;
+
+	if (!arg || !*arg)
+		return (0);
+	equal_pos = ft_strchr(arg, '=');
+	if (equal_pos)
+		*equal_pos = '\0';
+	if (!ft_isalpha(arg[0]) && arg[0] != '_')
+	{
+		if (equal_pos)
+			*equal_pos = '=';
+		return (0);
+	}
+	i = 1;
+	while (arg[i])
+	{
+		if (!ft_isalnum(arg[i]) && arg[i] != '_')
+		{
+			if (equal_pos)
+				*equal_pos = '=';
+			return (0);
+		}
+		i++;
+	}
+	if (equal_pos)
+		*equal_pos = '=';
+	return (1);
+}
+
 void	builtin_export(t_shell *shell, t_cmd *cmd)
 {
 	t_env	*node;
 	int		i;
+	int		error_found;
 
 	if (!cmd->argv[1])
 	{
@@ -102,8 +135,18 @@ void	builtin_export(t_shell *shell, t_cmd *cmd)
 		return ;
 	}
 	i = 1;
+	error_found = 0;
 	while (cmd->argv[i])
 	{
+		if (!is_valid_identifier(cmd->argv[i]))
+		{
+			ft_putstr_fd("minishell: export: `", STDERR_FILENO);
+			ft_putstr_fd(cmd->argv[i], STDERR_FILENO);
+			ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
+			error_found = 1;
+			i++;
+			continue ;
+		}
 		node = new_env_node(cmd->argv[i]);
 		if (!node)
 		{
@@ -115,5 +158,5 @@ void	builtin_export(t_shell *shell, t_cmd *cmd)
 			append_env_node(&shell->env, node);
 		i++;
 	}
-	exit_status_manager(0, 1);
+	exit_status_manager(error_found, 1);
 }

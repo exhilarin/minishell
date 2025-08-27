@@ -81,8 +81,18 @@ char	*get_cmd_path(t_shell *shell, t_cmd *cmd)
 	cmd_name = cmd->argv[0];
 	if (ft_strchr(cmd_name, '/'))
 	{
-		if (stat(cmd_name, &st) == 0 && S_ISREG(st.st_mode))
-			return (ft_strdup(cmd_name));
+		if (stat(cmd_name, &st) == 0)
+		{
+			if (S_ISDIR(st.st_mode))
+			{
+				ft_putstr_fd("minishell: ", STDERR_FILENO);
+				ft_putstr_fd(cmd_name, STDERR_FILENO);
+				ft_putendl_fd(": Is a directory", STDERR_FILENO);
+				exit_shell(126, NULL);
+			}
+			if (S_ISREG(st.st_mode))
+				return (ft_strdup(cmd_name));
+		}
 		return (NULL);
 	}
 	split_path(shell);

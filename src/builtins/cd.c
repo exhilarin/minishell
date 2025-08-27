@@ -21,7 +21,9 @@ static int	change_directory(t_shell *shell, char *path, char *oldpwd)
 		if (path)
 		{
 			ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
-			ft_putendl_fd(path, STDERR_FILENO);
+			ft_putstr_fd(path, STDERR_FILENO);
+			ft_putstr_fd(": ", STDERR_FILENO);
+			ft_putendl_fd(strerror(errno), STDERR_FILENO);
 			exit_status_manager(1, 1);
 		}
 		return (0);
@@ -37,7 +39,17 @@ void	builtin_cd(t_shell *shell, t_cmd *cmd)
 {
 	char	*oldpwd;
 	char	*path;
+	int		arg_count;
 
+	arg_count = 0;
+	while (cmd->argv[arg_count])
+		arg_count++;
+	if (arg_count > 2)
+	{
+		ft_putendl_fd("minishell: cd: too many arguments", STDERR_FILENO);
+		exit_status_manager(1, 1);
+		return ;
+	}
 	oldpwd = getcwd(NULL, 0);
 	if (!oldpwd)
 	{

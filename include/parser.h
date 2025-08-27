@@ -39,6 +39,14 @@ typedef struct s_cmd
 
 t_cmd	*parser(t_token *tokens);
 
+char	*expand_string(t_shell *shell, char *str);
+char	*expand_var(t_shell *shell, char *str, char **ptr_i);
+char	*handle_single_quotes(char **str_ptr);
+char	*handle_double_quotes(t_shell *shell, char **str_ptr);
+void	expand_all(t_shell *shell);
+void	expand_args(t_shell *shell, t_cmd *cmd);
+void	expand_redirs(t_shell *shell, t_cmd *cmd);
+
 int		is_invalid_char(char *input);
 int		validate_redir(t_token *tokens);
 int		is_unclosed_quotes(const char *input);

@@ -101,6 +101,7 @@ void	executor(t_shell *shell, t_cmd *cmd)
 	pid_t	pids[1024];
 	int		count;
 	int		status;
+	int		i;
 
 	count = 0;
 	status = 0;
@@ -117,12 +118,14 @@ void	executor(t_shell *shell, t_cmd *cmd)
 		count++;
 		cmd = cmd->next;
 	}
-	while (count-- > 0)
+	i = 0;
+	while (i < count)
 	{
-		waitpid(pids[count], &status, 0);
-		if (WIFEXITED(status))
-			exit_status_manager(WEXITSTATUS(status), 1);
-		else if (WIFSIGNALED(status))
-			exit_status_manager(128 + WTERMSIG(status), 1);
+		waitpid(pids[i], &status, 0);
+		i++;
 	}
+	if (WIFEXITED(status))
+		exit_status_manager(WEXITSTATUS(status), 1);
+	else if (WIFSIGNALED(status))
+		exit_status_manager(128 + WTERMSIG(status), 1);
 }

@@ -14,9 +14,24 @@
 
 int	is_invalid_char(char *input)
 {
+	int		in_quote;
+	char	quote_char;
+
+	in_quote = 0;
+	quote_char = 0;
 	while (*input)
 	{
-		if (*input == ';' || *input == '\\')
+		if ((*input == '"' || *input == '\'') && !in_quote)
+		{
+			in_quote = 1;
+			quote_char = *input;
+		}
+		else if (*input == quote_char && in_quote)
+		{
+			in_quote = 0;
+			quote_char = 0;
+		}
+		else if (!in_quote && (*input == ';' || *input == '\\'))
 			return (1);
 		input++;
 	}
@@ -67,12 +82,7 @@ int	validate_syntax(t_shell *shell, t_token *tokens)
 
 int	validate_redir(t_token *tokens)
 {
-	if (tokens->type == PIPE && ((tokens->next->type == REDIR_IN
-				|| tokens->next->type == REDIR_OUT
-				|| tokens->next->type == APPEND
-				|| tokens->next->type == HEREDOC)))
-		return (ERR_REDIR_EOF);
-	else if ((tokens->type == REDIR_IN || tokens->type == REDIR_OUT
+	if ((tokens->type == REDIR_IN || tokens->type == REDIR_OUT
 			|| tokens->type == APPEND || tokens->type == HEREDOC)
 		&& (tokens->next == NULL || tokens->next->type == PIPE))
 		return (ERR_REDIR_EOF);

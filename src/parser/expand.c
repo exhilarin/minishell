@@ -18,13 +18,13 @@ char	*expand_string(t_shell *shell, char *str)
 	char	*expanded_part;
 	char	*str_ptr;
 
+	if (str && str[0] == '\001')
+		return (ft_strdup(str + 1));
 	result = ft_strdup("");
 	str_ptr = str;
 	while (*str_ptr)
 	{
-		if (*str_ptr == '\'' || *str_ptr == '"')
-			expanded_part = handle_quoted_part(&str_ptr, *str_ptr);
-		else if (*str_ptr == '$')
+		if (*str_ptr == '$')
 			expanded_part = expand_var(shell, str, &str_ptr);
 		else
 		{
@@ -51,6 +51,39 @@ void	expand_all(t_shell *shell)
 	}
 }
 
+static char	**filter_empty_args(char **argv)
+{
+	char	**new_argv;
+	int		i;
+	int		j;
+	int		count;
+
+	i = 0;
+	count = 0;
+	while (argv[i])
+	{
+		if (argv[i][0] != '\0')
+			count++;
+		i++;
+	}
+	new_argv = malloc(sizeof(char *) * (count + 1));
+	if (!new_argv)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (argv[i])
+	{
+		if (argv[i][0] != '\0')
+			new_argv[j++] = argv[i];
+		else
+			free(argv[i]);
+		i++;
+	}
+	new_argv[j] = NULL;
+	free(argv);
+	return (new_argv);
+}
+
 void	expand_args(t_shell *shell, t_cmd *cmd)
 {
 	int		i;
@@ -66,6 +99,7 @@ void	expand_args(t_shell *shell, t_cmd *cmd)
 		cmd->argv[i] = expanded;
 		i++;
 	}
+	cmd->argv = filter_empty_args(cmd->argv);
 }
 
 void	expand_redirs(t_shell *shell, t_cmd *cmd)
@@ -108,4 +142,49 @@ char	*expand_var(t_shell *shell, char *str, char **ptr_i)
 	if (!value)
 		return (ft_strdup(""));
 	return (ft_strdup(value));
+}
+
+char	*handle_single_quotes(char **str_ptr)
+{
+	char	*result;
+	char	*start;
+	int		len;
+
+	(*str_ptr)++;
+	start = *str_ptr;
+	len = 0;
+	while (**str_ptr && **str_ptr != '\'')
+	{
+		len++;
+		(*str_ptr)++;
+	}
+	if (**str_ptr == '\'')
+		(*str_ptr)++;
+	result = ft_substr(start, 0, len);
+	return (result);
+}
+
+char	*handle_double_quotes(t_shell *shell, char **str_ptr)
+{
+	char	*result;
+	char	*expanded_part;
+
+	result = ft_strdup("");
+	(*str_ptr)++;
+	while (**str_ptr && **str_ptr != '"')
+	{
+		if (**str_ptr == '$')
+			expanded_part = expand_var(shell, *str_ptr, str_ptr);
+		else
+		{
+			expanded_part = ft_substr(*str_ptr, 0, 1);
+			(*str_ptr)++;
+		}
+		if (!expanded_part)
+			return (free(result), NULL);
+		result = join_and_free(result, expanded_part);
+	}
+	if (**str_ptr == '"')
+		(*str_ptr)++;
+	return (result);
 }

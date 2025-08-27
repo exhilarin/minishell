@@ -40,8 +40,10 @@ static void	redir_in(t_redir *redir)
 	fd = open(redir->file, O_RDONLY);
 	if (fd == -1)
 	{
-		ft_putstr_fd("minishell: No such file or directory: ", STDERR_FILENO);
-		ft_putendl_fd(redir->file, STDERR_FILENO);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(redir->file, STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putendl_fd(strerror(errno), STDERR_FILENO);
 		exit_shell(1, NULL);
 	}
 	if (dup2(fd, STDIN_FILENO) == -1)
@@ -56,8 +58,10 @@ static void	redir_out(t_redir *redir)
 	fd = open(redir->file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd == -1)
 	{
-		ft_putstr_fd("minishell: Permission denied: ", STDERR_FILENO);
-		ft_putendl_fd(redir->file, STDERR_FILENO);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(redir->file, STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putendl_fd(strerror(errno), STDERR_FILENO);
 		exit_shell(1, NULL);
 	}
 	if (dup2(fd, STDOUT_FILENO) == -1)
@@ -72,8 +76,10 @@ static void	redir_append(t_redir *redir)
 	fd = open(redir->file, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	if (fd == -1)
 	{
-		ft_putstr_fd("minishell: Permission denied: ", STDERR_FILENO);
-		ft_putendl_fd(redir->file, STDERR_FILENO);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(redir->file, STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putendl_fd(strerror(errno), STDERR_FILENO);
 		exit_shell(1, NULL);
 	}
 	if (dup2(fd, STDOUT_FILENO) == -1)

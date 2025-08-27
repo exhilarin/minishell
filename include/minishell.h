@@ -24,6 +24,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <signal.h>
+# include <errno.h>
 # include <sys/wait.h>
 # include <sys/wait.h>
 # include <sys/types.h>

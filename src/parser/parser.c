@@ -35,8 +35,19 @@ t_cmd	*parser(t_token *tokens)
 
 int	process_token(t_token **c_tkn, t_cmd **c_cmd, t_cmd **cmds)
 {
+	char	*marked_value;
+
 	if ((*c_tkn)->type == WORD)
-		add_arg_to_cmd(*c_cmd, (*c_tkn)->value);
+	{
+		if ((*c_tkn)->quoted == 1)
+		{
+			marked_value = ft_strjoin("\001", (*c_tkn)->value);
+			add_arg_to_cmd(*c_cmd, marked_value);
+			free(marked_value);
+		}
+		else
+			add_arg_to_cmd(*c_cmd, (*c_tkn)->value);
+	}
 	else if ((*c_tkn)->type == REDIR_IN || (*c_tkn)->type == REDIR_OUT
 		|| (*c_tkn)->type == APPEND || (*c_tkn)->type == HEREDOC)
 	{

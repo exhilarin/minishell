@@ -60,14 +60,15 @@ void	handle_redirection(t_token **tokens, char **input)
 int	handle_word_token(t_token **tokens, char **input)
 {
 	char	*word;
+	int		quote_type;
 
-	word = extract_word(input);
+	quote_type = extract_word_with_quote(input, &word);
 	if (!word)
 	{
 		free_tokens(*tokens);
 		return (0);
 	}
-	add_token(tokens, WORD, word);
+	add_token_with_quote(tokens, WORD, word, quote_type);
 	return (1);
 }
 
@@ -98,4 +99,38 @@ char	*extract_word(char **input)
 		}
 	}
 	return (result);
+}
+
+int	extract_word_with_quote(char **input, char **word)
+{
+	char	*result;
+	char	*tmp;
+	char	c[2];
+	int		quote_type;
+
+	result = ft_strdup("");
+	quote_type = 0;
+	while (**input && !ft_isspace(**input)
+		&& **input != '|' && **input != '<' && **input != '>')
+	{
+		if (**input == '"' || **input == '\'')
+		{
+			if (**input == '\'')
+				quote_type = 1;
+			result = append_quoted_part(input, result, **input);
+			if (!result)
+				return (0);
+		}
+		else
+		{
+			c[0] = **input;
+			c[1] = '\0';
+			tmp = ft_strjoin(result, c);
+			free(result);
+			result = tmp;
+			(*input)++;
+		}
+	}
+	*word = result;
+	return (quote_type);
 }

@@ -68,13 +68,25 @@ void	exec_error(t_shell *shell, t_cmd *cmd)
 	}
 	else if (!shell->exec->cmd_path)
 	{
-		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
-		exit_shell(127, ": command not found\n");
+		if (ft_strchr(cmd->argv[0], '/'))
+		{
+			ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
+			ft_putstr_fd(": ", STDERR_FILENO);
+			ft_putendl_fd(strerror(errno), STDERR_FILENO);
+			exit_shell(127, NULL);
+		}
+		else
+		{
+			ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
+			exit_shell(127, ": command not found\n");
+		}
 	}
 	else if (access(shell->exec->cmd_path, X_OK) != 0)
 	{
-		ft_putstr_fd("minishell: permission denied: ", STDERR_FILENO);
-		ft_putendl_fd(cmd->argv[0], STDERR_FILENO);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putendl_fd(strerror(errno), STDERR_FILENO);
 		exit_shell(126, NULL);
 	}
 }
