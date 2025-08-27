@@ -14,21 +14,112 @@
 
 void	exec_builtin_with_redir(t_shell *shell, t_cmd *cmd)
 {
-	int	stdin_backup;
-	int	stdout_backup;
+	int		stdin_backup;
+	int		stdout_backup;
+	t_redir	*redir;
+	int		error;
 
 	stdin_backup = dup(STDIN_FILENO);
 	stdout_backup = dup(STDOUT_FILENO);
 	if (stdin_backup == -1 || stdout_backup == -1)
-		exit_shell(1, "minishell: dup failed\n");
-	if (cmd->redir)
-		handle_redirections(shell, cmd->redir, 1);
-	if (exit_status_manager(0, 0) == 130)
+	{
+		if (stdin_backup != -1)
+			close(stdin_backup);
+		if (stdout_backup != -1)
+			close(stdout_backup);
+		exit_status_manager(1, 1);
 		return ;
+	}
+	error = 0;
+	redir = cmd->redir;
+	while (redir && !error)
+	{
+		if (redir->type == REDIR_IN)
+		{
+			int fd = open(redir->file, O_RDONLY);
+			if (fd == -1)
+			{
+				ft_putstr_fd("minishell: ", STDERR_FILENO);
+				ft_putstr_fd(redir->file, STDERR_FILENO);
+				ft_putstr_fd(": ", STDERR_FILENO);
+				ft_putendl_fd(strerror(errno), STDERR_FILENO);
+				error = 1;
+			}
+			else
+			{
+				if (dup2(fd, STDIN_FILENO) == -1)
+					error = 1;
+				close(fd);
+			}
+		}
+		else if (redir->type == REDIR_OUT)
+		{
+			int fd = open(redir->file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+			if (fd == -1)
+			{
+				ft_putstr_fd("minishell: ", STDERR_FILENO);
+				ft_putstr_fd(redir->file, STDERR_FILENO);
+				ft_putstr_fd(": ", STDERR_FILENO);
+				ft_putendl_fd(strerror(errno), STDERR_FILENO);
+				error = 1;
+			}
+			else
+			{
+				if (dup2(fd, STDOUT_FILENO) == -1)
+					error = 1;
+				close(fd);
+			}
+		}
+		else if (redir->type == APPEND)
+		{
+			int fd = open(redir->file, O_CREAT | O_WRONLY | O_APPEND, 0644);
+			if (fd == -1)
+			{
+				ft_putstr_fd("minishell: ", STDERR_FILENO);
+				ft_putstr_fd(redir->file, STDERR_FILENO);
+				ft_putstr_fd(": ", STDERR_FILENO);
+				ft_putendl_fd(strerror(errno), STDERR_FILENO);
+				error = 1;
+			}
+			else
+			{
+				if (dup2(fd, STDOUT_FILENO) == -1)
+					error = 1;
+				close(fd);
+			}
+		}
+		else if (redir->type == HEREDOC)
+		{
+			if (redir_heredoc(shell, redir))
+				error = 1;
+		}
+		redir = redir->next;
+	}
+	if (exit_status_manager(0, 0) == 130 || error)
+	{
+		if (dup2(stdin_backup, STDIN_FILENO) == -1
+			|| dup2(stdout_backup, STDOUT_FILENO) == -1)
+		{
+			close(stdin_backup);
+			close(stdout_backup);
+			exit_status_manager(1, 1);
+			return ;
+		}
+		close(stdin_backup);
+		close(stdout_backup);
+		if (error)
+			exit_status_manager(1, 1);
+		return ;
+	}
 	exec_builtin(shell, cmd);
 	if (dup2(stdin_backup, STDIN_FILENO) == -1
 		|| dup2(stdout_backup, STDOUT_FILENO) == -1)
-		exit_shell(1, "minishell: dup2 failed\n");
+	{
+		close(stdin_backup);
+		close(stdout_backup);
+		exit_status_manager(1, 1);
+		return ;
+	}
 	close(stdin_backup);
 	close(stdout_backup);
 }
