@@ -191,7 +191,7 @@ static char	*handle_special_vars(char **ptr_i)
 	if (**ptr_i == '$')
 	{
 		(*ptr_i)++;
-		return (ft_itoa(getpid()));
+		return (ft_strdup(""));
 	}
 	return (NULL);
 }
