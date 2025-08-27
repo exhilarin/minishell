@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yenyilma <yyenerkaan1@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/26 18:52:31 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/27 01:32:25 by yenyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,26 @@
 
 static	void	exec_command(t_shell *shell, t_cmd *cmd)
 {
-	if (is_builtin(cmd))
-	{
-		exec_builtin(shell, cmd);
-		exit_shell(exit_status_manager(0, 0), NULL);
-	}
-	shell->exec = init_exec();
-	if (!shell->exec || !cmd->argv[0])
-		exit_shell(1, NULL);
-	shell->exec->cmd_path = get_cmd_path(shell, cmd);
-	exec_error(shell, cmd);
-	if (execve(shell->exec->cmd_path, cmd->argv,
-			env_list_to_array(shell->env)) == -1)
-	{
-		ft_putstr_fd("minishell: execution failed: ", STDERR_FILENO);
-		ft_putendl_fd(cmd->argv[0], STDERR_FILENO);
-		exit_shell(126, NULL);
-	}
+	   if (is_builtin(cmd))
+	   {
+			   exec_builtin(shell, cmd);
+			   exit_shell(exit_status_manager(0, 0), NULL);
+	   }
+	   shell->exec = init_exec();
+	   if (!shell->exec || !cmd->argv[0])
+			   exit_shell(1, NULL);
+	   shell->exec->cmd_path = get_cmd_path(shell, cmd);
+	   exec_error(shell, cmd);
+	   char **envp = env_list_to_array(shell->env);
+	   if (execve(shell->exec->cmd_path, cmd->argv, envp) == -1)
+	   {
+			   ft_putstr_fd("minishell: execution failed: ", STDERR_FILENO);
+			   ft_putendl_fd(cmd->argv[0], STDERR_FILENO);
+			   perror("execve");
+			   free_envp(envp);
+			   exit_shell(126, NULL);
+	   }
+	   free_envp(envp);
 }
 
 static	void	child_process(t_shell *shell, t_cmd *cmd, int fd[2])
@@ -102,6 +105,7 @@ void	executor(t_shell *shell, t_cmd *cmd)
 	count = 0;
 	status = 0;
 	g_signal_code = 1;
+	ft_memset(pids, 0, sizeof(pids));
 	if (check_special_case(shell, cmd, cmd->redir))
 		return ;
 	while (cmd)

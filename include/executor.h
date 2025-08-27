@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yenyilma <yyenerkaan1@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:19:20 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/26 18:08:12 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/27 00:52:01 by yenyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,6 @@ void	handle_redirections(t_shell *shell, t_redir *redir, int proccess);
 int		redir_heredoc(t_shell *shell, t_redir *redir);
 int		handle_heredoc(t_shell *shell, t_redir *redir);
 int		check_special_case(t_shell *shell, t_cmd *cmd, t_redir *redir);
+void	free_envp(char **envp);
 
 #endif

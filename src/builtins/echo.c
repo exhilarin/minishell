@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yenyilma <yyenerkaan1@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 01:15:50 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/26 20:25:26 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/27 01:40:38 by yenyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,18 @@
 
 void	builtin_echo(char **args)
 {
-	int	i;
-	int	j;
-	int	newline;
+	int i = 1;
+	int newline = 1;
 
-	i = 0;
-	newline = 1;
-	while (args[++i] && ft_strncmp(args[1], "-n", 2))
+	while (args[i] && args[i][0] == '-' && args[i][1] == 'n')
 	{
-		j = 2;
+		int j = 2;
 		while (args[i][j] == 'n')
 			j++;
 		if (args[i][j] != '\0')
-			break ;
+			break;
 		newline = 0;
+		i++;
 	}
 	while (args[i])
 	{

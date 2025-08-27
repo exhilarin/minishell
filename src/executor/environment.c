@@ -3,14 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yenyilma <yyenerkaan1@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 22:42:30 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/26 18:00:42 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/27 01:32:25 by yenyilma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	free_envp(char **envp)
+{
+	int i = 0;
+	if (!envp)
+		return;
+	while (envp[i])
+	{
+		free(envp[i]);
+		i++;
+	}
+	free(envp);
+}
 
 t_env	*new_env_node(char *env_str)
 {
@@ -20,6 +33,11 @@ t_env	*new_env_node(char *env_str)
 	node = malloc(sizeof(t_env));
 	if (!node)
 		return (NULL);
+	node->env_line = NULL;
+	node->key = NULL;
+	node->value = NULL;
+	node->next = NULL;
+
 	node->env_line = ft_strdup(env_str);
 	if (!node->env_line)
 		return (free(node), NULL);
@@ -35,7 +53,6 @@ t_env	*new_env_node(char *env_str)
 		node->value = ft_strdup("");
 	if (!node->value)
 		return (free(node->key), free(node->env_line), free(node), NULL);
-	node->next = NULL;
 	return (node);
 }
 
@@ -49,7 +66,8 @@ char	**env_list_to_array(t_env *env)
 	curr = env;
 	while (curr)
 	{
-		i++;
+		if (curr->env_line)
+			i++;
 		curr = curr->next;
 	}
 	envp = malloc(sizeof(char *) * (i + 1));
@@ -58,11 +76,19 @@ char	**env_list_to_array(t_env *env)
 	i = 0;
 	while (env)
 	{
-		envp[i] = ft_strdup(env->env_line);
-		if (!envp[i])
-			return (NULL);
+		if (env->env_line)
+		{
+			envp[i] = ft_strdup(env->env_line);
+			if (!envp[i])
+			{
+				while (i-- > 0)
+					free(envp[i]);
+				free(envp);
+				return (NULL);
+			}
+			i++;
+		}
 		env = env->next;
-		i++;
 	}
 	envp[i] = NULL;
 	return (envp);
