@@ -12,21 +12,6 @@
 
 #include "minishell.h"
 
-void	free_envp(char **envp)
-{
-	int	i;
-
-	i = 0;
-	if (!envp)
-		return ;
-	while (envp[i])
-	{
-		free(envp[i]);
-		i++;
-	}
-	free(envp);
-}
-
 int	ms_is_valid_key(const char *s)
 {
 	int	i;

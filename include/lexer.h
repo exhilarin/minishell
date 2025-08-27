@@ -36,7 +36,6 @@ t_token	*lexer(char *input);
 void	skip_whitespace(char **input);
 void	handle_redirection(t_token **tokens, char **input);
 
-char	*extract_word(char **input);
 int		extract_word_with_quote(char **input, char **word);
 char	*join_and_free(char *s1, char *s2);
 char	*append_quoted_part(char **input, char *result, char quote);

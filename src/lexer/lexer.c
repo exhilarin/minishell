@@ -73,35 +73,6 @@ int	handle_word_token(t_token **tokens, char **input)
 	return (1);
 }
 
-char	*extract_word(char **input)
-{
-	char	*result;
-	char	*tmp;
-	char	c[2];
-
-	result = ft_strdup("");
-	while (**input && !ft_isspace(**input)
-		&& **input != '|' && **input != '<' && **input != '>')
-	{
-		if (**input == '"' || **input == '\'')
-		{
-			result = append_quoted_part(input, result, **input);
-			if (!result)
-				return (NULL);
-		}
-		else
-		{
-			c[0] = **input;
-			c[1] = '\0';
-			tmp = ft_strjoin(result, c);
-			free(result);
-			result = tmp;
-			(*input)++;
-		}
-	}
-	return (result);
-}
-
 static int	init_word_extraction(char **result, char **word)
 {
 	*result = ft_strdup("");

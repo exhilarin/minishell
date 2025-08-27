@@ -26,7 +26,6 @@
 # include <signal.h>
 # include <errno.h>
 # include <sys/wait.h>
-# include <sys/wait.h>
 # include <sys/types.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -53,7 +52,6 @@ int		exit_status_manager(int status, int mode);
 
 void	process(t_shell *shell);
 
-void	signal_handler(int sig);
 void	discard_signals(void);
 
 void	exec_error(t_shell *shell, t_cmd *cmd);
@@ -76,6 +74,5 @@ void	free_cmd(t_cmd	*commands);
 void	free_redir(t_redir *redir);
 void	free_env(t_env *env);
 void	free_exec(t_exec *exec);
-void	free_argv(char **new_argv, int i);
 
 #endif

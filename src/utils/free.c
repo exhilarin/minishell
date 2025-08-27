@@ -91,10 +91,3 @@ void	free_redir(t_redir *redir)
 		redir = tmp;
 	}
 }
-
-void	free_argv(char **new_argv, int i)
-{
-	while (--i >= 0)
-		free(new_argv[i]);
-	free(new_argv);
-}

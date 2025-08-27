@@ -12,6 +12,13 @@
 
 #include "minishell.h"
 
+static void	free_argv(char **new_argv, int i)
+{
+	while (--i >= 0)
+		free(new_argv[i]);
+	free(new_argv);
+}
+
 void	add_token(t_token **tokens, t_token_type type, char *value)
 {
 	t_token	*new_token;

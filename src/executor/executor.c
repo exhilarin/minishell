@@ -12,6 +12,21 @@
 
 #include "minishell.h"
 
+static void	free_envp(char **envp)
+{
+	int	i;
+
+	i = 0;
+	if (!envp)
+		return ;
+	while (envp[i])
+	{
+		free(envp[i]);
+		i++;
+	}
+	free(envp);
+}
+
 static void	exec_command(t_shell *shell, t_cmd *cmd)
 {
 	char	**envp;
