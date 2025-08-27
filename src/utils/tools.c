@@ -32,8 +32,16 @@ char	*append_quoted_part(char **input, char *result, char quote)
 {
 	char	*tmp;
 	char	c[2];
+	char	*marker;
 
 	c[1] = '\0';
+	if (quote == '\'')
+		marker = "\001";  /* Single quote marker */
+	else
+		marker = "\002";  /* Double quote marker */
+	tmp = ft_strjoin(result, marker);
+	free(result);
+	result = tmp;
 	(*input)++;
 	while (**input && **input != quote)
 	{
@@ -45,6 +53,10 @@ char	*append_quoted_part(char **input, char *result, char quote)
 	}
 	if (**input != quote)
 		return (free(result), NULL);
+	marker = "\003";  /* End quote marker */
+	tmp = ft_strjoin(result, marker);
+	free(result);
+	result = tmp;
 	(*input)++;
 	return (result);
 }

@@ -17,23 +17,45 @@ char	*expand_string(t_shell *shell, char *str)
 	char	*result;
 	char	*expanded_part;
 	char	*str_ptr;
+	int		in_single_quotes;
 
-	if (str && str[0] == '\001')
+	if (str && str[0] == '\001' && !ft_strchr(str, '\002') && !ft_strchr(str, '\003'))
 		return (ft_strdup(str + 1));
 	result = ft_strdup("");
 	str_ptr = str;
+	in_single_quotes = 0;
 	while (*str_ptr)
 	{
-		if (*str_ptr == '$')
+		if (*str_ptr == '\001')  /* Start single quote */
+		{
+			in_single_quotes = 1;
+			str_ptr++;
+		}
+		else if (*str_ptr == '\002')  /* Start double quote */
+		{
+			in_single_quotes = 0;
+			str_ptr++;
+		}
+		else if (*str_ptr == '\003')  /* End quote */
+		{
+			in_single_quotes = 0;
+			str_ptr++;
+		}
+		else if (*str_ptr == '$' && !in_single_quotes)
+		{
 			expanded_part = expand_var(shell, str, &str_ptr);
+			if (!expanded_part)
+				return (free(result), NULL);
+			result = join_and_free(result, expanded_part);
+		}
 		else
 		{
 			expanded_part = ft_substr(str_ptr, 0, 1);
 			str_ptr++;
+			if (!expanded_part)
+				return (free(result), NULL);
+			result = join_and_free(result, expanded_part);
 		}
-		if (!expanded_part)
-			return (free(result), NULL);
-		result = join_and_free(result, expanded_part);
 	}
 	return (result);
 }
@@ -129,6 +151,11 @@ char	*expand_var(t_shell *shell, char *str, char **ptr_i)
 	{
 		(*ptr_i)++;
 		return (ft_itoa(exit_status_manager(0, 0)));
+	}
+	if (**ptr_i == '$')
+	{
+		(*ptr_i)++;
+		return (ft_itoa(getpid()));
 	}
 	if (!ft_isalpha(**ptr_i) && **ptr_i != '_')
 		return (ft_strdup("$"));
