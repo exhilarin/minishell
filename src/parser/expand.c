@@ -155,7 +155,7 @@ char	*expand_var(t_shell *shell, char *str, char **ptr_i)
 	if (**ptr_i == '$')
 	{
 		(*ptr_i)++;
-		return (ft_itoa(getpid()));
+		return (ft_strdup(""));
 	}
 	if (!ft_isalpha(**ptr_i) && **ptr_i != '_')
 		return (ft_strdup("$"));
