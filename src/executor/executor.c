@@ -89,6 +89,8 @@ static void	run_command_process(t_shell *shell, t_cmd *cmd, int fd[2],
 		exit_shell(1, "minishell: fork failed\n");
 	if (*pid == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		child_process(shell, cmd, fd);
 		if (cmd->redir)
 			handle_redirections(shell, cmd->redir, 0);
@@ -107,9 +109,14 @@ void	executor(t_shell *shell, t_cmd *cmd)
 
 	count = 0;
 	g_signal_code = 1;
+	discard_signals();
 	ft_memset(pids, 0, sizeof(pid_t) * 1024);
 	if (check_special_case(shell, cmd, cmd->redir))
+	{
+		init_signal();
+		g_signal_code = 0;
 		return ;
+	}
 	while (cmd)
 	{
 		run_command_process(shell, cmd, fd, &pids[count]);
@@ -117,4 +124,6 @@ void	executor(t_shell *shell, t_cmd *cmd)
 		cmd = cmd->next;
 	}
 	wait_and_set_status(pids, count);
+	init_signal();
+	g_signal_code = 0;
 }

@@ -69,7 +69,8 @@ int	redir_heredoc(t_shell *shell, t_redir *redir)
 	if (pid == 0)
 	{
 		close(fd[0]);
-		init_signal();
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		heredoc_child(redir, fd[1]);
 	}
 	close(fd[1]);

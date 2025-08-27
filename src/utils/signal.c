@@ -19,20 +19,19 @@ static void	signal_handler(int sig)
 	(void)sig;
 	if (g_signal_code == 0)
 	{
-		write(1, "\n", 1);
+		write(STDOUT_FILENO, "\n", 1);
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
 	}
 	else if (g_signal_code == 1)
 	{
-		rl_on_new_line();
-		write(1, "\n", 1);
+		write(STDOUT_FILENO, "\n", 1);
 		exit_status_manager(130, 1);
 	}
 	else if (g_signal_code == 2)
 	{
-		write(1, "\n", 1);
+		write(STDOUT_FILENO, "\n", 1);
 		exit_shell(130, NULL);
 	}
 }
@@ -55,7 +54,6 @@ void	wait_and_set_status(pid_t *pids, int count)
 	int	status;
 
 	i = 0;
-	status = 0;
 	while (i < count)
 	{
 		waitpid(pids[i], &status, 0);
