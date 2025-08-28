@@ -52,15 +52,18 @@ void	wait_and_set_status(pid_t *pids, int count)
 {
 	int	i;
 	int	status;
+	int	last_status;
 
 	i = 0;
+	last_status = 0;
 	while (i < count)
 	{
 		waitpid(pids[i], &status, 0);
+		last_status = status;
 		i++;
 	}
-	if (WIFEXITED(status))
-		exit_status_manager(WEXITSTATUS(status), 1);
-	else if (WIFSIGNALED(status))
-		exit_status_manager(128 + WTERMSIG(status), 1);
+	if (WIFEXITED(last_status))
+		exit_status_manager(WEXITSTATUS(last_status), 1);
+	else if (WIFSIGNALED(last_status))
+		exit_status_manager(128 + WTERMSIG(last_status), 1);
 }

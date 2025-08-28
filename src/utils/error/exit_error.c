@@ -28,13 +28,12 @@ int	shutdown_shell(t_shell *shell)
 	if (!shell)
 		return (1);
 	status = exit_status_manager(0, 0);
-	free_all(shell);
 	if (shell->env)
 	{
 		free_env(shell->env);
 		shell->env = NULL;
 	}
-	shell = NULL;
+	free_all(shell);
 	return (status);
 }
 

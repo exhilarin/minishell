@@ -30,6 +30,7 @@ int	main(int argc, char *argv[], char *env[])
 		if (!shell.input)
 		{
 			printf("exit\n");
+			rl_clear_history();
 			return (shutdown_shell(&shell));
 		}
 		if (*shell.input)
