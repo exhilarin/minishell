@@ -3,42 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yenyilma <yyenerkaan1@student.42.fr>       +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 04:04:56 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/28 02:14:46 by yenyilma         ###   ########.fr       */
+/*   Updated: 2025/08/28 03:58:13 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*expand_string(t_shell *shell, char *str)
-{
-	char	*result;
-	char	*expanded_part;
-	char	*str_ptr;
-	int		in_single_quotes;
-
-	if (is_simple_single_quote(str))
-		return (ft_strdup(str + 1));
-	result = ft_strdup("");
-	str_ptr = str;
-	in_single_quotes = 0;
-	while (*str_ptr)
-	{
-		if (*str_ptr == '\001' || *str_ptr == '\002' || *str_ptr == '\003')
-			handle_quote_chars(&str_ptr, &in_single_quotes);
-		else
-		{
-			expanded_part = handle_regular_char(shell, str, &str_ptr,
-					in_single_quotes);
-			if (!expanded_part)
-				return (free(result), NULL);
-			result = join_and_free(result, expanded_part);
-		}
-	}
-	return (result);
-}
 
 void	expand_all(t_shell *shell)
 {
@@ -51,6 +23,30 @@ void	expand_all(t_shell *shell)
 		expand_redirs(shell, cmd);
 		cmd = cmd->next;
 	}
+}
+
+char	*expand_string_core(t_shell *shell, char *str, char *result)
+{
+	char	*expanded_part;
+	char	*str_ptr;
+	int		in_single_quotes;
+
+	str_ptr = str;
+	in_single_quotes = 0;
+	while (*str_ptr)
+	{
+		if (*str_ptr == '\001' || *str_ptr == '\002' || *str_ptr == '\003')
+			handle_quote_chars(&str_ptr, &in_single_quotes);
+		else
+		{
+			expanded_part = handle_regular_char(shell, str,
+					&str_ptr, in_single_quotes);
+			if (!expanded_part)
+				return (free(result), NULL);
+			result = join_and_free(result, expanded_part);
+		}
+	}
+	return (result);
 }
 
 void	expand_args(t_shell *shell, t_cmd *cmd)
@@ -79,7 +75,6 @@ void	expand_args(t_shell *shell, t_cmd *cmd)
 			}
 		}
 	}
-	cmd->argv = filter_empty_args(cmd->argv);
 }
 
 void	expand_redirs(t_shell *shell, t_cmd *cmd)

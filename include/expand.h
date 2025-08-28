@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 21:58:31 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/27 23:31:31 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/28 03:57:46 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,9 @@ char	*handle_regular_char(t_shell *shell, char *str, char **str_ptr,
 			int in_single_quotes);
 void	handle_quote_chars(char **str_ptr, int *in_single_quotes);
 
+char	*expand_string(t_shell *shell, char *str);
+char	*expand_string_core(t_shell *shell, char *str, char *result);
 int		is_simple_single_quote(char *str);
-int		count_non_empty_args(char **argv);
-char	**filter_empty_args(char **argv);
 char	*extract_var_name(t_shell *shell, char **ptr_i);
-void	copy_non_empty_args(char **argv, char **new_argv);
 
 #endif

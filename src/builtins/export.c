@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 00:31:37 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/27 23:24:46 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/28 03:54:02 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,18 +87,9 @@ static int	process_export_arg(t_shell *shell, char *arg)
 		handle_export_value(shell, key, arg);
 	else
 	{
-		// Değişken zaten varsa değerini koru, yoksa NULL ile oluştur
 		existing_var = ms_export_get(shell->env, key);
-		if (existing_var)
-		{
-			// Değişken zaten export edilmiş, değerini değiştirme
-			// Sadece export durumunu koru (zaten export edilmiş)
-		}
-		else
-		{
-			// Yeni değişken oluştur, değer olmadan
+		if (!existing_var)
 			ms_export_set(&shell->env, key, NULL);
-		}
 	}
 	free(key);
 	return (0);
