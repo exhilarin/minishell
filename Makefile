@@ -6,7 +6,7 @@ INCLUDE_DIR = include
 LIBFT_DIR   = libft
 
 CC          = cc
-CFLAGS      = -Wall -Wextra -Werror -I$(INCLUDE_DIR) -I$(LIBFT_DIR) -g
+CFLAGS      = -Wall -Wextra -Werror -I$(INCLUDE_DIR) -I$(LIBFT_DIR)
 
 READLINE    = -lreadline
 RL_INC      = -I/usr/include
