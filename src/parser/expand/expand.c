@@ -3,40 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 04:04:56 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/26 16:40:41 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/28 03:58:13 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*expand_string(t_shell *shell, char *str)
-{
-	char	*result;
-	char	*expanded_part;
-	char	*str_ptr;
-
-	result = ft_strdup("");
-	str_ptr = str;
-	while (*str_ptr)
-	{
-		if (*str_ptr == '\'' || *str_ptr == '"')
-			expanded_part = handle_quoted_part(&str_ptr, *str_ptr);
-		else if (*str_ptr == '$')
-			expanded_part = expand_var(shell, str, &str_ptr);
-		else
-		{
-			expanded_part = ft_substr(str_ptr, 0, 1);
-			str_ptr++;
-		}
-		if (!expanded_part)
-			return (free(result), NULL);
-		result = join_and_free(result, expanded_part);
-	}
-	return (result);
-}
 
 void	expand_all(t_shell *shell)
 {
@@ -51,6 +25,30 @@ void	expand_all(t_shell *shell)
 	}
 }
 
+char	*expand_string_core(t_shell *shell, char *str, char *result)
+{
+	char	*expanded_part;
+	char	*str_ptr;
+	int		in_single_quotes;
+
+	str_ptr = str;
+	in_single_quotes = 0;
+	while (*str_ptr)
+	{
+		if (*str_ptr == '\001' || *str_ptr == '\002' || *str_ptr == '\003')
+			handle_quote_chars(&str_ptr, &in_single_quotes);
+		else
+		{
+			expanded_part = handle_regular_char(shell, str,
+					&str_ptr, in_single_quotes);
+			if (!expanded_part)
+				return (free(result), NULL);
+			result = join_and_free(result, expanded_part);
+		}
+	}
+	return (result);
+}
+
 void	expand_args(t_shell *shell, t_cmd *cmd)
 {
 	int		i;
@@ -58,13 +56,24 @@ void	expand_args(t_shell *shell, t_cmd *cmd)
 
 	if (!cmd->argv)
 		return ;
-	i = 0;
-	while (cmd->argv[i])
+	i = -1;
+	while (cmd->argv[++i])
 	{
-		expanded = expand_string(shell, cmd->argv[i]);
-		free(cmd->argv[i]);
-		cmd->argv[i] = expanded;
-		i++;
+		if (i == 0 || !cmd->argv[0] || ft_strcmp(cmd->argv[0], "export") != 0)
+		{
+			expanded = expand_string(shell, cmd->argv[i]);
+			free(cmd->argv[i]);
+			cmd->argv[i] = expanded;
+		}
+		else
+		{
+			if (ft_strchr(cmd->argv[i], '='))
+			{
+				expanded = expand_string(shell, cmd->argv[i]);
+				free(cmd->argv[i]);
+				cmd->argv[i] = expanded;
+			}
+		}
 	}
 }
 
@@ -85,27 +94,14 @@ void	expand_redirs(t_shell *shell, t_cmd *cmd)
 
 char	*expand_var(t_shell *shell, char *str, char **ptr_i)
 {
-	int		start;
-	char	*var_name;
-	char	*value;
+	char	*result;
 
 	(void)str;
 	(*ptr_i)++;
-	if (**ptr_i == '?')
-	{
-		(*ptr_i)++;
-		return (ft_itoa(exit_status_manager(0, 0)));
-	}
+	result = handle_special_vars(ptr_i);
+	if (result)
+		return (result);
 	if (!ft_isalpha(**ptr_i) && **ptr_i != '_')
 		return (ft_strdup("$"));
-	start = 0;
-	while (ft_isalnum((*ptr_i)[start]) || (*ptr_i)[start] == '_')
-		start++;
-	var_name = ft_substr(*ptr_i, 0, start);
-	value = get_env_value(shell->env, var_name);
-	free(var_name);
-	*ptr_i += start;
-	if (!value)
-		return (ft_strdup(""));
-	return (ft_strdup(value));
+	return (extract_var_name(shell, ptr_i));
 }

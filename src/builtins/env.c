@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 23:16:40 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/26 18:08:59 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/28 04:04:34 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	add_env_node(t_env **env, char *key, char *value)
 	new->key = ft_strdup(key);
 	new->value = ft_strdup(value);
 	new->next = NULL;
+	new->env_line = NULL;
 	if (!*env)
 	{
 		*env = new;
@@ -58,7 +59,7 @@ void	builtin_env(t_env *env)
 {
 	while (env)
 	{
-		if (env->value && env->value[0])
+		if (env->value != NULL)
 			printf("%s=%s\n", env->key, env->value);
 		env = env->next;
 	}

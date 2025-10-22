@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 08:21:04 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/26 17:55:03 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/28 04:04:49 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,20 @@ void	builtin_unset(t_env **env, t_cmd *cmd)
 	i = 1;
 	while (cmd->argv[i])
 	{
-		prev = NULL;
-		current = *env;
-		while (current)
+		if (ms_is_valid_key(cmd->argv[i]))
 		{
-			if (ft_strcmp(current->key, cmd->argv[i]) == 0)
+			prev = NULL;
+			current = *env;
+			while (current)
 			{
-				delete_node(env, prev, current);
-				break ;
+				if (ft_strcmp(current->key, cmd->argv[i]) == 0)
+				{
+					delete_node(env, prev, current);
+					break ;
+				}
+				prev = current;
+				current = current->next;
 			}
-			prev = current;
-			current = current->next;
 		}
 		i++;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 20:16:33 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/26 18:05:24 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/28 04:04:06 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,19 @@ typedef struct s_cmd
 
 t_cmd	*parser(t_token *tokens);
 
+char	*handle_single_quotes(char **str_ptr);
+char	*expand_string(t_shell *shell, char *str);
+char	*expand_var(t_shell *shell, char *str, char **ptr_i);
+char	*handle_double_quotes(t_shell *shell, char **str_ptr);
+void	expand_all(t_shell *shell);
+void	expand_args(t_shell *shell, t_cmd *cmd);
+void	expand_redirs(t_shell *shell, t_cmd *cmd);
+
+void	syntax_error(int err_code);
 int		is_invalid_char(char *input);
 int		validate_redir(t_token *tokens);
 int		is_unclosed_quotes(const char *input);
 int		validate_syntax(t_shell *shell, t_token *tokens);
 int		process_token(t_token **c_tkn, t_cmd **c_cmd, t_cmd **cmds);
-void	syntax_error(int err_code);
 
 #endif

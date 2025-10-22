@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   helper.c                                           :+:      :+:    :+:   */
+/*   func_tools.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 04:22:09 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/26 18:11:35 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/27 22:14:58 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,6 @@ int	check_special_case(t_shell *shell, t_cmd *cmd, t_redir *redir)
 	{
 		exec_builtin_with_redir(shell, cmd);
 		return (1);
-	}
-	return (0);
-}
-
-int	handle_heredoc(t_shell *shell, t_redir *redir)
-{
-	while (redir)
-	{
-		if (redir->type == HEREDOC && redir_heredoc(shell, redir))
-			return (1);
-		redir = redir->next;
 	}
 	return (0);
 }
@@ -81,8 +70,18 @@ char	*get_cmd_path(t_shell *shell, t_cmd *cmd)
 	cmd_name = cmd->argv[0];
 	if (ft_strchr(cmd_name, '/'))
 	{
-		if (stat(cmd_name, &st) == 0 && S_ISREG(st.st_mode))
-			return (ft_strdup(cmd_name));
+		if (stat(cmd_name, &st) == 0)
+		{
+			if (S_ISDIR(st.st_mode))
+			{
+				ft_putstr_fd("minishell: ", STDERR_FILENO);
+				ft_putstr_fd(cmd_name, STDERR_FILENO);
+				ft_putendl_fd(": Is a directory", STDERR_FILENO);
+				exit_shell(126, NULL);
+			}
+			if (S_ISREG(st.st_mode))
+				return (ft_strdup(cmd_name));
+		}
 		return (NULL);
 	}
 	split_path(shell);

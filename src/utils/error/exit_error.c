@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   exit_error.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/23 00:22:09 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/26 17:56:16 by mugenan          ###   ########.fr       */
+/*   Created: 2025/08/28 04:06:54 by iguney            #+#    #+#             */
+/*   Updated: 2025/08/28 04:06:56 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,6 @@ int	shutdown_shell(t_shell *shell)
 	return (status);
 }
 
-void	print_error(char *msg, int code)
-{
-	ft_putstr_fd(msg, STDERR_FILENO);
-	exit_status_manager(code, 1);
-}
-
 void	exit_shell(int code, char *msg)
 {
 	t_shell	*shell;
@@ -60,21 +54,15 @@ void	exit_shell(int code, char *msg)
 void	exec_error(t_shell *shell, t_cmd *cmd)
 {
 	if (shell->exec->flag == 1)
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
-		ft_putendl_fd(": No such file or directory", STDERR_FILENO);
-		exit_shell(1, NULL);
-	}
+		handle_flag_error(cmd);
 	else if (!shell->exec->cmd_path)
-	{
-		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
-		exit_shell(127, ": command not found\n");
-	}
+		handle_no_cmd_path(cmd);
 	else if (access(shell->exec->cmd_path, X_OK) != 0)
-	{
-		ft_putstr_fd("minishell: permission denied: ", STDERR_FILENO);
-		ft_putendl_fd(cmd->argv[0], STDERR_FILENO);
-		exit_shell(126, NULL);
-	}
+		handle_access_error(shell, cmd);
+}
+
+void	print_error(char *msg, int code)
+{
+	ft_putstr_fd(msg, STDERR_FILENO);
+	exit_status_manager(code, 1);
 }

@@ -6,46 +6,25 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 23:21:21 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/26 18:52:31 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/28 07:53:33 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static	void	exec_command(t_shell *shell, t_cmd *cmd)
-{
-	if (is_builtin(cmd))
-	{
-		exec_builtin(shell, cmd);
-		exit_shell(exit_status_manager(0, 0), NULL);
-	}
-	shell->exec = init_exec();
-	if (!shell->exec || !cmd->argv[0])
-		exit_shell(1, NULL);
-	shell->exec->cmd_path = get_cmd_path(shell, cmd);
-	exec_error(shell, cmd);
-	if (execve(shell->exec->cmd_path, cmd->argv,
-			env_list_to_array(shell->env)) == -1)
-	{
-		ft_putstr_fd("minishell: execution failed: ", STDERR_FILENO);
-		ft_putendl_fd(cmd->argv[0], STDERR_FILENO);
-		exit_shell(126, NULL);
-	}
-}
-
 static	void	child_process(t_shell *shell, t_cmd *cmd, int fd[2])
 {
-	if (shell->in_fd != -1)
-	{
-		if (dup2(shell->in_fd, STDIN_FILENO) == -1)
-			exit_shell(1, "minishell: dup2 failed\n");
-		close(shell->in_fd);
-	}
-	else if (shell->heredoc_fd != -1)
+	if (shell->heredoc_fd != -1)
 	{
 		if (dup2(shell->heredoc_fd, STDIN_FILENO) == -1)
 			exit_shell(1, "minishell: dup2 failed\n");
 		close(shell->heredoc_fd);
+	}
+	else if (shell->in_fd != -1)
+	{
+		if (dup2(shell->in_fd, STDIN_FILENO) == -1)
+			exit_shell(1, "minishell: dup2 failed\n");
+		close(shell->in_fd);
 	}
 	if (cmd->next)
 	{
@@ -54,11 +33,6 @@ static	void	child_process(t_shell *shell, t_cmd *cmd, int fd[2])
 			exit_shell(1, "minishell: dup2 failed\n");
 		close(fd[1]);
 	}
-	if (cmd->redir)
-		handle_redirections(shell, cmd->redir, 0);
-	if (!cmd->argv || !cmd->argv[0])
-		exit_shell(0, NULL);
-	exec_command(shell, cmd);
 }
 
 static	void	parent_process(t_shell *shell, t_cmd *cmd, int fd[2])
@@ -77,6 +51,31 @@ static	void	parent_process(t_shell *shell, t_cmd *cmd, int fd[2])
 	}
 }
 
+static void	exec_command(t_shell *shell, t_cmd *cmd)
+{
+	char	**envp;
+
+	if (is_builtin(cmd))
+	{
+		exec_builtin(shell, cmd);
+		exit_shell(exit_status_manager(0, 0), NULL);
+	}
+	shell->exec = init_exec();
+	if (!shell->exec || !cmd->argv[0])
+		exit_shell(1, NULL);
+	shell->exec->cmd_path = get_cmd_path(shell, cmd);
+	exec_error(shell, cmd);
+	envp = env_list_to_array(shell->env);
+	if (execve(shell->exec->cmd_path, cmd->argv, envp) == -1)
+	{
+		ft_putstr_fd("minishell: execution failed: ", STDERR_FILENO);
+		ft_putendl_fd(cmd->argv[0], STDERR_FILENO);
+		free_envp(envp);
+		exit_shell(126, NULL);
+	}
+	free_envp(envp);
+}
+
 static void	run_command_process(t_shell *shell, t_cmd *cmd, int fd[2],
 		pid_t *pid)
 {
@@ -88,7 +87,17 @@ static void	run_command_process(t_shell *shell, t_cmd *cmd, int fd[2],
 	if (*pid == -1)
 		exit_shell(1, "minishell: fork failed\n");
 	if (*pid == 0)
+	{
+		g_signal_code = 1;
+		signal(SIGINT, signal_handler);
+		signal(SIGQUIT, sigquit_handler);
 		child_process(shell, cmd, fd);
+		if (cmd->redir)
+			handle_redirections(shell, cmd->redir, 0);
+		if (!cmd->argv || !cmd->argv[0])
+			exit_shell(0, NULL);
+		exec_command(shell, cmd);
+	}
 	parent_process(shell, cmd, fd);
 }
 
@@ -97,28 +106,25 @@ void	executor(t_shell *shell, t_cmd *cmd)
 	int		fd[2];
 	pid_t	pids[1024];
 	int		count;
-	int		status;
 
 	count = 0;
-	status = 0;
 	g_signal_code = 1;
+	discard_signals();
+	ft_memset(pids, 0, sizeof(pid_t) * 1024);
 	if (check_special_case(shell, cmd, cmd->redir))
+	{
+		init_signal();
+		g_signal_code = 0;
 		return ;
+	}
 	while (cmd)
 	{
+		g_signal_code = 0;
 		run_command_process(shell, cmd, fd, &pids[count]);
-		if (shell->heredoc_fd != -1)
-			close(shell->heredoc_fd);
-		shell->heredoc_fd = -1;
 		count++;
 		cmd = cmd->next;
 	}
-	while (count-- > 0)
-	{
-		waitpid(pids[count], &status, 0);
-		if (WIFEXITED(status))
-			exit_status_manager(WEXITSTATUS(status), 1);
-		else if (WIFSIGNALED(status))
-			exit_status_manager(128 + WTERMSIG(status), 1);
-	}
+	wait_and_set_status(pids, count);
+	init_signal();
+	g_signal_code = 0;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/19 00:31:37 by ilyas-guney       #+#    #+#             */
-/*   Updated: 2025/08/26 17:54:10 by mugenan          ###   ########.fr       */
+/*   Created: 2025/08/28 04:05:35 by iguney            #+#    #+#             */
+/*   Updated: 2025/08/28 04:05:38 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,60 +41,64 @@ static void	builtin_print_export(t_env *env)
 		if (!min)
 			break ;
 		printf("declare -x %s", min->key);
-		if (min->value && min->value[0])
-			printf("=\"%s\"", min->value);
+		if (min->value)
+		{
+			if (min->value[0])
+				printf("=\"%s\"", min->value);
+			else
+				printf("=\"\"");
+		}
 		printf("\n");
 		last_min = min;
 	}
 	exit_status_manager(0, 1);
 }
 
-static int	update_env(t_env **env, t_env *node)
+static void	handle_export_value(t_shell *shell, char *key, char *arg)
 {
-	t_env	*curr;
+	char	*val;
+	t_env	*var;
 
-	if (!env || !*env || !node)
-		return (0);
-	curr = *env;
-	while (curr)
+	val = ms_val_from_arg(arg);
+	if (ms_has_plus_equal(arg))
 	{
-		if (!ft_strcmp(curr->key, node->key))
-		{
-			if (curr->value)
-				free(curr->value);
-			curr->value = node->value;
-			if (curr->env_line)
-				free(curr->env_line);
-			curr->env_line = ft_strdup(node->env_line);
-			free(node->key);
-			free(node->env_line);
-			free(node);
-			return (1);
-		}
-		curr = curr->next;
+		var = ms_export_get(shell->env, key);
+		if (var && var->value)
+			val = ms_strjoin_free(ft_strdup(var->value), val);
 	}
-	return (0);
+	ms_export_set(&shell->env, key, val);
+	free(val);
 }
 
-static void	append_env_node(t_env **env, t_env *node)
+static int	process_export_arg(t_shell *shell, char *arg)
 {
-	t_env	*current;
+	char	*key;
+	t_env	*existing_var;
 
-	if (!*env)
+	if (!ms_is_valid_key(arg))
 	{
-		*env = node;
-		return ;
+		ft_putstr_fd("minishell: export: `", STDERR_FILENO);
+		ft_putstr_fd(arg, STDERR_FILENO);
+		ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
+		return (1);
 	}
-	current = *env;
-	while (current->next)
-		current = current->next;
-	current->next = node;
+	key = ms_key_from_arg(arg);
+	if (ms_has_plus_equal(arg) || ft_strchr(arg, '='))
+		handle_export_value(shell, key, arg);
+	else
+	{
+		existing_var = ms_export_get(shell->env, key);
+		if (!existing_var)
+			ms_export_set(&shell->env, key, NULL);
+	}
+	free(key);
+	return (0);
 }
 
 void	builtin_export(t_shell *shell, t_cmd *cmd)
 {
-	t_env	*node;
-	int		i;
+	int	i;
+	int	status;
 
 	if (!cmd->argv[1])
 	{
@@ -102,18 +106,12 @@ void	builtin_export(t_shell *shell, t_cmd *cmd)
 		return ;
 	}
 	i = 1;
+	status = 0;
 	while (cmd->argv[i])
 	{
-		node = new_env_node(cmd->argv[i]);
-		if (!node)
-		{
-			print_error("minishell: export: allocation failed\n", 1);
-			exit_status_manager(1, 1);
-			return ;
-		}
-		if (!update_env(&shell->env, node))
-			append_env_node(&shell->env, node);
+		if (process_export_arg(shell, cmd->argv[i]))
+			status = 1;
 		i++;
 	}
-	exit_status_manager(0, 1);
+	exit_status_manager(status, 1);
 }

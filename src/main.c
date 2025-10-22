@@ -6,13 +6,38 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:53:57 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/26 18:38:47 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/10/22 14:02:47 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-volatile sig_atomic_t	g_signal = 0;
+t_shell	*set_get_shell(t_shell *sh)
+{
+	static t_shell	*shell = NULL;
+
+	if (sh != NULL)
+		shell = sh;
+	return (shell);
+}
+
+void	process(t_shell *shell)
+{
+	int		syntax_err;
+
+	shell->token_list = lexer(shell->input);
+	syntax_err = validate_syntax(shell, shell->token_list);
+	if (syntax_err != SYNTAX_OK)
+	{
+		syntax_error(syntax_err);
+		free_all(shell);
+		return ;
+	}
+	shell->command_list = parser(shell->token_list);
+	expand_all(shell);
+	executor(shell, shell->command_list);
+	free_all(shell);
+}
 
 int	main(int argc, char *argv[], char *env[])
 {
@@ -38,22 +63,4 @@ int	main(int argc, char *argv[], char *env[])
 			add_history(shell.input);
 		process(&shell);
 	}
-}
-
-void	process(t_shell *shell)
-{
-	int		syntax_err;
-
-	shell->token_list = lexer(shell->input);
-	syntax_err = validate_syntax(shell, shell->token_list);
-	if (syntax_err != SYNTAX_OK)
-	{
-		syntax_error(syntax_err);
-		free_all(shell);
-		return ;
-	}
-	shell->command_list = parser(shell->token_list);
-	expand_all(shell);
-	executor(shell, shell->command_list);
-	free_all(shell);
 }

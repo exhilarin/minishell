@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: iguney <iguney@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 00:33:28 by iguney            #+#    #+#             */
-/*   Updated: 2025/08/26 17:53:30 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/28 04:04:38 by iguney           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ static int	is_numeric(const char *str)
 
 void	builtin_exit(char **args)
 {
-	ft_putendl_fd("exit", STDERR_FILENO);
 	if (!args[1])
 		exit_shell(exit_status_manager(0, 1), NULL);
 	if (!is_numeric(args[1]))
@@ -40,7 +39,7 @@ void	builtin_exit(char **args)
 		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 		ft_putstr_fd(args[1], STDERR_FILENO);
 		ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-		exit_shell(exit_status_manager(255, 1), NULL);
+		exit_shell(2, NULL);
 	}
 	if (args[2])
 	{

@@ -16,10 +16,13 @@ BOBJS = $(BONUS:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS) 
-	ar -rc $(NAME) $(OBJS)
+	@ar -rc $(NAME) $(OBJS)
 
 bonus: $(BOBJS)
-	ar -rc $(NAME) $(BOBJS)
+	@ar -rc $(NAME) $(BOBJS)
+
+%.o: %.c
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -f $(OBJS) $(BOBJS)

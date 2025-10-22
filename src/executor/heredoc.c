@@ -6,7 +6,7 @@
 /*   By: mugenan <mugenan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 06:51:59 by mugenan           #+#    #+#             */
-/*   Updated: 2025/08/26 18:45:44 by mugenan          ###   ########.fr       */
+/*   Updated: 2025/08/28 07:53:47 by mugenan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,22 @@ static int	redir_heredoc_parent(t_shell *shell, int fd[2], pid_t pid)
 
 	close(fd[1]);
 	waitpid(pid, &status, 0);
+	exit_code = 0;
 	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGQUIT)
+			ft_putendl_fd("Quit (core dumped)", STDERR_FILENO);
 		exit_code = 128 + WTERMSIG(status);
-	else if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+	}
+	else if (WIFEXITED(status))
 		exit_code = WEXITSTATUS(status);
-	else
-		exit_code = 0;
 	if (exit_code != 0)
+	{
+		close(fd[0]);
+		shell->heredoc_fd = -1;
 		exit_status_manager(exit_code, 1);
+		return (exit_code);
+	}
 	shell->heredoc_fd = fd[0];
 	return (exit_code);
 }
@@ -69,9 +77,21 @@ int	redir_heredoc(t_shell *shell, t_redir *redir)
 	if (pid == 0)
 	{
 		close(fd[0]);
-		init_signal();
+		signal(SIGINT, signal_handler);
+		signal(SIGQUIT, sigquit_handler);
 		heredoc_child(redir, fd[1]);
 	}
 	close(fd[1]);
 	return (redir_heredoc_parent(shell, fd, pid));
+}
+
+int	handle_heredoc(t_shell *shell, t_redir *redir)
+{
+	while (redir)
+	{
+		if (redir->type == HEREDOC && redir_heredoc(shell, redir))
+			return (1);
+		redir = redir->next;
+	}
+	return (0);
 }
